@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.irisify/
+!examples/**/.irisify/
+.DS_Store
