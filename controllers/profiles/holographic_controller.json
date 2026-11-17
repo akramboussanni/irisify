@@ -1,0 +1,92 @@
+{
+ "name": "Windows Mixed Reality",
+ "controller_type": "holographic_controller",
+ "family": "wmr",
+ "components": {
+  "/input/system": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/menu": {
+   "type": "button",
+   "click": true,
+   "touch": false
+  },
+  "/input/trigger": {
+   "type": "trigger",
+   "value": true,
+   "click": true
+  },
+  "/input/grip": {
+   "type": "button",
+   "click": true,
+   "touch": false
+  },
+  "/input/joystick": {
+   "type": "joystick",
+   "click": true
+  },
+  "/input/trackpad": {
+   "type": "trackpad",
+   "click": true,
+   "touch": true
+  },
+  "/pose/raw": {
+   "type": "pose"
+  },
+  "/pose/base": {
+   "type": "pose"
+  },
+  "/pose/handgrip": {
+   "type": "pose"
+  },
+  "/pose/tip": {
+   "type": "pose"
+  },
+  "/pose/gdc2015": {
+   "type": "pose"
+  },
+  "/pose/openxr_grip": {
+   "type": "pose"
+  },
+  "/pose/openxr_aim": {
+   "type": "pose"
+  },
+  "/input/skeleton/left": {
+   "type": "skeleton",
+   "side": "left"
+  },
+  "/input/skeleton/right": {
+   "type": "skeleton",
+   "side": "right"
+  },
+  "/output/haptic": {
+   "type": "vibration"
+  }
+ },
+ "from_frame": {
+  "thumbstick": "joystick",
+  "dpad_up": "menu",
+  "dpad_down": null,
+  "dpad_left": null,
+  "dpad_right": null,
+  "a": null,
+  "b": null,
+  "x": null,
+  "y": null,
+  "view": null,
+  "menu": null,
+  "bumper": null
+ },
+ "display": {
+  "px_per_degree": 15
+ },
+ "glyphs": {
+  "trigger": "Trigger",
+  "grip": "Grip",
+  "joystick": "Stick",
+  "trackpad": "Trackpad",
+  "menu": "Menu"
+ }
+}

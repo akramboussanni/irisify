@@ -28,7 +28,7 @@ and prompts. It's never the sum of each feature's favourite button. See `control
 
 ## The per-context table
 
-Write it in `design/controls.yaml` (schema in `controllers/schema.md`) and render it in the design doc with
+Write it in `design/controls.json` (schema in `skill/references/controllers.md` section 3) and render it in the design doc with
 `irisify controllers table`. Example (Steam Frame, Subnautica, after the fixes):
 
 | Context | L stick | R stick | L trigger | R trigger | L grip | R grip | A / B / X / Y (right) | L D-pad / bumpers / View |

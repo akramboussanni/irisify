@@ -1,0 +1,89 @@
+{
+ "name": "OpenXR generic controller",
+ "controller_type": "generic",
+ "family": "generic",
+ "components": {
+  "/input/trigger": {
+   "type": "trigger",
+   "value": true,
+   "click": true
+  },
+  "/input/grip": {
+   "type": "trigger",
+   "value": true,
+   "click": true
+  },
+  "/input/thumbstick": {
+   "type": "joystick",
+   "click": true
+  },
+  "/input/a": {
+   "type": "button",
+   "click": true,
+   "touch": false
+  },
+  "/input/b": {
+   "type": "button",
+   "click": true,
+   "touch": false
+  },
+  "/input/menu": {
+   "type": "button",
+   "click": true,
+   "touch": false
+  },
+  "/pose/raw": {
+   "type": "pose"
+  },
+  "/pose/base": {
+   "type": "pose"
+  },
+  "/pose/handgrip": {
+   "type": "pose"
+  },
+  "/pose/tip": {
+   "type": "pose"
+  },
+  "/pose/gdc2015": {
+   "type": "pose"
+  },
+  "/pose/openxr_grip": {
+   "type": "pose"
+  },
+  "/pose/openxr_aim": {
+   "type": "pose"
+  },
+  "/input/skeleton/left": {
+   "type": "skeleton",
+   "side": "left"
+  },
+  "/input/skeleton/right": {
+   "type": "skeleton",
+   "side": "right"
+  },
+  "/output/haptic": {
+   "type": "vibration"
+  }
+ },
+ "from_frame": {
+  "dpad_up": "b",
+  "dpad_down": "a",
+  "dpad_left": null,
+  "dpad_right": null,
+  "x": "a",
+  "y": "b",
+  "view": "menu",
+  "bumper": null
+ },
+ "display": {
+  "px_per_degree": 15
+ },
+ "glyphs": {
+  "trigger": "Trigger",
+  "grip": "Grip",
+  "thumbstick": "Stick",
+  "a": "Primary",
+  "b": "Secondary",
+  "menu": "Menu"
+ }
+}

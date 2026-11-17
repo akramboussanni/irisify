@@ -17,7 +17,7 @@ text sizes). The human catches what accumulates over time (fatigue, nausea, clut
   through a hull.
 - No motion blur, DOF, camera shake or head bob. Bright flashes capped.
 
-### Rig metrics (`tools/irisify/metrics.py` defines them; the adapter's `ComfortMonitor` measures them)
+### Rig metrics (the adapter's `ComfortMonitor` measures them)
 | event | threshold | meaning |
 |---|---|---|
 | `snap` | > 0.75 m beyond what velocity explains, or > 10° in one frame | a cut. Counted as covered if a blink was logged in that frame or the one before |

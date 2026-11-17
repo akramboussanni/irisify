@@ -124,7 +124,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **Root cause:** a real platform limit. The scripted input also replaces everything below the action layer.
 - **Why the agent missed it:** it didn't; the rig notes say so. The gap was that nothing *routed* those checks to
   the human.
-- **What catches it up front:** each scenario declares `covers:` and `cannot_cover:` (`tools/irisify/scenarios.py`).
+- **What catches it up front:** each scenario declares `covers:` and `cannot_cover:` (`scenarios/*.json`, read by `tools/irisify/suites.py`).
   The dashboard's "Ready for headset" checklist is built from the union of `cannot_cover` items: bindings and focus,
   feel, optics and text, haptics, comfort over time. `tools/rig/null-driver.sh` documents where the null driver works
   (Windows; Linux only with a DRM-lease display) and switches to the Monado path on Linux.
@@ -151,7 +151,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   method named `Update`. The agent also didn't consider failure isolation, because it pictured a correct build.
 - **What catches it up front:** the adapter's `SafePatcher` (`adapters/unity-bepinex/Core/SafePatcher.cs`) patches
   class by class, logs and skips failures, filters null `TargetMethods`, and logs `[Irisify] patches: N applied, M
-  failed: [...]`. The first-boot gate needs `M == 0`. Offline check: `tools/irisify/patchcheck.py` lists patch
+  failed: [...]`. The first-boot gate needs `M == 0`. Offline check: `irisify patchcheck <decomp dir> <mod src>` lists patch
   targets with `IInterface.` names found in the decompiled source.
 
 ### B2. A transpiler lost a branch label
@@ -215,7 +215,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   asking first "who has input focus?" The decisive evidence ("Opted-in Controller Mask for AppId 264710",
   "Controller 0 uses xinput") was in Steam's console log, which nobody read. Poses working was taken to mean input
   worked.
-- **What catches it up front:** `irisify doctor input-focus` (`tools/irisify/focus.py`) reads Steam's console log
+- **What catches it up front:** `irisify doctor input-focus` (`tools/irisify/doctor.py`) reads Steam's console log
   and `vrserver.txt` for those lines, checks the per-game Steam Input setting, and prints the fix. The adapter's
   `InputFocusDiag` logs `IsInputAvailable`, `ShouldApplicationPause`, `bActive` and DOWN events from boot. Platform
   preflight step 5: "Steam Input for this game: off" on every machine that runs the game. The rule is **focus
@@ -230,7 +230,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **Root cause:** a streaming VR stack on Linux has many independent preconditions, and none is checked up front.
 - **Why the agent missed it:** it treated "set up the laptop" as a single step and reacted to each error as it came
   up, instead of listing every precondition for this headset + host + runtime first.
-- **What catches it up front:** `irisify doctor platform` (`tools/irisify/preflight.py`) runs over SSH on the host and
+- **What catches it up front:** `irisify doctor platform` (`tools/irisify/doctor.py`) runs over SSH on the host and
   checks Steam packaging (Flatpak or native), kernel version against the headset profile's minimum, H.265/HEVC
   encode in `vainfo`/Vulkan, `getcap` on the compositor launcher, NetworkManager managing the adapter, Proton
   version, and per-game Steam Input. Each check prints the exact fix and says whether it needs sudo (the human runs
@@ -282,7 +282,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **Root cause:** prompts and bindings were two sources of truth.
 - **Why the agent missed it:** prompts are UI and bindings are input, so they lived in different heads.
 - **What catches it up front:** `irisify controllers prompts` generates the prompt table **from the same manifest
-  and context table** that generates the binding JSON (`controllers/generate.py`). The adapter reads that generated
+  and context table** that generates the binding JSON (`tools/irisify/controllers.py`). The adapter reads that generated
   table, and a test fails if a prompt names an input the binding doesn't use. SubmersedVR's eventual
   `ButtonPrompts.cs` (prompts read from the binding file) is the same idea at runtime.
 

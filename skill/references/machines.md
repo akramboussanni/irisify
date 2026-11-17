@@ -52,7 +52,7 @@ Pick the headset in the dashboard or with `irisify machine add ... --headset <pr
 `controllers/profiles/` and carry the controller type, the real component list, display numbers (pixels per degree)
 and host requirements. Supported now: Steam Frame, Valve Index, and Touch/WMR bindings. Quest (Link, Air Link,
 Virtual Desktop, ALVR) is planned: the profile and the adb link exist, and the streaming-specific checks are marked
-TODO in `tools/irisify/preflight.py`.
+TODO in `controllers/profiles/oculus_touch.json`.
 
 ## One writer per target
 

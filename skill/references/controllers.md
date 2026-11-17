@@ -1,6 +1,6 @@
 # Controller knowledge: detect, read the real profile, generate bindings and prompts
 
-One source of truth, `design/controls.yaml`, generates the SteamVR binding JSON for every controller family **and**
+One source of truth, `design/controls.json`, generates the SteamVR binding JSON for every controller family **and**
 the on-screen prompt tables. Prompts can't drift from bindings, because both come out of one generator
 (`lessons.md` D3, D4).
 
@@ -36,7 +36,7 @@ binding generator only uses components the profile has.
 The Frame profile was read from the runtime's own file on the test laptop on 2026-11-17 (`drivers/frame_controller`).
 Refresh it with `irisify controllers detect --refresh` after SteamVR updates.
 
-## 3. The manifest and context table (`design/controls.yaml`)
+## 3. The manifest and context table (`design/controls.json`)
 
 ```yaml
 game: subnautica
@@ -68,10 +68,10 @@ mod decides per context what an action does.
 ## 4. Commands
 
 ```
-irisify controllers lint design/controls.yaml [design/interactions.yaml]
-irisify controllers bindings design/controls.yaml --out StreamingAssets/SteamVR/   # bindings_<type>.json + actions.json default_bindings
-irisify controllers prompts design/controls.yaml --out prompts/                    # prompts.<type>.json + PROMPTS.md
-irisify controllers table design/controls.yaml                                     # markdown table for the design doc
+irisify controllers lint design/controls.json [design/interactions.json]
+irisify controllers bindings design/controls.json --out StreamingAssets/SteamVR/   # bindings_<type>.json + actions.json default_bindings
+irisify controllers prompts design/controls.json --out prompts/                    # prompts.<type>.json + PROMPTS.md
+irisify controllers table design/controls.json                                     # markdown table for the design doc
 ```
 
 Lint errors: a component the profile doesn't have; two owners for one input in one context and holding state; a

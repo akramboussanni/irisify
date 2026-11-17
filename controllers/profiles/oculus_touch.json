@@ -1,0 +1,129 @@
+{
+ "name": "Oculus / Meta Touch",
+ "controller_type": "oculus_touch",
+ "family": "touch",
+ "components": {
+  "/input/system": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/x": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/y": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/a": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/b": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/menu": {
+   "type": "button",
+   "click": true,
+   "touch": false,
+   "side": "left"
+  },
+  "/input/trigger": {
+   "type": "trigger",
+   "value": true,
+   "click": true,
+   "touch": true
+  },
+  "/input/grip": {
+   "type": "trigger",
+   "value": true,
+   "click": true,
+   "touch": false
+  },
+  "/input/joystick": {
+   "type": "joystick",
+   "click": true,
+   "touch": true
+  },
+  "/input/thumbrest": {
+   "type": "button",
+   "click": false,
+   "touch": true
+  },
+  "/pose/raw": {
+   "type": "pose"
+  },
+  "/pose/base": {
+   "type": "pose"
+  },
+  "/pose/handgrip": {
+   "type": "pose"
+  },
+  "/pose/tip": {
+   "type": "pose"
+  },
+  "/pose/gdc2015": {
+   "type": "pose"
+  },
+  "/pose/openxr_grip": {
+   "type": "pose"
+  },
+  "/pose/openxr_aim": {
+   "type": "pose"
+  },
+  "/input/skeleton/left": {
+   "type": "skeleton",
+   "side": "left"
+  },
+  "/input/skeleton/right": {
+   "type": "skeleton",
+   "side": "right"
+  },
+  "/output/haptic": {
+   "type": "vibration"
+  }
+ },
+ "from_frame": {
+  "thumbstick": "joystick",
+  "dpad_up": "y",
+  "dpad_down": "x",
+  "dpad_left": null,
+  "dpad_right": null,
+  "x": null,
+  "y": null,
+  "view": "menu",
+  "menu": null,
+  "bumper": null
+ },
+ "display": {
+  "per_eye_px": [
+   2064,
+   2208
+  ],
+  "fov_deg": 104,
+  "px_per_degree": 20
+ },
+ "glyphs": {
+  "trigger": "Trigger",
+  "grip": "Grip",
+  "joystick": "Stick",
+  "a": "A",
+  "b": "B",
+  "x": "X",
+  "y": "Y",
+  "menu": "Menu"
+ },
+ "notes": [
+  "Quest via Link / Air Link / Virtual Desktop / ALVR shows up as oculus_touch in SteamVR. Streaming-specific checks are TODO."
+ ]
+}

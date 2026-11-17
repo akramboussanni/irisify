@@ -47,7 +47,7 @@ run the game yourself, ask the user to launch it now, not after features exist.
    (`IsInputAvailable`, `ShouldApplicationPause`, `bActive`), *then* bindings. Poses working proves nothing about
    buttons.
 4. **Read the controller's real profile.** Detect the controller type, read the runtime's input profile, generate
-   bindings and prompts from `design/controls.yaml`. Never hand-write either.
+   bindings and prompts from `design/controls.json`. Never hand-write either.
 5. **Grips grab, nothing else. One owner per input per context per holding state.** No shortcut left next to its
    physical replacement. Every manifest action bound or dropped with a reason.
 6. **Design the cross-cutting things once, before breadth:** control scheme, body map (calibration, neck pivot, body

@@ -1,0 +1,13 @@
+[
+ {"id": "play_posture", "rank": "blocking", "q": "Do you play seated, standing, or both?", "why": "Sets body height, reach, and whether turning your body can steer.", "options": ["both", "seated", "standing"], "recommend": "both"},
+ {"id": "game_machine", "rank": "blocking", "q": "Which machine runs the game when you play: a PC streaming to the headset, or the headset itself?", "why": "That's where Steam Input, the mod and the logs live.", "detect": "machines with role game-host", "options": ["pc_stream", "headset_native", "both"], "recommend": "both"},
+ {"id": "agent_runs_game", "rank": "blocking", "q": "May the agent launch and stop the game itself on the rig machine (never on your saves)?", "why": "Without it every test waits for you.", "options": ["yes", "rig only", "no"], "recommend": "rig only"},
+ {"id": "saves", "rank": "blocking", "q": "Must your own saves never be loaded or touched? (Tests use a separate test save.)", "why": "Saves are backed up either way; this decides whether tests may ever read them.", "options": ["never touch", "read-only ok"], "recommend": "never touch"},
+ {"id": "sickness", "rank": "blocking", "q": "How sensitive are you to motion sickness?", "why": "Sets turning, vignette and how cuts are hidden.", "options": ["very", "a little", "not at all"], "recommend": "a little"},
+ {"id": "immersion_style", "rank": "shaping", "q": "Immersive like Half-Life: Alyx (info on the gear, quick physical actions) or like a sim (every step by hand)?", "why": "Most people find full sims tiring after an hour.", "options": ["alyx", "sim", "mixed: ask per mechanic"], "recommend": "alyx"},
+ {"id": "turn", "rank": "shaping", "q": "Snap turn or smooth turn?", "why": "Smooth turning makes some people sick.", "options": ["snap30", "snap45", "smooth"], "recommend": "snap30"},
+ {"id": "flat_ui", "rank": "shaping", "q": "How much flat UI will you accept where no physical home fits (subtitles, system messages)?", "why": "Everything else goes on the body, gear or world.", "options": ["minimal", "some", "whatever is clearest"], "recommend": "minimal"},
+ {"id": "priorities", "rank": "shaping", "q": "Which mechanics do you care about most? (They get built and tuned first.)", "why": "Order of work after the vertical slice.", "free_text": true, "recommend": "the ones used most per minute"},
+ {"id": "defaults_on", "rank": "shaping", "q": "Ship new physical features on by default (you turn off what you don't like), or off?", "why": "Off by default made most of the Subnautica mod invisible.", "options": ["on", "off"], "recommend": "on"},
+ {"id": "hand", "rank": "taste", "q": "Dominant hand?", "why": "Mirrors tool hand and holsters.", "options": ["right", "left"], "recommend": "right"}
+]

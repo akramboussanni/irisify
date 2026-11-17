@@ -8,7 +8,7 @@ design` fails until the artifacts below exist and pass their checks, and fan-out
 to run before that.
 
 The orchestrator (the agent that talks to the user) owns every design artifact. Workers read them and propose
-changes in their notes. They never edit `design/controls.yaml` or `design/body-map.md` themselves.
+changes in their notes. They never edit `design/controls.json` or `design/body-map.md` themselves.
 
 ## Overview
 
@@ -17,8 +17,8 @@ changes in their notes. They never edit `design/controls.yaml` or `design/body-m
 | 0. Intake | `design/00-intake.md` + `.irisify/intake.json` | user answers, agent judges | intake has no unanswered *blocking* question |
 | 1. Evidence | `design/01-evidence.md` | agent | engine, build id, existing VR work, input path recorded |
 | 2. Physical sketch | `design/02-physical-sketch.md` | agent, user reviews | one section per locomotion mode and per high-frequency mechanic |
-| 3. Interaction inventory | `design/interactions.yaml` | agent | `irisify design lint`: every row has form, tier, context, discoverability, immersion verdict |
-| 4. Control scheme | `design/controls.yaml` → generated bindings + prompts | agent, user approves trade-offs | `irisify controllers lint`: no double owner, every action bound or dropped, grips grab-only |
+| 3. Interaction inventory | `design/interactions.json` | agent | `irisify design lint`: every row has form, tier, context, discoverability, immersion verdict |
+| 4. Control scheme | `design/controls.json` → generated bindings + prompts | agent, user approves trade-offs | `irisify controllers lint`: no double owner, every action bound or dropped, grips grab-only |
 | 5. Body map | `design/body-map.md` | agent | calibration, neck pivot, body yaw, all spots in one frame |
 | 6. Information placement | `design/ui-placement.md` | agent | every flat UI element has a home or a reason |
 | 7. Comfort plan | `design/comfort.md` | agent, user picks defaults | teleport/cinematic audit complete, head-clip plan |
@@ -69,7 +69,7 @@ grab the water to nudge 1:1, optional strokes on top". Write the physical versio
 
 ## Step 3. Interaction inventory
 
-One row per thing the player does, in `design/interactions.yaml` (schema: `skill/templates/design/interactions.yaml`):
+One row per thing the player does, in `design/interactions.json` (schema: `skill/templates/design/interactions.json`):
 
 ```yaml
 - id: holster_draw
@@ -99,14 +99,14 @@ Rules for this table:
 
 ## Step 4. Control scheme
 
-Read `control-scheme.md` and `controllers.md`. Write `design/controls.yaml` (the action manifest + one table per
+Read `control-scheme.md` and `controllers.md`. Write `design/controls.json` (the action manifest + one table per
 context) and generate everything else from it:
 
 ```
 irisify controllers detect            # real controller type and component list from the runtime
-irisify controllers lint design/controls.yaml design/interactions.yaml
-irisify controllers bindings design/controls.yaml --out <mod>/StreamingAssets/SteamVR/
-irisify controllers prompts  design/controls.yaml --out <mod>/prompts/
+irisify controllers lint design/controls.json design/interactions.json
+irisify controllers bindings design/controls.json --out <mod>/StreamingAssets/SteamVR/
+irisify controllers prompts  design/controls.json --out <mod>/prompts/
 ```
 
 Hard rules (lint fails otherwise): grips grab, nothing else; one owner per physical input per context and holding

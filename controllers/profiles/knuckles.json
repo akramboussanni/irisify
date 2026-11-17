@@ -1,0 +1,105 @@
+{
+ "name": "Valve Index controllers",
+ "controller_type": "knuckles",
+ "hmd_type": "indexhmd",
+ "family": "index",
+ "components": {
+  "/input/system": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/a": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/b": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/trigger": {
+   "type": "trigger",
+   "value": true,
+   "click": true,
+   "touch": true
+  },
+  "/input/trackpad": {
+   "type": "trackpad",
+   "touch": true,
+   "force": true
+  },
+  "/input/thumbstick": {
+   "type": "joystick",
+   "click": true,
+   "touch": true
+  },
+  "/input/grip": {
+   "type": "trigger",
+   "value": true,
+   "force": true,
+   "touch": true,
+   "note": "force-sensing; use force threshold for grab"
+  },
+  "/pose/raw": {
+   "type": "pose"
+  },
+  "/pose/base": {
+   "type": "pose"
+  },
+  "/pose/handgrip": {
+   "type": "pose"
+  },
+  "/pose/tip": {
+   "type": "pose"
+  },
+  "/pose/gdc2015": {
+   "type": "pose"
+  },
+  "/pose/openxr_grip": {
+   "type": "pose"
+  },
+  "/pose/openxr_aim": {
+   "type": "pose"
+  },
+  "/input/skeleton/left": {
+   "type": "skeleton",
+   "side": "left"
+  },
+  "/input/skeleton/right": {
+   "type": "skeleton",
+   "side": "right"
+  },
+  "/output/haptic": {
+   "type": "vibration"
+  }
+ },
+ "from_frame": {
+  "dpad_up": "b",
+  "dpad_down": "a",
+  "dpad_left": null,
+  "dpad_right": null,
+  "x": "a",
+  "y": "b",
+  "view": null,
+  "menu": null,
+  "bumper": null
+ },
+ "display": {
+  "per_eye_px": [
+   1440,
+   1600
+  ],
+  "fov_deg": 108,
+  "px_per_degree": 13
+ },
+ "glyphs": {
+  "trigger": "Trigger",
+  "grip": "Grip",
+  "thumbstick": "Stick",
+  "trackpad": "Trackpad",
+  "a": "A",
+  "b": "B"
+ }
+}

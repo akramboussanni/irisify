@@ -1,0 +1,234 @@
+{
+ "name": "Steam Frame controllers",
+ "controller_type": "frame_controller",
+ "hmd_type": "frame_hmd",
+ "family": "frame",
+ "source": "Read from SteamVR's drivers/frame_controller/resources/input/frame_controller_profile.json on the Fedora test laptop, 2026-11-17 (binding-image points and order dropped).",
+ "components": {
+  "/input/system": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/menu": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/view": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/a": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/b": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/x": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/y": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "right"
+  },
+  "/input/dpad_up": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/dpad_right": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/dpad_down": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/dpad_left": {
+   "type": "button",
+   "click": true,
+   "touch": true,
+   "side": "left"
+  },
+  "/input/bumper": {
+   "type": "button",
+   "click": true,
+   "touch": true
+  },
+  "/input/trigger": {
+   "type": "trigger",
+   "value": true,
+   "click": true,
+   "touch": true
+  },
+  "/input/grip": {
+   "type": "trigger",
+   "value": true,
+   "click": true,
+   "touch": true,
+   "note": "analog: set click thresholds for grab actions"
+  },
+  "/input/thumbstick": {
+   "type": "joystick",
+   "click": true,
+   "touch": true
+  },
+  "/input/thumbrest": {
+   "type": "button",
+   "click": false,
+   "touch": true,
+   "internal": true,
+   "note": "SteamVR-internal visibility: don't bind"
+  },
+  "/pose/raw": {
+   "type": "pose"
+  },
+  "/pose/base": {
+   "type": "pose"
+  },
+  "/pose/handgrip": {
+   "type": "pose"
+  },
+  "/pose/tip": {
+   "type": "pose"
+  },
+  "/pose/gdc2015": {
+   "type": "pose"
+  },
+  "/pose/openxr_grip": {
+   "type": "pose"
+  },
+  "/pose/openxr_aim": {
+   "type": "pose"
+  },
+  "/input/skeleton/left": {
+   "type": "skeleton",
+   "side": "left"
+  },
+  "/input/skeleton/right": {
+   "type": "skeleton",
+   "side": "right"
+  },
+  "/output/haptic": {
+   "type": "vibration"
+  }
+ },
+ "mirror_mappings": [
+  [
+   "/user/hand/left/input/view",
+   "/user/hand/right/input/menu"
+  ],
+  [
+   "/user/hand/left/input/dpad_up",
+   "/user/hand/right/input/y"
+  ],
+  [
+   "/user/hand/left/input/dpad_right",
+   "/user/hand/right/input/b"
+  ],
+  [
+   "/user/hand/left/input/dpad_down",
+   "/user/hand/right/input/a"
+  ],
+  [
+   "/user/hand/left/input/dpad_left",
+   "/user/hand/right/input/x"
+  ]
+ ],
+ "from_frame": {},
+ "display": {
+  "per_eye_px": [
+   1728,
+   1728
+  ],
+  "fov_deg": 110,
+  "px_per_degree": 16,
+  "px_per_degree_center": 20
+ },
+ "glyphs": {
+  "trigger": "Trigger",
+  "grip": "Grip",
+  "bumper": "Bumper",
+  "thumbstick": "Stick",
+  "a": "A",
+  "b": "B",
+  "x": "X",
+  "y": "Y",
+  "dpad_up": "D-pad up",
+  "dpad_down": "D-pad down",
+  "dpad_left": "D-pad left",
+  "dpad_right": "D-pad right",
+  "view": "View",
+  "menu": "Menu"
+ },
+ "notes": [
+  "Not a Touch layout: left has a D-pad, View and a bumper; right has A, B, X and Y, Menu and a bumper.",
+  "Steam Input must be off for the game (Properties > Controller > Disable Steam Input) on the machine that runs it, or SteamVR never gives the game input focus (IsInputAvailable stays false).",
+  "SteamVR falls back to a Frame binding, then OpenXR generic, then Oculus Touch remapped; with only Touch bindings B/Y land on odd buttons.",
+  "The HMD's type is frame_hmd; '(frame_hmd) has no configured binding' in logs is harmless."
+ ],
+ "host_requirements": {
+  "linux": [
+   {
+    "id": "steam_native",
+    "what": "Native Steam, not Flatpak (Flatpak never sets up the wireless adapter)",
+    "check": "flatpak list 2>/dev/null | grep -q com.valvesoftware.Steam && echo flatpak || echo native",
+    "expect": "native",
+    "fix": "Install Steam from your distro (Fedora: RPM Fusion 'steam'), sign in, remove the Flatpak",
+    "who": "you"
+   },
+   {
+    "id": "kernel",
+    "what": "Kernel 7.2 or newer (Frame wireless adapter)",
+    "check": "uname -r",
+    "expect_min_version": "7.2",
+    "fix": "Update the kernel and reboot",
+    "who": "you"
+   },
+   {
+    "id": "hevc_encode",
+    "what": "Hardware H.265 encode for streaming",
+    "check": "vainfo 2>/dev/null | grep -c 'VAProfileHEVCMain.*EncSlice' || echo 0",
+    "expect_nonzero": true,
+    "fix": "Fedora: sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld && sudo dnf swap mesa-vulkan-drivers mesa-vulkan-drivers-freeworld (RPM Fusion)",
+    "who": "you"
+   },
+   {
+    "id": "compositor_cap",
+    "what": "cap_sys_nice on SteamVR's vrcompositor-launcher",
+    "check": "getcap ~/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher 2>/dev/null",
+    "expect_contains": "cap_sys_nice",
+    "fix": "sudo setcap CAP_SYS_NICE=eip ~/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrcompositor-launcher",
+    "who": "you"
+   },
+   {
+    "id": "adapter_managed",
+    "what": "Frame wireless adapter managed by NetworkManager",
+    "check": "nmcli -t -f NAME connection show 2>/dev/null | grep -c 'Steam Frame' || echo 0",
+    "expect_nonzero": true,
+    "fix": "Plug in the adapter with Steam running; keep the device managed (don't mark it unmanaged)",
+    "who": "you"
+   }
+  ]
+ }
+}
