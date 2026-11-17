@@ -168,7 +168,7 @@ Fill in three tables in `design/reviews.md`:
 
 ## Step 9. Test plan
 
-Every row of `interactions.yaml` names a scenario. Every scenario declares `covers` and `cannot_cover`, and names its
+Every row of `interactions.json` names a scenario. Every scenario declares `covers` and `cannot_cover`, and names its
 screenshot moments with a caption question. The union of `cannot_cover` becomes the human's headset checklist
 (`screenshot-review.md`, `testing-loop.md`).
 

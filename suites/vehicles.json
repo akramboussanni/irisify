@@ -1,0 +1,11 @@
+{
+ "name": "vehicles",
+ "description": "Boarding, piloting, ejecting",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "vehicles"
+ ],
+ "exclude_tags": []
+}

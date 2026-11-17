@@ -1,0 +1,13 @@
+{
+ "name": "ui",
+ "description": "Readability, hints, overwhelm budgets, prompts",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "ui",
+  "hints",
+  "prompts"
+ ],
+ "exclude_tags": []
+}

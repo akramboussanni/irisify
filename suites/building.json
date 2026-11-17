@@ -1,0 +1,11 @@
+{
+ "name": "building",
+ "description": "Builder, tablet, placement",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "building"
+ ],
+ "exclude_tags": []
+}

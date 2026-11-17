@@ -296,7 +296,10 @@ def generate_prompts(controls, profile):
             continue
         base = glyphs.get(target, target.replace("_", " ").title())
         glyph = f"{'L' if hand == 'left' else 'R'} {base}"
-        if sub not in ("click",):
+        stick = profile_components(profile).get(target, {}).get("type") in ("joystick", "trackpad")
+        if sub == "click" and stick:
+            glyph += " click"
+        elif sub != "click":
             glyph += {"position": "", "touch": " (touch)", "pull": ""}.get(sub, f" {sub}")
         entry = {"hand": hand, "input": target, "sub": sub, "glyph": glyph.strip(),
                  "label": actions.get(action, {}).get("label", action)}

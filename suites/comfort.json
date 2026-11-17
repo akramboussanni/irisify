@@ -1,0 +1,11 @@
+{
+ "name": "comfort",
+ "description": "Snaps, drift, flashes, head clipping: run before every headset session",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "comfort"
+ ],
+ "exclude_tags": []
+}

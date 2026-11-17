@@ -1,0 +1,13 @@
+{
+ "name": "locomotion",
+ "description": "Swimming, walking, climbing: everything that moves the player",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "locomotion",
+  "swim",
+  "climb"
+ ],
+ "exclude_tags": []
+}

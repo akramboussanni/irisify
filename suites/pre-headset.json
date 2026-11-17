@@ -1,0 +1,13 @@
+{
+ "name": "pre-headset",
+ "description": "What must be green before the human puts the headset on: smoke, comfort, ui and every scenario tagged headset-critical",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "smoke",
+  "comfort",
+  "ui",
+  "headset-critical"
+ ]
+}

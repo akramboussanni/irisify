@@ -1,0 +1,12 @@
+{
+ "name": "nightly",
+ "description": "Everything, shuffled with a logged seed, then everything again in the normal order: catches state leaking between scenarios",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "*"
+ ],
+ "shuffle": true,
+ "repeat": 2
+}

@@ -76,7 +76,7 @@ irisify controllers table design/controls.json                                  
 
 Lint errors: a component the profile doesn't have; two owners for one input in one context and holding state; a
 `role: grab` action off the grips, or a non-grab action on a grip; a manifest action neither bound nor dropped; a
-shortcut bound in a context where its physical replacement is active (from `interactions.yaml`).
+shortcut bound in a context where its physical replacement is active (from `interactions.json`).
 
 ## 5. Prompts at runtime
 

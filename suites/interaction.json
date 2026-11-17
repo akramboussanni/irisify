@@ -1,0 +1,14 @@
+{
+ "name": "interaction",
+ "description": "Grabbing, gathering, containers, machines",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "gathering",
+  "containers",
+  "machines",
+  "grab"
+ ],
+ "exclude_tags": []
+}

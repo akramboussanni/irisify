@@ -1,0 +1,629 @@
+[
+ {
+  "name": "boot",
+  "owner": "integrator",
+  "tags": [
+   "smoke",
+   "boot",
+   "settings"
+  ],
+  "touches": [
+   "*.cs"
+  ],
+  "covers": [
+   "cold start to menu",
+   "no exceptions",
+   "all patch classes applied"
+  ],
+  "cannot_cover": [
+   "SteamVR bindings and Steam Input focus (the rig uses Monado + OpenComposite)"
+  ],
+  "shots": [],
+  "minutes": 4,
+  "needs_restart": true
+ },
+ {
+  "name": "settings_roundtrip",
+  "owner": "integrator",
+  "tags": [
+   "settings"
+  ],
+  "touches": [
+   "Settings*.cs"
+  ],
+  "covers": [
+   "settings save and load"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 5,
+  "needs_restart": true
+ },
+ {
+  "name": "settings_migration",
+  "owner": "integrator",
+  "tags": [
+   "settings",
+   "smoke"
+  ],
+  "touches": [
+   "Settings*.cs",
+   "SettingsMigration.cs"
+  ],
+  "covers": [
+   "old settings file gets new defaults"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 5,
+  "needs_restart": true
+ },
+ {
+  "name": "swim_stroke",
+  "owner": "swim-controls",
+  "tags": [
+   "swim",
+   "locomotion"
+  ],
+  "touches": [
+   "VR/ArmSwimming.cs",
+   "VR/SwimMath.cs"
+  ],
+  "covers": [
+   "breaststrokes reach >= 50% of stick speed"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "swim_controls",
+  "owner": "swim-controls",
+  "tags": [
+   "swim",
+   "locomotion",
+   "smoke",
+   "input"
+  ],
+  "touches": [
+   "VR/Swim*.cs",
+   "Input/GripRouting.cs"
+  ],
+  "covers": [
+   "level along body facing",
+   "right stick up/down",
+   "grips don't move you",
+   "flicks push"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "swim_speed_curve",
+  "owner": "swim-controls",
+  "tags": [
+   "swim",
+   "locomotion"
+  ],
+  "touches": [
+   "VR/Swim*.cs",
+   "VR/ArmSwimming.cs"
+  ],
+  "covers": [
+   "stick curve monotonic",
+   "stroke push grows with size"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "swim_water_hold",
+  "owner": "swim-controls",
+  "tags": [
+   "swim",
+   "locomotion",
+   "grab"
+  ],
+  "touches": [
+   "VR/WaterGrab.cs"
+  ],
+  "covers": [
+   "5 cm hand move = 2.5-7.5 cm body move",
+   "grip priority"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "holster_draw_stow",
+  "owner": "body",
+  "tags": [
+   "body",
+   "holsters",
+   "smoke"
+  ],
+  "touches": [
+   "VR/VRHolsters.cs",
+   "VR/HolsterLayout.cs",
+   "VR/BodyFrame.cs"
+  ],
+  "covers": [
+   "draw and stow from every spot"
+  ],
+  "cannot_cover": [
+   "haptic strength"
+  ],
+  "shots": [
+   {
+    "moment": "drawn",
+    "question": "Is the drawn tool in the hand, holsters visible on the body?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "holster_carry_release",
+  "owner": "body",
+  "tags": [
+   "body",
+   "holsters",
+   "carry"
+  ],
+  "touches": [
+   "VR/VRHolsters.cs",
+   "VR/HandThrow.cs"
+  ],
+  "covers": [
+   "let go away from body keeps the tool",
+   "carry moves it"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "pda_assign",
+  "owner": "body",
+  "tags": [
+   "body",
+   "pda",
+   "carry",
+   "ui"
+  ],
+  "touches": [
+   "VR/VRHolsterAssign.cs",
+   "VR/CarriedItemDrop.cs"
+  ],
+  "covers": [
+   "laser item taken",
+   "bound on release at a spot",
+   "release away drops it in the world"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "carry",
+    "question": "Is the carried item's copy in the hand and a preview on the spot?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "pda_gaze_vs_laser",
+  "owner": "body",
+  "tags": [
+   "body",
+   "pda"
+  ],
+  "touches": [
+   "VR/VRHolsterAssign.cs"
+  ],
+  "covers": [
+   "the laser's item is taken, not the gazed one"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "pda_hint",
+  "owner": "readability",
+  "tags": [
+   "ui",
+   "hints"
+  ],
+  "touches": [
+   "VR/Hints.cs"
+  ],
+  "covers": [
+   "PDA hints show first, once each, only with the PDA open"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "hint",
+    "question": "Is the hint readable and not covering the item grid?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "punch_sandstone",
+  "owner": "gathering",
+  "tags": [
+   "gathering",
+   "grab"
+  ],
+  "touches": [
+   "VR/VRGathering.cs",
+   "VR/GatherGestures.cs"
+  ],
+  "covers": [
+   "punch breaks outcrop",
+   "chunk grabbed into inventory"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "builder_move",
+  "owner": "building",
+  "tags": [
+   "building",
+   "locomotion",
+   "headset-critical"
+  ],
+  "touches": [
+   "VR/BuilderTablet.cs",
+   "VR/VRBuilding.cs",
+   "Input/*.cs"
+  ],
+  "covers": [
+   "moves >= 70% speed with builder drawn"
+  ],
+  "cannot_cover": [
+   "intermittent slow swim seen only in play"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "builder_menu_move",
+  "owner": "building",
+  "tags": [
+   "building",
+   "ui"
+  ],
+  "touches": [
+   "VR/BuilderTablet.cs"
+  ],
+  "covers": [
+   "moves with the build menu open"
+  ],
+  "cannot_cover": [
+   "text readability at lens resolution"
+  ],
+  "shots": [
+   {
+    "moment": "builder-tablet-open",
+    "question": "Are icons at least 4 cm, the info strip readable?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "builder_bisect",
+  "owner": "building",
+  "tags": [
+   "building",
+   "diagnostic"
+  ],
+  "touches": [
+   "VR/VRBuilding.cs",
+   "VR/InputLockWatch.cs"
+  ],
+  "covers": [
+   "per-frame lockMovement samples per builder setting"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 4,
+  "needs_restart": false
+ },
+ {
+  "name": "ladder_climb",
+  "owner": "movement",
+  "tags": [
+   "climb",
+   "locomotion"
+  ],
+  "touches": [
+   "VR/VRClimbing.cs",
+   "VR/GrabToClimb.cs"
+  ],
+  "covers": [
+   "hand over hand route",
+   "game transition confirmed"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "free_climb_rock",
+  "owner": "movement",
+  "tags": [
+   "climb",
+   "locomotion",
+   "grab"
+  ],
+  "touches": [
+   "VR/FreeClimb*.cs"
+  ],
+  "covers": [
+   "pull 0.4 m moves body 0.25-0.6 m",
+   "release keeps momentum"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "head_clip_fade",
+  "owner": "movement",
+  "tags": [
+   "comfort"
+  ],
+  "touches": [
+   "VR/HeadClipFade.cs"
+  ],
+  "covers": [
+   "fade > 0.5 with head in the floor, < 0.1 out"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "comfort_idle",
+  "owner": "rig",
+  "tags": [
+   "comfort",
+   "smoke",
+   "headset-critical"
+  ],
+  "touches": [
+   "VR/*.cs"
+  ],
+  "covers": [
+   "no view motion without input: swimming, PDA, builder"
+  ],
+  "cannot_cover": [
+   "nausea over time"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "ui_contexts",
+  "owner": "readability",
+  "tags": [
+   "ui",
+   "comfort",
+   "headset-critical"
+  ],
+  "touches": [
+   "VR/HudComfort.cs",
+   "VR/ButtonLegend*.cs",
+   "VR/WristComputer.cs"
+  ],
+  "covers": [
+   "label budgets",
+   "text >= 0.5 deg",
+   "no head-locked canvases"
+  ],
+  "cannot_cover": [
+   "text readability at lens resolution"
+  ],
+  "shots": [
+   {
+    "moment": "swimming",
+    "question": "Is anything floating that has a physical home?"
+   },
+   {
+    "moment": "wrist-glance",
+    "question": "Is the wrist computer readable at full contrast?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "seamoth_enter_exit",
+  "owner": "vehicles",
+  "tags": [
+   "vehicles",
+   "comfort"
+  ],
+  "touches": [
+   "VR/Vehicle*.cs",
+   "VR/CockpitHeadLimit.cs"
+  ],
+  "covers": [
+   "board/eject cuts covered by the blink",
+   "cockpit UI checks"
+  ],
+  "cannot_cover": [
+   "feel and effort over minutes"
+  ],
+  "shots": [
+   {
+    "moment": "seated",
+    "question": "Are the dash stats readable, hands on the controls?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "seamoth_head_limit",
+  "owner": "vehicles",
+  "tags": [
+   "vehicles",
+   "comfort"
+  ],
+  "touches": [
+   "VR/CockpitHeadLimit.cs"
+  ],
+  "covers": [
+   "head out of cockpit goes black",
+   "never stuck dark"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "lifepod_hatch",
+  "owner": "movement",
+  "tags": [
+   "climb",
+   "locomotion"
+  ],
+  "touches": [
+   "VR/VRClimbing.cs"
+  ],
+  "covers": [
+   "out through the top hatch by hand"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "crouch_knees",
+  "owner": "body",
+  "tags": [
+   "body"
+  ],
+  "touches": [
+   "VR/VRFullBody.cs",
+   "VR/HeightCalibration.cs"
+  ],
+  "covers": [
+   "feet stay put when crouching"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "look-down-55",
+    "question": "Is the body below the eyes, hands on the controllers, holsters visible?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "craft_panel_lifepod",
+  "owner": "machines",
+  "tags": [
+   "machines",
+   "ui"
+  ],
+  "touches": [
+   "VR/CraftPanel.cs",
+   "VR/MachinePanel.cs"
+  ],
+  "covers": [
+   "fabricator opens the mod's panel, game menu hidden"
+  ],
+  "cannot_cover": [
+   "text readability at lens resolution"
+  ],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "containers_lifepod",
+  "owner": "machines",
+  "tags": [
+   "containers",
+   "grab",
+   "interaction"
+  ],
+  "touches": [
+   "VR/Container*.cs",
+   "VR/ReachToOpen.cs",
+   "VR/DropIntoContainers.cs"
+  ],
+  "covers": [
+   "glance label",
+   "reach-open",
+   "shelves",
+   "stash without also opening"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "glance",
+    "question": "Is the label on the door side, readable, not through walls?"
+   }
+  ],
+  "minutes": 2,
+  "needs_restart": false
+ },
+ {
+  "name": "lifepod_extinguisher",
+  "owner": "machines",
+  "tags": [
+   "grab"
+  ],
+  "touches": [
+   "VR/ReachToOpen.cs"
+  ],
+  "covers": [
+   "gripping the wall extinguisher draws it"
+  ],
+  "cannot_cover": [],
+  "shots": [],
+  "minutes": 2,
+  "needs_restart": false
+ }
+]

@@ -1,0 +1,48 @@
+[
+ {
+  "id": "holster_draw",
+  "game_action": "QuickSlots.SlotKeyDown",
+  "contexts": [
+   "on_foot",
+   "swimming"
+  ],
+  "form": "physical",
+  "replaces": [
+   "OpenQuickSlotWheel",
+   "CycleNext",
+   "CyclePrev"
+  ],
+  "in_preset": true,
+  "owner": "body",
+  "scenario": "holster_draw_stow"
+ },
+ {
+  "id": "thigh_pda",
+  "game_action": "PDA.Open",
+  "contexts": [
+   "on_foot",
+   "swimming"
+  ],
+  "form": "physical",
+  "replaces": [
+   "PDA"
+  ],
+  "in_preset": true,
+  "owner": "body",
+  "scenario": "pda_assign"
+ },
+ {
+  "id": "pull_deconstruct",
+  "game_action": "BuilderTool.HandleInput",
+  "contexts": [
+   "building"
+  ],
+  "form": "physical",
+  "replaces": [
+   "Deconstruct"
+  ],
+  "in_preset": false,
+  "owner": "building",
+  "scenario": "builder_bisect"
+ }
+]

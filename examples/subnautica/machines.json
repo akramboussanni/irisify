@@ -1,0 +1,32 @@
+{
+ "machines": {
+  "mac": {
+   "roles": [
+    "dev"
+   ],
+   "link": "local",
+   "os": "macos"
+  },
+  "fedora": {
+   "roles": [
+    "game-host",
+    "rig"
+   ],
+   "link": "ssh",
+   "host": "user@rig-laptop",
+   "os": "linux",
+   "headset": "frame_controller",
+   "game_dir": "~/.local/share/Steam/steamapps/common/Subnautica"
+  },
+  "frame": {
+   "roles": [
+    "headset",
+    "game-host"
+   ],
+   "link": "ssh",
+   "host": "frame",
+   "os": "linux",
+   "headset": "frame_controller"
+  }
+ }
+}

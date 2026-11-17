@@ -1,0 +1,8 @@
+[
+ {"id": "example_draw", "game_action": "Game.Function", "contexts": ["on_foot"], "form": "physical",
+  "input": {"hand": "right", "gesture": "grip_at_spot", "spot": "right_hip"}, "when_holding": "nothing",
+  "replaces": ["OpenWheel"], "frequency": "high", "in_preset": true,
+  "discoverability": {"seen": "tool model on the hip", "taught": "hint on first bind"},
+  "immersion": {"verdict": "physical", "why": "reaching to the hip is faster than a menu"},
+  "feedback": ["haptic tick on enter", "ghost on spot"], "owner": "body", "scenario": "holster_draw_stow"}
+]

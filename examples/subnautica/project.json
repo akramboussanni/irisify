@@ -1,0 +1,25 @@
+{
+ "game": "Subnautica",
+ "steam_appid": 264710,
+ "engine": "unity-mono",
+ "integration_branch": "deep-vr",
+ "log_path": "~/.local/share/Steam/steamapps/common/Subnautica/BepInEx/LogOutput.log",
+ "build": {
+  "cmd": "export DOTNET_ROOT=~/.dotnet PATH=~/.dotnet:$PATH && cd SubmersedVR && dotnet build -nologo -v q",
+  "output": "SubmersedVR/build",
+  "stamp_to": "SubmersedVR/build/BepInEx/plugins/irisify/build.json"
+ },
+ "deploy": {
+  "refuse_if_running": "pgrep -f '^[A-Z]:.*Subnautica\\.exe'"
+ },
+ "rig": {
+  "rig_dir": "~/.local/share/Steam/steamapps/common/Subnautica/BepInEx/testrig",
+  "start": "~/vr-rig/rig-launch.sh",
+  "stop": "~/vr-rig/rig-stop.sh",
+  "patch_line": "loaded and patches applied! \\((\\d+) patch classes\\)",
+  "load": {
+   "cmd": "load",
+   "slot": "slot9000"
+  }
+ }
+}

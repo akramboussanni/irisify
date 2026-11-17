@@ -1,0 +1,371 @@
+{
+ "game": "Subnautica",
+ "action_set": "/actions/subnautica",
+ "app_key": "steam.app.264710",
+ "actions": [
+  {
+   "name": "Move",
+   "type": "vector2",
+   "label": "Move"
+  },
+  {
+   "name": "Look",
+   "type": "vector2",
+   "label": "Turn"
+  },
+  {
+   "name": "UIScroll",
+   "type": "vector2",
+   "label": "Scroll"
+  },
+  {
+   "name": "Jump",
+   "type": "boolean",
+   "label": "Jump"
+  },
+  {
+   "name": "PDA",
+   "type": "boolean",
+   "label": "PDA"
+  },
+  {
+   "name": "Deconstruct",
+   "type": "boolean",
+   "label": "Take apart"
+  },
+  {
+   "name": "Exit",
+   "type": "boolean",
+   "label": "Get out"
+  },
+  {
+   "name": "LeftHand",
+   "type": "boolean",
+   "label": "Interact"
+  },
+  {
+   "name": "RightHand",
+   "type": "boolean",
+   "label": "Use tool"
+  },
+  {
+   "name": "AltTool",
+   "type": "boolean",
+   "label": "Alt tool"
+  },
+  {
+   "name": "Reload",
+   "type": "boolean",
+   "label": "Reload"
+  },
+  {
+   "name": "CycleNext",
+   "type": "boolean",
+   "label": "Next"
+  },
+  {
+   "name": "CyclePrev",
+   "type": "boolean",
+   "label": "Previous"
+  },
+  {
+   "name": "UISubmit",
+   "type": "boolean",
+   "label": "Select"
+  },
+  {
+   "name": "UICancel",
+   "type": "boolean",
+   "label": "Back"
+  },
+  {
+   "name": "UIMenu",
+   "type": "boolean",
+   "label": "Pause"
+  },
+  {
+   "name": "UIAssign",
+   "type": "boolean",
+   "label": "Put on body"
+  },
+  {
+   "name": "UIPrevTab",
+   "type": "boolean",
+   "label": "Prev tab"
+  },
+  {
+   "name": "UINextTab",
+   "type": "boolean",
+   "label": "Next tab"
+  },
+  {
+   "name": "UIClear",
+   "type": "boolean",
+   "label": "Pin recipe"
+  },
+  {
+   "name": "OpenQuickSlotWheel",
+   "type": "boolean",
+   "label": "Quick slots"
+  },
+  {
+   "name": "MoveUp",
+   "type": "boolean",
+   "label": "Grab",
+   "role": "grab"
+  },
+  {
+   "name": "MoveDown",
+   "type": "boolean",
+   "label": "Grab",
+   "role": "grab"
+  },
+  {
+   "name": "BuilderRotateLeft",
+   "type": "boolean",
+   "label": "Rotate"
+  },
+  {
+   "name": "BuilderRotateRight",
+   "type": "boolean",
+   "label": "Rotate"
+  },
+  {
+   "name": "LeftHandPose",
+   "type": "pose",
+   "hand": "left"
+  },
+  {
+   "name": "RightHandPose",
+   "type": "pose",
+   "hand": "right"
+  },
+  {
+   "name": "LeftHandSkeleton",
+   "type": "skeleton",
+   "hand": "left"
+  },
+  {
+   "name": "RightHandSkeleton",
+   "type": "skeleton",
+   "hand": "right"
+  },
+  {
+   "name": "HapticsLeft",
+   "type": "vibration",
+   "hand": "left"
+  },
+  {
+   "name": "HapticsRight",
+   "type": "vibration",
+   "hand": "right"
+  }
+ ],
+ "dropped": [
+  {
+   "name": "TakePicture",
+   "why": "no use in VR"
+  },
+  {
+   "name": "MoveForward",
+   "why": "the stick's position covers it"
+  },
+  {
+   "name": "MoveBackward",
+   "why": "stick"
+  },
+  {
+   "name": "MoveLeft",
+   "why": "stick"
+  },
+  {
+   "name": "MoveRight",
+   "why": "stick"
+  },
+  {
+   "name": "LookUp",
+   "why": "the game ignores look pitch in VR"
+  },
+  {
+   "name": "LookDown",
+   "why": "same"
+  },
+  {
+   "name": "LookLeft",
+   "why": "snap turn on the right stick"
+  },
+  {
+   "name": "LookRight",
+   "why": "snap turn"
+  },
+  {
+   "name": "Sprint",
+   "why": "full left-stick tilt runs (lessons D2)"
+  },
+  {
+   "name": "UIAdjustLeft",
+   "why": "laser on sliders"
+  },
+  {
+   "name": "UIAdjustRight",
+   "why": "laser on sliders"
+  },
+  {
+   "name": "UILeft",
+   "why": "laser"
+  },
+  {
+   "name": "UIRight",
+   "why": "laser"
+  },
+  {
+   "name": "UIUp",
+   "why": "laser"
+  },
+  {
+   "name": "UIDown",
+   "why": "laser"
+  },
+  {
+   "name": "DebugToggle",
+   "why": "dev only"
+  }
+ ],
+ "contexts": {
+  "on_foot": {
+   "left": {
+    "thumbstick": {
+     "position": "Move",
+     "click": "Jump"
+    },
+    "trigger": "LeftHand",
+    "grip": "MoveDown",
+    "view": "UIMenu",
+    "dpad_down": "Reload"
+   },
+   "right": {
+    "thumbstick": {
+     "position": "Look"
+    },
+    "trigger": "RightHand",
+    "grip": "MoveUp",
+    "a": [
+     {
+      "click": "LeftHand"
+     }
+    ],
+    "b": "Exit"
+   }
+  },
+  "swimming": {
+   "left": {
+    "thumbstick": {
+     "position": "Move",
+     "click": "Jump"
+    },
+    "trigger": "LeftHand",
+    "grip": "MoveDown",
+    "view": "UIMenu",
+    "dpad_down": "Reload"
+   },
+   "right": {
+    "thumbstick": {
+     "position": "Look"
+    },
+    "trigger": "RightHand",
+    "grip": "MoveUp",
+    "a": [
+     {
+      "click": "LeftHand"
+     }
+    ],
+    "b": "Exit"
+   }
+  },
+  "seamoth": {
+   "left": {
+    "thumbstick": {
+     "position": "Move"
+    },
+    "trigger": "LeftHand",
+    "grip": "MoveDown",
+    "dpad_left": "CyclePrev",
+    "dpad_right": "CycleNext",
+    "view": "UIMenu"
+   },
+   "right": {
+    "thumbstick": {
+     "position": "Look"
+    },
+    "trigger": "RightHand",
+    "grip": "MoveUp",
+    "b": "Exit"
+   }
+  },
+  "prawn": {
+   "left": {
+    "thumbstick": {
+     "position": "Move"
+    },
+    "trigger": "LeftHand",
+    "grip": "MoveDown",
+    "view": "UIMenu"
+   },
+   "right": {
+    "thumbstick": {
+     "position": "Look"
+    },
+    "trigger": "RightHand",
+    "a": "AltTool",
+    "b": "Exit",
+    "grip": "MoveUp"
+   }
+  },
+  "pda": {
+   "left": {
+    "bumper": "UIPrevTab",
+    "dpad_down": "UIClear",
+    "view": "UIMenu",
+    "dpad_up": "PDA"
+   },
+   "right": {
+    "thumbstick": {
+     "position": "UIScroll"
+    },
+    "trigger": "UISubmit",
+    "a": "UISubmit",
+    "b": "UICancel",
+    "y": "UIAssign",
+    "bumper": "UINextTab",
+    "grip": "MoveUp"
+   }
+  },
+  "building": {
+   "left": {
+    "thumbstick": {
+     "position": "Move"
+    },
+    "trigger": "LeftHand",
+    "grip": "MoveDown",
+    "dpad_left": "BuilderRotateLeft",
+    "dpad_right": "BuilderRotateRight"
+   },
+   "right": {
+    "thumbstick": {
+     "position": "Look"
+    },
+    "trigger": "RightHand",
+    "x": "Deconstruct",
+    "b": "UICancel",
+    "grip": "MoveUp"
+   }
+  },
+  "vehicle_menu": {
+   "right": {
+    "thumbstick": {
+     "click": "OpenQuickSlotWheel"
+    }
+   }
+  }
+ }
+}

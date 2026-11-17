@@ -1,0 +1,14 @@
+{
+ "name": "body",
+ "description": "Holsters, pouches, PDA, carry, throw, body and height",
+ "always": [
+  "boot"
+ ],
+ "include_tags": [
+  "body",
+  "holsters",
+  "pda",
+  "carry"
+ ],
+ "exclude_tags": []
+}

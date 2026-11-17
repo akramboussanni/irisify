@@ -1,0 +1,26 @@
+{
+ "game": "Game", "action_set": "/actions/game", "app_key": "steam.app.0",
+ "actions": [
+  {"name": "Move", "type": "vector2", "label": "Move"},
+  {"name": "Turn", "type": "vector2", "label": "Turn"},
+  {"name": "Interact", "type": "boolean", "label": "Interact"},
+  {"name": "UseTool", "type": "boolean", "label": "Use tool"},
+  {"name": "GrabLeft", "type": "boolean", "role": "grab", "label": "Grab"},
+  {"name": "GrabRight", "type": "boolean", "role": "grab", "label": "Grab"},
+  {"name": "Exit", "type": "boolean", "label": "Get out"},
+  {"name": "Menu", "type": "boolean", "label": "Pause"},
+  {"name": "LeftHandPose", "type": "pose", "hand": "left"},
+  {"name": "RightHandPose", "type": "pose", "hand": "right"},
+  {"name": "LeftSkeleton", "type": "skeleton", "hand": "left"},
+  {"name": "RightSkeleton", "type": "skeleton", "hand": "right"},
+  {"name": "HapticsLeft", "type": "vibration", "hand": "left"},
+  {"name": "HapticsRight", "type": "vibration", "hand": "right"}
+ ],
+ "dropped": [],
+ "contexts": {
+  "on_foot": {
+   "left": {"thumbstick": {"position": "Move"}, "trigger": "Interact", "grip": "GrabLeft", "view": "Menu"},
+   "right": {"thumbstick": {"position": "Turn"}, "trigger": "UseTool", "grip": "GrabRight", "a": "Interact", "b": "Exit"}
+  }
+ }
+}

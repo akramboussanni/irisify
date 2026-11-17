@@ -85,19 +85,22 @@ def select(project, suite, scenario=None, seed=None, files=None):
     smoke = [n for n, s in meta.items() if "smoke" in s["tags"]]
     if suite in suites:
         d = suites[suite]
-        names = list(d.get("always", []))
-        names += [n for n, s in meta.items() if set(s["tags"]) & set(d.get("include_tags", []))
-                  and not set(s["tags"]) & set(d.get("exclude_tags", []))]
+        inc, exc = set(d.get("include_tags", [])), set(d.get("exclude_tags", []))
+        always = [n for n in d.get("always", []) if n in meta or n == "boot"]
+        names = [n for n, s in meta.items() if ("*" in inc or set(s["tags"]) & inc) and not set(s["tags"]) & exc]
         names += d.get("scenarios", [])
+        names = [n for n in order(names, meta) if n not in always]
+        add(always, "always")
         add(names, f"suite {suite}")
-        sel = order(names, meta)
-        sel = sel * int(d.get("repeat", 1))
-        if d.get("interleave"):
-            sel = interleave(sel, d["interleave"])
+        sel = names * int(d.get("repeat", 1))
         if d.get("shuffle"):
             seed = seed if seed is not None else random.randrange(1 << 30)
-            random.Random(seed).shuffle(sel)
-        return {"suite": suite, "scenarios": sel, "why": why, "seed": seed}
+            first = names[:]
+            random.Random(seed).shuffle(first)
+            sel = first + names * (int(d.get("repeat", 1)) - 1)
+        if d.get("interleave"):
+            sel = interleave(sel, d["interleave"])
+        return {"suite": suite, "scenarios": always + sel, "why": why, "seed": seed}
     if suite == "smoke":
         add(smoke, "smoke")
     elif suite == "full":
