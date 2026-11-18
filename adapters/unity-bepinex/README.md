@@ -15,7 +15,7 @@ fix the namespace, and fill in the marked hook points.
 | `Rig/RigHost.cs` | command channel, results writer, scenario registry; off unless `IRISIFY_RIG=1` | A9 |
 | `Rig/ScriptedInput.cs` | virtual hands, queued button edges | A8 |
 | `Rig/ComfortMonitor.cs` | snap / tilt / turn / drift events, added to every scenario | E9 |
-| `Rig/ViewChecks.cs` | own body near the eye, one held model per hand, body model near a busy hand, duplicated info, edge-band text | A7, E12, E13 |
+| `Rig/ViewChecks.cs` | own body near the eye, one held model per hand, body model near a busy hand, duplicated info, edge-band text, slot model vs reach zone | A7, E12, E13, E15 |
 | `Body/SkeletonProbe.cs` | log every bone, hide by verified subtree, proportion checks | E12 |
 | `Rig/Capture.cs` | `<scenario>-<moment>.png` with the moment's question | A7 |
 

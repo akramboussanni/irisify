@@ -15,6 +15,8 @@ namespace Irisify.Rig
         public static Func<string, IEnumerable<GameObject>> HeldModels = hand => Enumerable.Empty<GameObject>();   // real held item + proxies, per hand
         public static Func<IEnumerable<GameObject>> BodyAttachments = () => Enumerable.Empty<GameObject>();       // holster/pouch/pocket models
         public static Func<IEnumerable<(string widget, string text, RectTransform rect)>> VisibleTexts = () => Enumerable.Empty<(string, string, RectTransform)>();
+        public static Func<IEnumerable<(string slot, GameObject model, Vector3 zoneCentre)>> BodySlots = () => Enumerable.Empty<(string, GameObject, Vector3)>();
+        public static float ModelToZone = 0.05f;
         public static float Clearance = 0.15f, ConeDegrees = 20f, BusyHandRadius = 0.20f, EdgeBandDegrees = 10f;
 
         public static void AddChecks(ScenarioContext ctx)
@@ -47,6 +49,12 @@ namespace Irisify.Rig
                                             .Select(a => a.name).ToList();
                 ctx.Expect($"view: no body model shown near the busy {hand} hand", near.Count == 0, near);
             }
+
+            // Grab where you see it: each shown slot model sits on its reach zone (lessons E15)
+            var off = BodySlots().Where(x => x.model != null && x.model.activeInHierarchy)
+                                 .Select(x => (x.slot, d: (x.model.transform.position - x.zoneCentre).magnitude))
+                                 .Where(x => x.d > ModelToZone).Select(x => $"{x.slot}: model {x.d * 100:0} cm from its zone").ToList();
+            ctx.Expect("view: every body slot's model is within 5 cm of its reach zone", off.Count == 0, off);
 
             // Same information on two widgets; text in the top/bottom edge bands
             var texts = VisibleTexts().Where(t => !string.IsNullOrWhiteSpace(t.text)).ToList();

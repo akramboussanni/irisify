@@ -521,6 +521,11 @@ The entries are grouped by the gap behind them, not by date. The last section tu
     camera or inside the central view cone (`Rig/ViewChecks.cs`).
   - In vehicles, shift the seated body (bounded, e.g. ≤ 30 cm) so its eye point matches the headset through the
     neck pivot.
+  - Unity games often hang the first-person model by its skeleton root at the camera, so the camera sits at the
+    model's neck base, and IK "head" targets (FinalIK `head_rig`) aren't the real head bone. Anchor the body
+    explicitly: the chest bone at a measured offset under and behind the eyes (Subnautica: 32 cm under, 10 cm behind,
+    scaled with height and smoothed), find the head and neck bones by name with safety checks, and log every
+    candidate.
 
 ### E13. Attachments that overlap read as one object
 - **What happened:** a screenshot showed "two things in one hand". It was the chest holster model lying across the
@@ -542,6 +547,13 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   headset's back strap at eye height drew a tool. False-trigger cases must include adjusting the headset strap and
   scratching the hair or neck. Any body-slot change keeps an A/B toggle (old vs new) and the reach-rate scenario, so
   the comparison is a number, not a feeling.
+
+### E15. Grab where you see it
+- **What happened:** after the body moved, a holstered model hung at belly height while its grab zone stayed at the
+  old hip height. The player reached for what they saw and got nothing.
+- **Root cause:** the visible models and the reach zones were placed by two pieces of code from two frames.
+- **What catches it up front:** one body frame places both (design step 5). `Rig/ViewChecks.cs` checks every body
+  slot in every scenario: the shown model is within ~5 cm of its zone's centre.
 
 ---
 

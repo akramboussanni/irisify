@@ -139,6 +139,11 @@ Read `vr-design.md` section 7. Decide and write down:
 - **The skeleton, verified:** bones resolved by verified subtree and logged at setup; head *and* neck collapsed when
   the full body shows (neck skin can be baked into the body mesh); proportions asserted; children of any moved bone
   listed (`lessons.md` E12).
+- **Anchor the body explicitly:** many Unity games hang the first-person model by its root at the camera (the camera
+  ends up at the neck base) and IK head targets aren't the real head. Put the chest bone at a measured offset under and
+  behind the eyes, and log every head/neck candidate (`lessons.md` E12).
+- **Grab where you see it:** the same body frame places each slot's visible model and its reach zone, within ~5 cm
+  (`lessons.md` E15).
 - **Seated in vehicles:** the seat pose rarely matches the player's eye height. Shift the seated body, bounded, so its
   eye point matches the headset through the neck pivot.
 - **Out-of-view slots** (shoulders, back): regions in the body frame with generous margins and distinct haptics, a
