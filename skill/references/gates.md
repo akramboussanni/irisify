@@ -50,7 +50,8 @@ If the agent can't run the game, ask the user to launch it **now** and paste or 
 - [ ] Feature scenario passes, plus a worst-case variant for content-heavy features (`irisify scenarios lint`).
 - [ ] Comfort, overwhelm and view checks pass (clearance, one held model per hand, no body model near a busy hand,
       no duplicated info, no text in the 10° edge bands).
-- [ ] Merged by the integrator in a batch; the **full** suite ran on the merged build (not just the feature's scenario).
+- [ ] Merged by the integrator in a batch; the affected scenarios (`auto`, with shared-core fan-out) ran on the merged
+      build, not just the feature's own scenario.
 - [ ] Movement changes log per-step physics (input → applied velocity → body speed).
 - [ ] Screenshot moments reviewed.
 - [ ] Discoverability row filled in. In the preset, or off with a reason.

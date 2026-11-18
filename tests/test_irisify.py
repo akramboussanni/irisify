@@ -131,6 +131,15 @@ class Suites(unittest.TestCase):
         self.assertNotIn("seamoth_enter_exit", sel["scenarios"])
         self.assertIn("boot", sel["scenarios"])  # smoke always
 
+    def test_shared_core_files_fan_out(self):
+        p = project()
+        cfg = {"core": [{"files": ["VR/BodyFrame.cs"], "tags": ["holsters"]}]}
+        p.write("project.json", cfg)
+        sel = suites.select(p, "changed", files=["SubmersedVR/VR/BodyFrame.cs"])
+        self.assertIn("holster_carry_release", sel["scenarios"])
+        self.assertTrue(sel["why"]["holster_carry_release"].startswith("shared"))
+        self.assertNotIn("swim_water_hold", sel["scenarios"])
+
     def test_flaky_hunt_interleaves(self):
         p = project()
         sel = suites.select(p, "flaky-hunt", scenario="builder_move", seed=1)
@@ -195,6 +204,7 @@ class RigClient(unittest.TestCase):
         os.makedirs(cmd)
         res = os.path.join(d, "results.jsonl")
         stop = threading.Event()
+        loads = []
 
         def game():
             while not stop.is_set():
@@ -202,11 +212,13 @@ class RigClient(unittest.TestCase):
                     if not f.endswith(".json"):
                         continue
                     for c in json.load(open(os.path.join(cmd, f))):
+                        if c["cmd"] == "load":
+                            loads.append(1)
                         if c["cmd"] == "scenario":
                             line = {"id": c["id"], "scenario": c["name"], "result": "FAIL" if c["name"] == "bad" else "PASS",
                                     "checks": [{"check": "x", "ok": c["name"] != "bad"}]}
                         else:
-                            line = {"id": c["id"], "cmd": c["cmd"], "ok": True, "data": {"mainMenu": True}}
+                            line = {"id": c["id"], "cmd": c["cmd"], "ok": True, "data": {"scene": "game" if loads else "menu", "slot": "slot9000" if loads else None}}
                         open(res, "a").write(json.dumps(line) + "\n")
                     os.remove(os.path.join(cmd, f))
                 time.sleep(0.05)
@@ -214,7 +226,7 @@ class RigClient(unittest.TestCase):
         t = threading.Thread(target=game, daemon=True)
         t.start()
         cfg = os.path.join(d, "rig.json")
-        json.dump({"rig_dir": d, "scenario_timeout": 10}, open(cfg, "w"))
+        json.dump({"rig_dir": d, "scenario_timeout": 10, "load": {"cmd": "load", "slot": "slot9000"}}, open(cfg, "w"))
         p = subprocess.run([sys.executable, os.path.join(REPO, "tools", "rig", "rigclient.py"), "--config", cfg, "run",
                             "--scenarios", "good,bad,good", "--run-id", "r1", "--build", '{"id": "b1"}'], capture_output=True, text=True, timeout=60)
         stop.set()
@@ -223,6 +235,8 @@ class RigClient(unittest.TestCase):
         self.assertEqual(len(runs), 1)
         self.assertEqual([s["scenario"] for s in runs[0]["scenarios"]], ["good", "bad", "good#2"])
         self.assertEqual(runs[0]["header"]["build"]["id"], "b1")
+        self.assertEqual(len(loads), 1, "the test save is loaded once, not per scenario")
+        self.assertTrue(all("seconds" in s for s in runs[0]["scenarios"]))
 
 
 class SkillCopy(unittest.TestCase):

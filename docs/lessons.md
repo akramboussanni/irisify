@@ -163,8 +163,14 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   (B3). Each fix passed its own scenario.
 - **Root cause:** the fix was verified against the scenario for the bug, not against everything else it touches.
   Physics changes interact through shared state (velocity, colliders, the motor).
-- **What catches it up front:** the **full suite runs after every merge**, and `irisify deploy` to a headset or game
-  host refuses a build without a green full or nightly run on that exact commit. Movement code keeps per-step physics
+- **What catches it up front:** every merge runs the scenarios **affected by the changed files**, using a file →
+  scenario map in which shared core files (body frame, input claims, settings, the motor) fan out to everything that
+  depends on them. `irisify deploy` to a headset or game host refuses a build without a green full or nightly run on
+  that exact commit, so the full suite is the gate before the human's turn.
+- **Correction from the user ("why are we testing everything"):** running the full suite after every merge made the
+  loop slow. Targeted runs per merge, the full suite only before a headset deploy, one game process kept alive
+  across scenarios (load the test save once, teleport between scenarios, never relaunch), and time reported per
+  scenario so the slow ones are visible. Movement code keeps per-step physics
   diagnostics (input → applied velocity → body speed, per physics step, in the log), so "logged but didn't move" is
   visible in one line.
 
@@ -172,7 +178,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **What happened:** verifying each branch on its own, one at a time on a single game instance, queued everything
   behind the rig.
 - **What catches it up front:** owners *request* a merge (`.irisify/integrate.json`). The integrator batch-merges
-  every ready branch into the integration branch, builds once and runs one full suite per build. A failure goes
+  every ready branch into the integration branch, builds once and runs the affected scenarios once per build. A failure goes
   back to its owner with the evidence; a conflict drops only that branch from the batch. The headset is the human's
   turn only after everything testable passes.
 
@@ -618,8 +624,9 @@ The entries are grouped by the gap behind them, not by date. The last section tu
    reading notes.
 8. **Physical when it's better, abstract when physical is tedious.** Immersion is the test, not realism.
 9. **One writer per target.** Branches for workers, one integrator deploys, every build stamped.
-10. **Test the worst case, run everything after every merge.** A fix checked only by its own scenario breaks
-    something else. No headset deploy without a green full suite on that commit.
+10. **Test the worst case, and test what a change touches.** A fix checked only by its own scenario breaks something
+    else, so map files to scenarios with shared files fanning out. No headset deploy without a green full suite on
+    that commit.
 11. **Diegetic means the game's own surfaces first.** Render onto existing screens before adding a panel.
 12. **Test what the player knows, not where the hand goes.** A geometric pass rate on an out-of-view mechanic says
     nothing about intuitiveness: judge intent, give feedback at the hand, and ask the human.

@@ -168,7 +168,13 @@ def cmd_suite(a):
             print(f"  {n:<28} {sel['why'].get(n, '')}")
         return
     res = runner.run_suite(p, a.name, a.machine, a.scenario, a.seed)
-    out(res, True)
+    if a.json:
+        return out(res, True)
+    print(f"{a.name} on {a.machine}: run {res.get('run')} rc={res.get('rc')} (planned ~{res['minutes']} min)")
+    for rid in res.get("imported", []):
+        r = p.read(os.path.join("runs", rid, "run.json")) or {}
+        for sc in sorted(r.get("scenarios", []), key=lambda x: -(x.get("seconds") or 0)):
+            print(f"  {(sc.get('seconds') or 0):7.1f}s  {sc['result']:<5} {sc['scenario']}")
 
 
 def cmd_sync(a):
@@ -400,7 +406,7 @@ def main(argv=None):
     s.set_defaults(f=cmd_deploy)
 
     s = sub.add_parser("integrate", help="merge, build, deploy to the rig, run a suite")
-    s.add_argument("--branches"); s.add_argument("--suite", default="full"); s.add_argument("--rig"); s.add_argument("--force")
+    s.add_argument("--branches"); s.add_argument("--suite", default="auto"); s.add_argument("--rig"); s.add_argument("--force")
     s.set_defaults(f=cmd_integrate)
 
     s = sub.add_parser("verify-branch", help="test a worker's branch on the rig without touching it")

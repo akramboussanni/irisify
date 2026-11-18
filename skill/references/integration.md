@@ -29,7 +29,8 @@ one owner.
 
 ## Merges are batched
 Owners *request* a merge by adding their branch to `.irisify/integrate.json`. They never merge themselves. The
-integrator merges every ready branch in one batch, builds once and runs **one full suite per build**. One queue per
+integrator merges every ready branch in one batch, builds once and runs **the affected scenarios** (`auto`) once per
+build. The full suite runs only as the gate before a headset deploy. One queue per
 branch on a single game instance was the bottleneck on Subnautica (`lessons.md` A12). The headset is the human's turn
 only after everything testable passes.
 
@@ -37,7 +38,9 @@ only after everything testable passes.
 1. Fetch. For each ready branch, in the order in `.irisify/integrate.json`: merge into the integration branch.
    Stop on a conflict and route it to the branch owner.
 2. Build. Stamp `build.json` (git describe, branch, time, merged branches).
-3. Deploy to the rig (lock, install, unlock). Run the `smoke` suite, then the `full` suite.
+3. Deploy to the rig (lock, install, unlock). Run `auto`: smoke, the scenarios the changed files touch (with shared
+   core files fanning out through `core` in `.irisify/project.json`) and recent failures. One game process stays up
+   for the whole run.
 4. Write the run to `.irisify/runs/<build>/`. The dashboard picks it up.
 5. Route each failure to its owner (the scenario's `owner`), with check values, log lines, screenshots and the start
    state. Write it to `.irisify/issues.jsonl`.

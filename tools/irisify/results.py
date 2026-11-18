@@ -107,7 +107,7 @@ def normalise_scenario(sc, meta):
     return {
         "scenario": name, "base": base_name(name), "result": sc.get("result"), "detail": sc.get("detail", ""),
         "checks": sc.get("checks", []), "shots": shots, "log": sc.get("log", [])[-60:],
-        "errors": sc.get("errors", []), "startState": sc.get("startState"),
+        "errors": sc.get("errors", []), "startState": sc.get("startState"), "seconds": sc.get("seconds"),
         "owner": sc.get("owner") or info.get("owner"), "covers": sc.get("covers") or info.get("covers", []),
         "cannot_cover": sc.get("cannot_cover") or info.get("cannot_cover", []),
         "metrics": dict(sc.get("metrics") or {}, comfort_events=comfort_events(sc), **{f"check:{k}": v for k, v in numeric_checks(sc).items()}),

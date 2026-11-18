@@ -127,3 +127,19 @@ Irisify generalizes the Subnautica rig (`tools/rig/`, `adapters/unity-bepinex/`)
   log lines and goes on.
 - **Runner-side checks** that need restarts: `boot` (cold start to the menu, no exceptions, all patches applied) and
   `settings_roundtrip` / `settings_migration`.
+
+## 10. Run what a change touches, and keep the game up
+
+- **File → scenario map.** Each scenario lists the files it `touches`. Shared core files fan out to their dependents
+  through `core` in `.irisify/project.json`:
+  ```json
+  "core": [{"files": ["VR/BodyFrame.cs", "VR/HolsterLayout.cs"], "tags": ["body", "holsters"]},
+           {"files": ["Input/InputClaims.cs", "Input/GripRouting.cs"], "tags": ["input", "grab", "locomotion"]},
+           {"files": ["Settings*.cs", "SettingsMigration.cs"], "tags": ["settings"]}]
+  ```
+  `irisify suite plan auto` shows each scenario with why it's in ("touches X", "shared X", "FAIL on <build>").
+- **Per merge: `auto`. Before the headset: `full`.** `irisify deploy` to a headset refuses without a green full run.
+- **One game process.** The rig client loads the test save only when it isn't loaded already, and scenarios teleport
+  within it. Restarts are for `boot`, settings round-trips and crashes.
+- **Time per scenario.** The rig client records seconds per scenario and prints the slowest first. Suite estimates
+  use measured times, so a slow scenario shows up in the plan before you run it.

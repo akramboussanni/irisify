@@ -154,13 +154,22 @@ def boot(rig, run):
     return checks
 
 
+def loaded(rig):
+    want = rig.cfg["load"].get("slot")
+    try:
+        d = rig.send({"cmd": "dump"}, timeout=15)[-1].get("data", {})
+    except TimeoutError:
+        return False
+    return d.get("scene") == "game" and (want is None or d.get("slot") == want)
+
+
 def run_scenarios(rig, args):
     build = json.loads(args.build) if args.build else {}
     names = [n for n in args.scenarios.split(",") if n]
     run = {"type": "run", "id": args.run_id, "build": build, "suite": args.suite, "machine": args.machine,
            "scenarios": names, "seed": args.seed, "started": time.time()}
     rig.append(run)
-    summary, seen = {}, {}
+    summary, seen, seconds = {}, {}, {}
     for name in names:
         seen[name] = seen.get(name, 0) + 1
         label = name if seen[name] == 1 else f"{name}#{seen[name]}"
@@ -175,7 +184,9 @@ def run_scenarios(rig, args):
             rig.append({"scenario": label, "result": "CRASH", "detail": "game did not come up", "run": args.run_id, "build": build})
             summary[label] = "CRASH"
             continue
-        if rig.cfg.get("load"):
+        if rig.cfg.get("load") and not loaded(rig):
+            # One game process for the whole run: load the test save only when it isn't already loaded;
+            # scenarios teleport within it instead of relaunching.
             try:
                 rig.send(dict(rig.cfg["load"]), timeout=700)
             except TimeoutError:
@@ -194,6 +205,7 @@ def run_scenarios(rig, args):
             res["via"] = "rigclient"  # the importer replaces the adapter's own line with this labelled copy
             rig.append(res)
             summary[label] = res.get("result")
+            seconds[label] = res["seconds"]
         except TimeoutError:
             tail = rig.log_since(off).splitlines()[-30:]
             rig.append({"scenario": label, "result": "CRASH", "detail": "no answer; game restarted", "log": tail,
@@ -203,8 +215,10 @@ def run_scenarios(rig, args):
     counts = {}
     for v in summary.values():
         counts[v] = counts.get(v, 0) + 1
-    rig.append({"summary": summary, **counts, "run": args.run_id, "t": time.time()})
-    print(json.dumps({"run": args.run_id, "summary": summary, "counts": counts}))
+    rig.append({"summary": summary, **counts, "seconds": seconds, "run": args.run_id, "t": time.time()})
+    for k, v in sorted(seconds.items(), key=lambda kv: -kv[1]):
+        print(f"{v:7.1f}s  {summary.get(k)}  {k}", file=sys.stderr)
+    print(json.dumps({"run": args.run_id, "summary": summary, "counts": counts, "seconds": seconds}))
     return 0 if not counts.get("FAIL") and not counts.get("CRASH") else 1
 
 

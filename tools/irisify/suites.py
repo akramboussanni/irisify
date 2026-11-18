@@ -113,8 +113,14 @@ def select(project, suite, scenario=None, seed=None, files=None):
         if files is None:
             add(meta.keys(), "no green build to diff against: everything")
         else:
+            # Shared core files fan out to their dependents: project.json "core": [{"files": [...], "tags": [...]}]
+            for rule in project.config().get("core", []):
+                hit = next((f for f in files for pat in rule.get("files", []) if _match(f, pat)), None)
+                if hit:
+                    tags = set(rule.get("tags", []))
+                    add([n for n, s in meta.items() if "*" in tags or set(s["tags"]) & tags], f"shared {hit}")
             for n, s in meta.items():
-                hits = [f for f in files for pat in s.get("touches", []) if fnmatch.fnmatch(f, pat) or fnmatch.fnmatch(f, "*/" + pat) or fnmatch.fnmatch(os.path.basename(f), pat)]
+                hits = [f for f in files for pat in s.get("touches", []) if _match(f, pat)]
                 if hits:
                     add([n], f"touches {hits[0]}")
                 elif any(t in s["tags"] for t in ("settings", "input")) and any(f.endswith(("Settings.cs", ".json")) for f in files):
@@ -141,6 +147,22 @@ def select(project, suite, scenario=None, seed=None, files=None):
     return {"suite": suite, "scenarios": order(why.keys(), meta), "why": why, "seed": seed}
 
 
+def _match(f, pat):
+    return fnmatch.fnmatch(f, pat) or fnmatch.fnmatch(f, "*/" + pat) or fnmatch.fnmatch(os.path.basename(f), pat)
+
+
+def measured_seconds(project):
+    """Median measured seconds per scenario from past runs (rigclient records them)."""
+    import statistics
+    seen = {}
+    for r in results.list_runs(project)[-30:]:
+        for sc in r["scenarios"]:
+            v = sc.get("seconds") or (sc.get("metrics") or {}).get("seconds")
+            if isinstance(v, (int, float)):
+                seen.setdefault(sc["base"], []).append(v)
+    return {k: statistics.median(v) for k, v in seen.items()}
+
+
 def interleave(names, x):
     out = [x]
     for n in names:
@@ -150,8 +172,15 @@ def interleave(names, x):
 
 
 def estimate_minutes(project, names):
+    """Measured time where we have it, the scenario's own estimate otherwise."""
     meta = load_scenarios(project)
-    return round(sum(meta.get(n, {}).get("minutes", 2) for n in names) + 1.5 * sum(1 for n in names if meta.get(n, {}).get("needs_restart")), 1)
+    sec = measured_seconds(project)
+    total = 0.0
+    for n in names:
+        total += sec[n] / 60 if n in sec else meta.get(n, {}).get("minutes", 2)
+        if meta.get(n, {}).get("needs_restart") and n not in sec:
+            total += 1.5
+    return round(total, 1)
 
 
 CONTENT_TAGS = ("ui", "containers", "machines", "pda", "building")

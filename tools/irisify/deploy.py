@@ -128,9 +128,11 @@ def require_full_suite(project, commit, force=None):
                      "Run `irisify integrate` (deploys to the rig and runs the full suite) or `irisify suite run full` first.")
 
 
-def integrate(project, branches=None, force=None, suite="full", rig=None):
-    """Batch-merge every ready branch into the integration branch, build once, deploy to the rig, run the full suite
-    (lessons A11, A12). Owners request merges in .irisify/integrate.json; a conflict drops only that branch."""
+def integrate(project, branches=None, force=None, suite="auto", rig=None):
+    """Batch-merge every ready branch into the integration branch, build once, deploy to the rig and run what the
+    merge affects (`auto`: smoke + changed files' scenarios with shared-core fan-out + recent failures). The full
+    suite is the gate before a headset deploy, not a per-merge step (lessons A11, A12). Owners request merges in
+    .irisify/integrate.json; a conflict drops only that branch."""
     from . import runner
     workflow.require(project, "integrate", force)
     cfg = project.config()

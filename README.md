@@ -99,11 +99,11 @@ cover, screenshot moments with questions). Suites pick from them, so you don't r
 | Suite | What | When |
 |---|---|---|
 | `smoke` | boot, input, one mechanic per area | after every deploy |
-| `auto` | smoke + scenarios whose files changed since the last green build + recent failures and flaky ones | after every change (the default) |
+| `auto` | smoke + scenarios whose files changed (shared core files fan out to dependents) + recent failures and flaky ones | after every change and every merge (the default) |
 | `changed` / `regression` | the two halves of `auto` | |
 | area suites (`locomotion`, `body`, `interaction`, `building`, `vehicles`, `ui`, `comfort`) | by tag | working on one area |
 | `pre-headset` | smoke + comfort + UI + `headset-critical` | before the human puts the headset on |
-| `full` | everything, cheap first | before a release |
+| `full` | everything, cheap first | the gate before a headset deploy |
 | `nightly` | everything shuffled with a logged seed, then again in order | catches state leaking between tests |
 | `flaky-hunt --scenario X` | X between every other test | an intermittent bug |
 

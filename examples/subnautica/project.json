@@ -21,5 +21,56 @@
    "cmd": "load",
    "slot": "slot9000"
   }
- }
+ },
+ "core": [
+  {
+   "files": [
+    "VR/BodyFrame.cs",
+    "VR/HolsterLayout.cs",
+    "VR/VRFullBody.cs",
+    "VR/HeightCalibration.cs"
+   ],
+   "tags": [
+    "body",
+    "holsters",
+    "pda",
+    "carry"
+   ]
+  },
+  {
+   "files": [
+    "Input/InputClaims.cs",
+    "Input/GripRouting.cs",
+    "Input/SteamVrGameInput.cs"
+   ],
+   "tags": [
+    "input",
+    "grab",
+    "locomotion",
+    "holsters",
+    "containers"
+   ]
+  },
+  {
+   "files": [
+    "Settings.cs",
+    "Settings*.cs",
+    "SettingsMigration.cs"
+   ],
+   "tags": [
+    "settings"
+   ]
+  },
+  {
+   "files": [
+    "VR/MachinePanel.cs",
+    "VR/ReadableUi.cs"
+   ],
+   "tags": [
+    "ui",
+    "machines",
+    "containers"
+   ]
+  }
+ ]
 }
