@@ -142,7 +142,8 @@ Read `vr-design.md` section 7. Decide and write down:
 - **Seated in vehicles:** the seat pose rarely matches the player's eye height. Shift the seated body, bounded, so its
   eye point matches the headset through the neck pivot.
 - **Out-of-view slots** (shoulders, back): regions in the body frame with generous margins and distinct haptics, a
-  reach success-rate scenario with a target, and false-trigger cases. Ask first whether the spot suits the platform
+  reach success-rate scenario with a target (≥ 95% per context), and false-trigger cases (hand raised near the head,
+  adjusting the headset strap, scratching hair or neck). Keep an A/B toggle for any slot change. Ask first whether the spot suits the platform
   (`lessons.md` E14).
 
 ## Step 6. Information placement

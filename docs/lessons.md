@@ -537,6 +537,11 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   scenario over many reach paths (heights, speeds, head turned, seated and swimming) plus false-trigger cases (hand
   raised near the head), with a target rate. First ask whether the location suits the platform at all (back or
   backpack zone, thighs, belt) before tuning it.
+- **Measured result:** as body-frame regions, shoulder holsters reached ≥ 95% success in every context on the rig
+  (body scale 1.15 included), against 5/8 and 3/8 for the old small spheres. The one false draw: gripping the
+  headset's back strap at eye height drew a tool. False-trigger cases must include adjusting the headset strap and
+  scratching the hair or neck. Any body-slot change keeps an A/B toggle (old vs new) and the reach-rate scenario, so
+  the comparison is a number, not a feeling.
 
 ---
 
