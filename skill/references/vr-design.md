@@ -117,7 +117,8 @@ Ship these in the mod's own options menu:
 
 Design these physically before writing code; they decide whether every other mechanic feels right.
 
-- **Direction never comes from the head.** Players look around while moving; head-relative movement makes them "look at random places" to steer. Use the body (torso yaw from the headset with lag, or a calibrated body frame) or a hand's pointing direction, with vertical movement from stick tilt or hand pitch, not from looking up and down.
+- **Head pitch never steers.** Players look around while moving; pitch-relative movement makes them "look at random places" to steer, and looking down dives. Facing (head or body yaw) is a fine source of direction, and so is a hand's pointing direction. Vertical movement comes from the stick, a hand, or its own stroke type, not from looking up and down. When a player complains about direction, ask which axis.
+- **Feel is picked in the headset.** Build a minimal version of each candidate locomotion model and let the human try them all before polishing one. Speed curves and terrain checks prove it works, not that it feels right.
 - **Swimming and other effort gestures must be effortless.** Small, comfortable motions count (wrist flicks, short pulls); speed matches or beats the stick; long glide; the stick always works as a fallback. Test for an hour of play, not ten seconds.
 - **Grips are for grabbing.** Don't put vertical movement, sprint or menus on the grips once holsters, climbing or pickups use them.
 - **Climbing moves the body by hand deltas.** No handing off to the game's climb cinematic or teleports; mantle at the top; keep the game's player state (inside/outside, current sub) consistent.

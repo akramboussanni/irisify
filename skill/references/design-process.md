@@ -66,10 +66,16 @@ more than once a minute:
 4. **The three tiers of control.** *Travel* (cover distance), *cruise* (hold a speed and direction without effort)
    and *fine positioning* (move 5 cm precisely). Each tier needs a mechanic. Subnautica's swimming had travel
    (stick) and nothing for fine positioning until "hold the water" was added (`lessons.md` E2).
-5. **Where the eyes are free.** The head looks. It never steers unless the user asked for it.
+5. **Where the eyes are free.** The head looks. Head pitch never steers (looking down mustn't dive). Facing (yaw) may
+   set direction; ask the user which axis bothers them before deciding (`lessons.md` E16).
 6. **Precision, not just speed.** How does the player move 5 cm without the stick? (Subnautica: grip the water and move
    the hand, 1:1.) Speed graded by stroke size and stick deflection, scaled to the game's real top speed, which
    equipment changes.
+
+7. **Candidate models, felt early.** List two or three models (for Subnautica's swim: stick along facing; one
+   stroke type for forward/back and another for up/down; grab the water). Build each minimally, put the human in
+   the headset with all of them, and polish only the pick. Rig metrics then keep the pick working; they never
+   choose it.
 
 The result is a short paragraph per mode plus the chosen design, for example "body-facing swim, right stick depth,
 grab the water to nudge 1:1, optional strokes on top". Write the physical version first, then the immersion check
@@ -209,6 +215,7 @@ Subnautica feedback, classified as examples:
 | "the buttons shown in UI just don't line up" | design gap | controls → generated prompts | prompt/binding consistency test |
 | "I don't have a body, only arms" | design gap | body map | look-down screenshot moments |
 | "way too much effort, way too slow" | bug (against targets) + gap | physical sketch (three tiers) | `swim_speed_curve`, effort per metre |
+| "absolutely horrible" (arm swim that passed every metric) | design gap: wrong axis, one model polished unfelt | physical sketch (axis, candidate models) | none can catch feel: minimal candidates in the headset first |
 | "overwhelmed by the thing that shows every button" | design gap | overwhelm review | `ui_contexts` label budget |
 | "builder tablet is way too small" | bug (sized in metres) | ui-placement (size in degrees) | text angle FAIL < 0.5° |
 | "dropped items seem to disappear" | design gap | interactions (`feedback` on let-go) | `carry_release_away` |

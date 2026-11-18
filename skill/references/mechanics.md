@@ -117,8 +117,8 @@ Prefer calling the game's own functions over re-implementing systems so saves, q
 - Test: weak swings don't register; spam; swings during reload and menus.
 
 ### 5.6 Swimming
-- Arm strokes: while in water, when both hands move backward relative to the HMD, push the body the opposite way scaled by stroke speed, with drag decay. Keep stick swimming as an option.
-- Vertical movement follows HMD pitch, not the hidden flat camera.
+- Direction from facing (yaw), never from head pitch. Offer distinct stroke types: one for forward and back (a pull along the body), one for up and down (a push or sweep downward or upward), with drag decay. Keep stick swimming as an option.
+- Build these minimally first and let the human pick in the headset before tuning (lessons E16).
 - Handle the game's swim ↔ walk transitions so the camera doesn't snap.
 
 ### 5.7 UI

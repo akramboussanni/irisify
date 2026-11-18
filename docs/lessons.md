@@ -419,7 +419,8 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **What catches it up front:** design-process step 2, the **physical sketch**: for every locomotion mode, write how
   a real body does it, what a player can sustain for an hour, and seated vs standing, *before* choosing inputs. Rule:
   direction comes from the body or a hand, never the head. The body-facing scheme (body yaw follows the head
-  lazily, ±40° free look) is the default pattern in `vr-design.md`.
+  lazily, ±40° free look) is the default pattern in `vr-design.md`. Careful: the complaint was about *pitch*.
+  Facing (yaw) is a fine source of direction; see E16.
 
 ### E2. Strokes too effortful and too slow; no fine adjustment; no graded speed
 - **What happened:** arm strokes were "way too much effort, way too slow", even after tuning. There was no way to
@@ -594,6 +595,25 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **What catches it up front:** one body frame places both (design step 5). `Rig/ViewChecks.cs` checks every body
   slot in every scenario: the shown model is within ~5 cm of its zone's centre.
 
+### E16. The arm swim that passed every metric and felt "absolutely horrible"
+- **What happened:** after "don't steer by where I look", the agent built arm swimming along the body and tuned it
+  until it passed every rig metric: speed curves, ceilings, terrain cases. On the Frame the user called it
+  "absolutely horrible". What they wanted: direction from where they *face* (yaw), and two distinct stroke types,
+  one for up and down and one for forward and back.
+- **Root cause:** two things. The complaint was read on the wrong axis: "don't steer by gaze" was about pitch
+  (looking down shouldn't dive), not about facing. And one model was polished for a long time before anyone felt it.
+- **Why the agent missed it:** green speed metrics looked like proof. Speed, ceilings and terrain measure whether
+  the mechanic *works*, not whether it feels right; feel has no rig metric. The agent also turned a vague complaint
+  into a full design without asking which part of "where I look" was wrong.
+- **What catches it up front:**
+  1. When a complaint is about direction, ask which axis: pitch (looking up and down), yaw (facing), or roll, and
+     whether it's the head, the body or a hand. Write the answer into the physical sketch.
+  2. For any locomotion mode, build a **minimal version of each candidate model** (an hour each, not a day), put the
+     human in the headset with all of them early, and polish only the one they pick. Rig metrics come after that
+     pick, to keep it working, never to choose it.
+  3. The vertical-slice gate for a locomotion mode needs the human's feel sign-off on the chosen model, not just a
+     green rig.
+
 ---
 
 ## F. Immersion is not realism (added on the user's direction, 2026-11-17)
@@ -655,5 +675,8 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 13. **Never assume a skeleton.** Resolve bones by verified subtree, log what you resolved, and assert body proportions.
 14. **A fail-safe never persists.** An error stops a feature for this session, says so in the log, and fails the
     test. Before adding any defensive disable, ask where that state is stored and who turns it back on.
-15. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
+15. **Feel is judged in the headset, early.** Rig metrics show a mechanic works, not that it feels right. Build a
+    minimal version of each candidate model and let the human pick before you polish one. Ask which axis a
+    direction complaint is about.
+16. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
     decide the rest yourself with a written reason.

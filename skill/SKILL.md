@@ -52,8 +52,11 @@ run the game yourself, ask the user to launch it now, not after features exist.
    physical replacement. Every manifest action bound or dropped with a reason.
 6. **Design the cross-cutting things once, before breadth:** control scheme, body map (calibration, neck pivot, body
    yaw), information placement, comfort plan. The orchestrator owns them.
-7. **Locomotion never steers by the head.** Design travel, cruise and fine positioning, each with a mechanic, and
-   measure effort per metre against targets.
+7. **Head pitch never steers.** Looking down must not dive; direction comes from facing (yaw), the body or a hand,
+   and you ask the user which axis a complaint is about. Design travel, cruise and fine positioning, each with a
+   mechanic, and measure effort per metre against targets. **Feel is chosen in the headset:** build a minimal
+   version of each candidate model, let the human try them all early, and polish only the one they pick. Green rig
+   metrics never prove feel (lessons E16).
 8. **Immersion, not realism.** Pick the lightest physical form that keeps the meaning, like the rounds in an Alyx
    magazine. Information goes on the thing, then the body, then the world, and flat only when nothing else fits.
 9. **Ship it on.** One coherent preset on by default, discoverable in game (visible models, rings, one-time hints).
