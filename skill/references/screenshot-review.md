@@ -16,6 +16,16 @@ looks at them with a question.
 The adapter saves `<scenario>-<moment>.png` (one eye, at eye resolution where possible). The runner records the
 moment and question with the build id.
 
+## Classes that became automatic checks
+
+Every screenshot class that showed up more than once is now checked in every scenario by the adapter's
+`Rig/ViewChecks.cs` (`lessons.md` A7, E12, E13): own body within ~15 cm of the camera or in the central view cone;
+more than one held/proxy model per hand; a body model near a busy hand; the same information on two widgets; text
+in the top or bottom 10° band. When a new class shows up twice, add a check for it.
+
+Moments every project should capture: look down 35° and 55°, standing and seated; seated in each vehicle, plus a
+head lean of ±15 cm for anything overlaid on a cockpit surface; each handheld UI open; the worst-case content screen.
+
 ## Agent review (required before "ready for headset")
 
 For each new or changed shot (the dashboard pairs it with the same moment in the previous build):

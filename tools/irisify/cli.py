@@ -264,6 +264,17 @@ def cmd_fanout(a):
     print("gates passed: fan out. Give every worker skill/references/integration.md and notes/conventions.md.")
 
 
+def cmd_scenarios(a):
+    p = Project.open()
+    errors, warnings = suites.lint_scenarios(p)
+    for e in errors:
+        print(f"error: {e}")
+    for w in warnings:
+        print(f"warn:  {w}")
+    print(f"{len(errors)} errors, {len(warnings)} warnings")
+    sys.exit(1 if errors else 0)
+
+
 def cmd_patchcheck(a):
     from . import patchcheck
     hits = patchcheck.scan(a.decomp, a.src)
@@ -351,7 +362,7 @@ def main(argv=None):
     s.set_defaults(f=cmd_deploy)
 
     s = sub.add_parser("integrate", help="merge, build, deploy to the rig, run a suite")
-    s.add_argument("--branches"); s.add_argument("--suite", default="smoke"); s.add_argument("--rig"); s.add_argument("--force")
+    s.add_argument("--branches"); s.add_argument("--suite", default="full"); s.add_argument("--rig"); s.add_argument("--force")
     s.set_defaults(f=cmd_integrate)
 
     s = sub.add_parser("verify-branch", help="test a worker's branch on the rig without touching it")
@@ -361,6 +372,10 @@ def main(argv=None):
     s = sub.add_parser("fanout", help="check the gates before starting parallel workers")
     s.add_argument("--force")
     s.set_defaults(f=cmd_fanout)
+
+    s = sub.add_parser("scenarios", help="lint scenario metadata (owners, questions, worst-case coverage)")
+    s.add_argument("op", choices=["lint"])
+    s.set_defaults(f=cmd_scenarios)
 
     s = sub.add_parser("patchcheck", help="find patch targets that are explicit interface methods")
     s.add_argument("decomp"); s.add_argument("src")

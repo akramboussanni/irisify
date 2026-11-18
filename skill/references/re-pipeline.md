@@ -38,6 +38,16 @@ MCP bridges for disassemblers are community projects of varying maturity; check 
 
 Write `notes/recon.md` with all of this before going deeper.
 
+## 2b. Asset inspection
+
+Find the game's own diegetic surfaces and the player skeleton before designing UI and the body:
+- Unity: UnityPy (scriptable; `tools/recon/find_screens.py`) or AssetRipper. List renderers and materials whose names
+  suggest screens, displays, monitors, gauges or HUDs, with their meshes and textures. Some screens are painted into a
+  larger interior texture, so look at UV regions, not only object names.
+- Unreal: FModel for meshes, materials and widget blueprints.
+- Dump the player skeleton (bone paths, order, children) from the prefab or at runtime. Never assume the order or
+  parentage from names.
+
 ## 3. Finding the things VR needs
 
 **Camera transform.** Cheat Engine: scan the camera position as floats while moving/rotating, narrow down, "find what writes" → the camera update function. In RenderDoc, the view matrix in the frame's constant buffers confirms it. Find the *last* write before rendering; that's where the HMD pose goes.

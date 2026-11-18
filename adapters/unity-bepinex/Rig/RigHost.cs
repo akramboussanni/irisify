@@ -102,6 +102,7 @@ namespace Irisify.Rig
             }
             ScriptedInput.ReleaseAll();
             ComfortMonitor.AddChecks(ctx);   // every scenario gets the comfort checks
+            ViewChecks.AddChecks(ctx);       // ...and the view checks (lessons A7, E12, E13)
             List<string> log; lock (captured) log = captured.Skip(logFrom).Where(l => l.StartsWith("[")).Take(200).ToList();
             var result = ctx.Checks.Count == 0 ? "SKIP" : ctx.Checks.All(x => x.ok) ? "PASS" : "FAIL";
             Write(new Dictionary<string, object> {

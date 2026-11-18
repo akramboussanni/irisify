@@ -22,6 +22,12 @@ one owner.
 - Notes: `notes/<area>.md` with design, hook map, open questions and the playtest list.
 - Commit messages say how the change was checked ("rig: holster_draw_stow PASS on 2556818" or "builds; not run").
 
+## Merges are batched
+Owners *request* a merge by adding their branch to `.irisify/integrate.json`. They never merge themselves. The
+integrator merges every ready branch in one batch, builds once and runs **one full suite per build**. One queue per
+branch on a single game instance was the bottleneck on Subnautica (`lessons.md` A12). The headset is the human's turn
+only after everything testable passes.
+
 ## The integration loop (`irisify integrate`)
 1. Fetch. For each ready branch, in the order in `.irisify/integrate.json`: merge into the integration branch.
    Stop on a conflict and route it to the branch owner.

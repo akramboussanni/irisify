@@ -47,7 +47,11 @@ If the agent can't run the game, ask the user to launch it **now** and paste or 
 - [ ] Human feel check recorded (intake.md, section 5).
 
 ## breadth (per feature, before merging)
-- [ ] Feature scenario passes. Comfort and overwhelm checks for its contexts pass.
+- [ ] Feature scenario passes, plus a worst-case variant for content-heavy features (`irisify scenarios lint`).
+- [ ] Comfort, overwhelm and view checks pass (clearance, one held model per hand, no body model near a busy hand,
+      no duplicated info, no text in the 10° edge bands).
+- [ ] Merged by the integrator in a batch; the **full** suite ran on the merged build (not just the feature's scenario).
+- [ ] Movement changes log per-step physics (input → applied velocity → body speed).
 - [ ] Screenshot moments reviewed.
 - [ ] Discoverability row filled in. In the preset, or off with a reason.
 - [ ] Changed default → settings migration.
@@ -55,6 +59,8 @@ If the agent can't run the game, ask the user to launch it **now** and paste or 
 
 ## ready (for the headset)
 - [ ] The headset runs the integration build (dashboard Devices).
-- [ ] Full suite green on that build. No flaky scenario unexplained.
+- [ ] Full (or nightly) suite green on that exact commit: `irisify deploy` to a headset refuses otherwise. No flaky
+      scenario unexplained.
+- [ ] Body: proportions check and clearance check pass standing, seated and in each vehicle.
 - [ ] All changed screenshots reviewed by the agent.
 - [ ] The headset checklist lists every `cannot_cover` item plus the user's own open complaints in their words.

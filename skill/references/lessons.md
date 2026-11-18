@@ -116,6 +116,15 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   gallery shows the screenshots next to the same moment in the previous build. A run isn't "ready for headset"
   until each new or changed screenshot has been marked reviewed (by the agent with a written answer, and by the
   human for anything about feel or readability).
+- **More cases from the ongoing loop (all with every scenario passing):** the player's own neck and head visible
+  while seated in a vehicle ("super uncomfortable and weird"); a floating centre text duplicating a gauge; a
+  "Power: 100%" reticle line duplicating the on-tool charge; two objects in one hand (the PDA plus a tool proxy inside
+  it).
+- **Automated checks derived from each class** (the adapter's `Rig/ViewChecks.cs`, added to every scenario like the
+  comfort checks): no own-body renderer within ~15 cm of the camera or inside the central view cone; at most one
+  held or proxy model per hand; no information shown by two widgets at once (same value text on two canvases); no
+  text in the top or bottom 10° edge band. A screenshot class that repeats becomes a check. The human review stays,
+  for everything a rule can't express.
 
 ### A8. The test rig's own blind spots: SteamVR layer, feel, optics
 - **What happened:** the rig runs Monado + OpenComposite, because SteamVR's null driver can't run its compositor on
@@ -137,6 +146,35 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 - **What catches it up front:** Irisify's result schema (`docs/results-schema.md`) requires `build` on every line
   and a `run` header line. The importer gives legacy lines a build from the deploy log by time, and marks them
   `inferred`.
+
+### A10. Tests only used the first convenient instance
+- **What happened:** the rig tested containers with the lifepod's small storage (8 items). It never opened a full
+  Large Locker or Cyclops locker with 25 kinds, which is where the "overwhelming" container UI actually showed.
+- **Root cause:** scenarios were written against whatever was nearest in the test save.
+- **Why the agent missed it:** it tested that the feature *works*, not where it's *hardest*. Overwhelm, paging and
+  layout bugs only appear at the worst case.
+- **What catches it up front:** scenario metadata has `"content": "typical" | "worst-case"`. `irisify scenarios lint`
+  fails when a tag that involves content (`ui`, `containers`, `machines`, `pda`, `building`) has no worst-case
+  scenario: full inventories, many kinds, long names, deep pages, every slot filled.
+
+### A11. Regressions from fixes
+- **What happened:** a swim change that applied stroke velocity directly made arm strokes move the body 0 m (strokes
+  logged, body speed 0.00). A climbing collider filter broke rock climbing. A settings `const` hung the main menu
+  (B3). Each fix passed its own scenario.
+- **Root cause:** the fix was verified against the scenario for the bug, not against everything else it touches.
+  Physics changes interact through shared state (velocity, colliders, the motor).
+- **What catches it up front:** the **full suite runs after every merge**, and `irisify deploy` to a headset or game
+  host refuses a build without a green full or nightly run on that exact commit. Movement code keeps per-step physics
+  diagnostics (input → applied velocity → body speed, per physics step, in the log), so "logged but didn't move" is
+  visible in one line.
+
+### A12. One queue per branch was the bottleneck
+- **What happened:** verifying each branch on its own, one at a time on a single game instance, queued everything
+  behind the rig.
+- **What catches it up front:** owners *request* a merge (`.irisify/integrate.json`). The integrator batch-merges
+  every ready branch into the integration branch, builds once and runs one full suite per build. A failure goes
+  back to its owner with the evidence; a conflict drops only that branch from the batch. The headset is the human's
+  turn only after everything testable passes.
 
 ---
 
@@ -369,6 +407,9 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   set in the design (one hand ≈ half stick speed, two hands ≈ full). Locomotion design must cover three tiers:
   travel, cruise and fine positioning, and each needs a mechanic. Stick speed must be graded (dead zone, curve,
   half push ≈ 40%).
+- **What the user turned out to want:** small fine adjustments without the stick ("hold the water": grip and move
+  the hand, 1:1), speed graded by stroke size and by analog stick deflection, and effortless strokes scaled to the
+  game's actual top speed (fins change it). Ask about **precision movement**, not just speed.
 
 ### E3. Climbing through teleporting cinematics
 - **What happened:** "I want to physically grab ladders... minimize teleportation as much as possible." Ladders and
@@ -446,6 +487,57 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   (Frame: 1728×1728 per eye, ~16 px/° average). The rig's `ui_contexts` FAILs text under 0.5° and warns under 0.8°.
   The controller/headset profile carries `px_per_degree`.
 
+### E11. A new floating panel where the game already had a screen
+- **What happened:** a "vehicle dash" panel was added floating in the Seamoth cockpit. The user rejected it: the
+  Seamoth already has three green dashboard screens.
+- **Root cause:** "diegetic" was read as "in world space", not "on the game's own surfaces".
+- **What catches it up front:** information placement (design step 6) starts with an inventory of the game's own
+  screens, gauges, labels and lights near each piece of information. Render onto those first. A new panel only goes
+  in when nothing physical exists, with a written reason. The immersion review asks: "does the world already have a
+  surface for this?"
+- **Painted screens:** the Seamoth's dashboard screens turned out to be painted into the cockpit interior texture
+  (material `Submersible_SeaMoth_indoor`, no screen objects), found by reading the prefab with UnityPy. The fallback is
+  an overlay anchored in the vehicle's frame at the screen's position, checked for parallax with head-lean
+  screenshots (seated eye, ±15 cm). Recon now includes an **asset inspection** step (UnityPy/AssetRipper for Unity,
+  FModel for Unreal; `tools/recon/find_screens.py`) that lists in-world screens, their meshes, UV regions and
+  materials, so diegetic UI is placed precisely instead of estimated from a screenshot.
+
+### E12. Skeleton assumptions: the neck, the seat, bone order, parent subtrees
+- **What happened, in order:** (1) with a full body, the player saw their own neck while seated in a vehicle: the
+  neck skin is baked into the suit's body mesh, so hiding the head mesh wasn't enough. (2) The game's seat pose
+  didn't match the player's real eye height. (3) Subnautica's spine bone list runs neck → hips, so a "chest" anchor
+  pointed at the hips. (4) Hiding the head by collapsing "the head bone's parent" collapsed the whole body (feet
+  at head height, only the arms left), because that parent wasn't the neck. Collapsing or moving a bone also moves
+  everything parented under it, cinematic cameras included.
+- **Root cause:** skeleton hierarchy, order and naming were assumed instead of read.
+- **Why the agent missed it:** it worked from bone names and one decompiled reference list, and never looked at the
+  resolved bones or at the body from the seated eye.
+- **What catches it up front:**
+  - Log, once at setup, every resolved bone with its full path, position and children (`adapters/unity-bepinex/Body/SkeletonProbe.cs`).
+  - Select bones to hide or scale by **verified subtree**: contains the head, contains none of pelvis, chest or
+    limbs. Then collapse the head *and* neck bones whenever the full body is shown.
+  - Assert body proportions after every change (feet near the floor, torso below the eyes), automatically.
+  - A **clearance check** in every context, seated included: no own-body bone or baked vertex within 15 cm of the
+    camera or inside the central view cone (`Rig/ViewChecks.cs`).
+  - In vehicles, shift the seated body (bounded, e.g. ≤ 30 cm) so its eye point matches the headset through the
+    neck pivot.
+
+### E13. Attachments that overlap read as one object
+- **What happened:** a screenshot showed "two things in one hand". It was the chest holster model lying across the
+  chest while the PDA was held in front of it; from the eye they merged.
+- **What catches it up front:** body-attached models (holsters, pouches, pockets) hide while a hand holding something
+  is within ~20 cm, with hysteresis. `ViewChecks` reports any shown body model near a busy hand. Check proximity
+  between held items and body attachments, not only how many things each hand holds.
+
+### E14. Out-of-view body slots tuned as points
+- **What happened:** shoulder holsters as small spheres behind the head felt "weird, inconsistent and not intuitive"
+  in the headset.
+- **What catches it up front:** design out-of-view slots as **regions** in the stable body frame (not the head), with
+  generous margins scaled to calibrated height and distinct haptics. Test them with a **reach success-rate**
+  scenario over many reach paths (heights, speeds, head turned, seated and swimming) plus false-trigger cases (hand
+  raised near the head), with a target rate. First ask whether the location suits the platform at all (back or
+  backpack zone, thighs, belt) before tuning it.
+
 ---
 
 ## F. Immersion is not realism (added on the user's direction, 2026-11-17)
@@ -498,5 +590,9 @@ The entries are grouped by the gap behind them, not by date. The last section tu
    reading notes.
 8. **Physical when it's better, abstract when physical is tedious.** Immersion is the test, not realism.
 9. **One writer per target.** Branches for workers, one integrator deploys, every build stamped.
-10. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
+10. **Test the worst case, run everything after every merge.** A fix checked only by its own scenario breaks
+    something else. No headset deploy without a green full suite on that commit.
+11. **Diegetic means the game's own surfaces first.** Render onto existing screens before adding a panel.
+12. **Never assume a skeleton.** Resolve bones by verified subtree, log what you resolved, and assert body proportions.
+13. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
     decide the rest yourself with a written reason.

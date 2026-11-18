@@ -152,3 +152,27 @@ def interleave(names, x):
 def estimate_minutes(project, names):
     meta = load_scenarios(project)
     return round(sum(meta.get(n, {}).get("minutes", 2) for n in names) + 1.5 * sum(1 for n in names if meta.get(n, {}).get("needs_restart")), 1)
+
+
+CONTENT_TAGS = ("ui", "containers", "machines", "pda", "building")
+
+
+def lint_scenarios(project):
+    """Errors and warnings for scenario metadata (lessons A7, A8, A10)."""
+    meta = load_scenarios(project)
+    errors, warnings = [], []
+    for n, s in meta.items():
+        if not s.get("owner"):
+            errors.append(f"{n}: no owner (failures can't be routed)")
+        if not s.get("covers"):
+            warnings.append(f"{n}: no 'covers' (the dashboard can't say what it checks)")
+        if "cannot_cover" not in s:
+            warnings.append(f"{n}: no 'cannot_cover' (nothing reaches the headset checklist)")
+        for m, shot in (s.get("shots") or {}).items():
+            if not shot.get("question"):
+                errors.append(f"{n}: screenshot moment '{m}' has no question")
+    for tag in CONTENT_TAGS:
+        tagged = [n for n, s in meta.items() if tag in s["tags"]]
+        if tagged and not any(meta[n].get("content") == "worst-case" for n in tagged):
+            errors.append(f"tag '{tag}': no worst-case scenario (full inventories, many kinds, long names, deep pages) among {', '.join(tagged)} (lessons A10)")
+    return errors, warnings

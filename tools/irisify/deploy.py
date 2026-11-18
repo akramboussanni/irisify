@@ -89,6 +89,8 @@ def deploy(project, machine, force=None, owner="integrator", root=None, allow_br
         if git(root, "status", "--porcelain", "--untracked-files=no"):
             raise SystemExit("working tree has uncommitted changes: commit first so the build id means something")
     rec = stamp(project, build_record(root), root)
+    if not allow_branch and set(m.get("roles", [])) & {"headset", "game-host"} and "rig" not in m.get("roles", []):
+        require_full_suite(project, rec["commit"], force)
     run_build(project, root)
     src = os.path.join(root, cfg.get("build", {}).get("output", "build")) + "/"
     link = machines.link_for(m)
@@ -112,8 +114,23 @@ def deploy(project, machine, force=None, owner="integrator", root=None, allow_br
     return rec
 
 
-def integrate(project, branches=None, force=None, suite="smoke", rig=None):
-    """Merge ready branches into the integration branch, build, deploy to the rig, run a suite."""
+def require_full_suite(project, commit, force=None):
+    """Never put a build in front of the human that the full suite hasn't passed (lessons A11)."""
+    from . import results
+    green = [r for r in results.list_runs(project) if r.get("suite") in ("full", "nightly")
+             and r["build"].get("commit") == commit and not r["counts"].get("FAIL") and not r["counts"].get("CRASH")]
+    if green:
+        return green[-1]
+    if force:
+        project.append("overrides.jsonl", {"action": "deploy without a green full suite", "gates": ["full-suite"], "why": force})
+        return None
+    raise SystemExit(f"refusing to deploy {commit[:10]} to a headset/game host: no green full or nightly suite on this exact commit. "
+                     "Run `irisify integrate` (deploys to the rig and runs the full suite) or `irisify suite run full` first.")
+
+
+def integrate(project, branches=None, force=None, suite="full", rig=None):
+    """Batch-merge every ready branch into the integration branch, build once, deploy to the rig, run the full suite
+    (lessons A11, A12). Owners request merges in .irisify/integrate.json; a conflict drops only that branch."""
     from . import runner
     workflow.require(project, "integrate", force)
     cfg = project.config()

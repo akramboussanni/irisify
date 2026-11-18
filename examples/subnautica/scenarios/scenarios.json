@@ -625,5 +625,156 @@
   "shots": [],
   "minutes": 2,
   "needs_restart": false
+ },
+ {
+  "name": "containers_large_locker_full",
+  "owner": "machines",
+  "tags": [
+   "containers",
+   "ui",
+   "interaction",
+   "headset-critical"
+  ],
+  "content": "worst-case",
+  "touches": [
+   "VR/Container*.cs",
+   "VR/ReachToOpen.cs"
+  ],
+  "minutes": 3,
+  "needs_restart": false,
+  "covers": [
+   "a Large Locker with 25+ kinds, long names and paging: shelves, labels and stash stay readable"
+  ],
+  "cannot_cover": [
+   "whether the shelves feel overwhelming in the headset"
+  ],
+  "shots": [
+   {
+    "moment": "shelves-full",
+    "question": "Are 25 kinds readable without overlap, with paging visible?"
+   },
+   {
+    "moment": "door-label-full",
+    "question": "Does the door label stay short (4 stacks + N)?"
+   }
+  ]
+ },
+ {
+  "name": "cyclops_locker_full",
+  "owner": "machines",
+  "tags": [
+   "containers",
+   "machines"
+  ],
+  "content": "worst-case",
+  "touches": [
+   "VR/Container*.cs"
+  ],
+  "minutes": 3,
+  "covers": [
+   "Cyclops locker full, opened from inside the moving sub"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "open",
+    "question": "Is the panel readable and anchored to the sub, not the world?"
+   }
+  ]
+ },
+ {
+  "name": "pda_inventory_full",
+  "owner": "body",
+  "tags": [
+   "pda",
+   "ui"
+  ],
+  "content": "worst-case",
+  "touches": [
+   "VR/VRHolsterAssign.cs"
+  ],
+  "minutes": 2,
+  "covers": [
+   "full inventory: laser picks the right item at the grid edges"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "grid-full",
+    "question": "Is the item under the laser the one highlighted?"
+   }
+  ]
+ },
+ {
+  "name": "build_menu_all_unlocked",
+  "owner": "building",
+  "tags": [
+   "building",
+   "ui"
+  ],
+  "content": "worst-case",
+  "touches": [
+   "VR/BuilderTablet.cs"
+  ],
+  "minutes": 2,
+  "covers": [
+   "every piece unlocked: tablet pages and costs stay readable"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "all-tabs",
+    "question": "Do all tabs fit, icons at least 4 cm?"
+   }
+  ]
+ },
+ {
+  "name": "shoulder_reach_rate",
+  "owner": "body",
+  "tags": [
+   "body",
+   "holsters"
+  ],
+  "touches": [
+   "VR/VRHolsters.cs",
+   "VR/HolsterLayout.cs"
+  ],
+  "minutes": 4,
+  "covers": [
+   "shoulder slots: >= 90% success over 40 reach paths (heights, speeds, head turned, seated, swimming)",
+   "no trigger with the hand raised near the head"
+  ],
+  "cannot_cover": [
+   "whether reaching behind the shoulder feels natural"
+  ]
+ },
+ {
+  "name": "seated_body_clearance",
+  "owner": "body",
+  "tags": [
+   "body",
+   "vehicles",
+   "comfort"
+  ],
+  "touches": [
+   "VR/VRFullBody.cs",
+   "VR/Vehicle*.cs"
+  ],
+  "minutes": 3,
+  "covers": [
+   "no own neck/head within 15 cm or in the view cone, seated in each vehicle",
+   "seated eye matches the headset through the neck pivot"
+  ],
+  "cannot_cover": [],
+  "shots": [
+   {
+    "moment": "seamoth-seated",
+    "question": "Is any part of the player's own neck or head visible?"
+   },
+   {
+    "moment": "seamoth-lean",
+    "question": "Do overlays on the cockpit screens stay on the screens with a 15 cm lean?"
+   }
+  ]
  }
 ]

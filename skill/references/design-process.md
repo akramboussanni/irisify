@@ -45,7 +45,12 @@ asking once the defaults are good enough to build on.
 Record: engine and version, game build id, mod loader, existing VR mods and what they already solve (fork a good base
 before starting over), how input reaches gameplay (the input layer's call into the game), the interaction system
 behind the interact button (it lists every interactable at once), the camera rig, the HUD/canvas system, and the
-save/settings system (how settings are serialized, which matters for `lessons.md` B3 and A5). Every claim gets a
+save/settings system (how settings are serialized, which matters for `lessons.md` B3 and A5).
+
+**Asset inspection** (`lessons.md` E11): list the game's own in-world screens, gauges, labels and lights, with their
+meshes, UV regions and materials (`tools/recon/find_screens.py` with UnityPy for Unity; AssetRipper; FModel for
+Unreal). Some screens are painted into a texture with no object to attach to; you need to know before designing UI.
+Also dump the player skeleton: every bone with its full path and children (`lessons.md` E12). Every claim gets a
 file:line or an address. Write *unknowns* as unknowns.
 
 ## Step 2. Physical sketch: how would a body do this?
@@ -62,6 +67,9 @@ more than once a minute:
    and *fine positioning* (move 5 cm precisely). Each tier needs a mechanic. Subnautica's swimming had travel
    (stick) and nothing for fine positioning until "hold the water" was added (`lessons.md` E2).
 5. **Where the eyes are free.** The head looks. It never steers unless the user asked for it.
+6. **Precision, not just speed.** How does the player move 5 cm without the stick? (Subnautica: grip the water and move
+   the hand, 1:1.) Speed graded by stroke size and stick deflection, scaled to the game's real top speed, which
+   equipment changes.
 
 The result is a short paragraph per mode plus the chosen design, for example "body-facing swim, right stick depth,
 grab the water to nudge 1:1, optional strokes on top". Write the physical version first, then the immersion check
@@ -126,13 +134,24 @@ Read `vr-design.md` section 7. Decide and write down:
 - **The visible body:** full body with arm IK (and leg bend on crouch), or a deliberate hands-only choice with a reason.
 - **Spots:** a table of every on-body spot (name, offset in the body frame, radius, hand, owner). Spots closer than
   2× their radii to each other need different hands or an explicit priority.
-- **What's visible on the body:** holstered items as their own models, not icons (`lessons.md` E7).
+- **What's visible on the body:** holstered items as their own models, not icons (`lessons.md` E7). Body models hide
+  while a busy hand is within ~20 cm (`lessons.md` E13).
+- **The skeleton, verified:** bones resolved by verified subtree and logged at setup; head *and* neck collapsed when
+  the full body shows (neck skin can be baked into the body mesh); proportions asserted; children of any moved bone
+  listed (`lessons.md` E12).
+- **Seated in vehicles:** the seat pose rarely matches the player's eye height. Shift the seated body, bounded, so its
+  eye point matches the headset through the neck pivot.
+- **Out-of-view slots** (shoulders, back): regions in the body frame with generous margins and distinct haptics, a
+  reach success-rate scenario with a target, and false-trigger cases. Ask first whether the spot suits the platform
+  (`lessons.md` E14).
 
 ## Step 6. Information placement
 
 List every piece of flat UI the game shows (HUD widgets, prompts, menus, notifications, subtitles, tooltips,
 reticle text). For each, choose a home in this order and write the reason:
 
+0. **The game's own surfaces first:** an existing cockpit screen, gauge or label from the asset inspection. If it is
+   painted into a texture, overlay it in the object's frame and check parallax with head-lean shots (`lessons.md` E11).
 1. **On the thing it describes:** charge on the tool, contents on the locker door, rounds in the magazine.
 2. **On the body or gear, where you'd glance anyway:** wrist dive computer, tank gauge, glove.
 3. **In the world, at the place of use:** crafting panel at the machine, vehicle stats on the dash.
@@ -168,7 +187,8 @@ Fill in three tables in `design/reviews.md`:
 
 ## Step 9. Test plan
 
-Every row of `interactions.json` names a scenario. Every scenario declares `covers` and `cannot_cover`, and names its
+Every row of `interactions.json` names a scenario. Content-heavy features (containers, menus, inventories, building)
+also get a **worst-case** scenario: full inventories, many kinds, long names, deep pages (`lessons.md` A10). Every scenario declares `covers` and `cannot_cover`, and names its
 screenshot moments with a caption question. The union of `cannot_cover` becomes the human's headset checklist
 (`screenshot-review.md`, `testing-loop.md`).
 

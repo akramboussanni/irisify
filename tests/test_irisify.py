@@ -139,6 +139,34 @@ class Suites(unittest.TestCase):
         self.assertEqual(s[::2], ["builder_move"] * len(s[::2]))
 
 
+class ScenarioLint(unittest.TestCase):
+    def test_worst_case_required_for_content_tags(self):
+        p = project()
+        errors, _ = suites.lint_scenarios(p)
+        self.assertEqual(errors, [])
+        path = os.path.join(p.root, "scenarios", "scenarios.json")
+        sc = [s for s in json.load(open(path)) if s.get("content") != "worst-case"]
+        json.dump(sc, open(path, "w"))
+        errors, _ = suites.lint_scenarios(p)
+        self.assertTrue(any("worst-case" in e and "containers" in e for e in errors))
+
+
+class DeployPolicy(unittest.TestCase):
+    def test_headset_deploy_needs_green_full_suite_on_the_commit(self):
+        from irisify import deploy
+        p = project()
+        with self.assertRaises(SystemExit):
+            deploy.require_full_suite(p, "abc123")
+        run = {"id": "r1", "seq": 1, "imported": "2026-11-17T00:00:00Z", "suite": "full", "machine": "rig",
+               "build": {"id": "abc", "commit": "abc123"}, "counts": {"PASS": 3, "FAIL": 0, "SKIP": 0, "CRASH": 0}, "scenarios": []}
+        p.write(os.path.join("runs", "r1", "run.json"), run)
+        self.assertEqual(deploy.require_full_suite(p, "abc123")["id"], "r1")
+        run["suite"] = "smoke"; run["id"] = "r2"; run["build"]["commit"] = "def456"
+        p.write(os.path.join("runs", "r2", "run.json"), run)
+        with self.assertRaises(SystemExit):
+            deploy.require_full_suite(p, "def456")      # a green smoke run isn't enough
+
+
 class Workflow(unittest.TestCase):
     def test_first_boot_from_log(self):
         p = project()
