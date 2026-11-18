@@ -18,12 +18,22 @@ built a lot of good VR mechanics on a missing foundation:
    screenshots, comfort over time, which build each device runs, open issues and who owns them, and what's left to
    check in the headset.
 
+![Overview: what the agent needs from you, the latest screenshots, sessions and your setup](docs/images/overview.png)
+
+| One test case | The features board |
+|---|---|
+| ![A test page: screenshots first, then checks](docs/images/test.png) | ![Features moving from idea to done](docs/images/features.png) |
+| **Every screenshot, with the question it answers** | **Your machines and headsets** |
+| ![Screenshot gallery](docs/images/screenshots.png) | ![Machines](docs/images/machines.png) |
+
+<sub>Screenshots are from the Subnautica + Steam Frame project's real test-rig runs; the sessions and features shown are sample data.</sub>
+
 Start with [`docs/lessons.md`](docs/lessons.md). It's the root-cause analysis everything else comes from.
 
 ## Quick start
 
 ```bash
-git clone <this repo> ~/irisify
+git clone https://github.com/akramboussanni/irisify ~/irisify
 ```
 
 ```bash

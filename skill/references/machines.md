@@ -23,7 +23,7 @@ Mac was `dev`, the Fedora laptop was `game-host` + `rig`, and the Steam Frame wa
 
 ```
 irisify machine add fedora --roles game-host,rig --link ssh --host user@rig-laptop
-irisify machine add frame  --roles headset,game-host --link ssh --host steam@frame   # or --link adb --host 192.168.1.50:5555
+irisify machine add frame  --roles headset,game-host --link ssh --host steamos@frame   # or --link adb --host 192.168.1.50:5555
 irisify machine check [name]      # reachability, OS, GPU, runtime, game install, Steam Input, lock, build
 irisify machine setup <name>      # the guided steps; runs what the agent may, prints what needs the human
 ```
