@@ -8,14 +8,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Cpath d='M5 16s4-7 11-7 11 7 11 7-4 7-11 7S5 16 5 16z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23fff'/%3E%3C/svg%3E">
 <style>
-:root{--bg:#fff;--bg2:#fafafa;--bg3:#f2f2f2;--fg:#0a0a0a;--fg2:#4d4d4d;--fg3:#8f8f8f;--line:#ebebeb;--line2:#d9d9d9;
+:root{--bg:#fff;--bg2:#fafafa;--bg3:#f2f2f2;--fg:#0a0a0a;--fg2:#45454a;--fg3:#7a7a80;--line:#ebebeb;--line2:#d9d9d9;
 --green:#0f9d58;--green-bg:#e6f6ec;--red:#e5484d;--red-bg:#fdecec;--amber:#d98a00;--amber-bg:#fff4dc;--blue:#0070f3;--blue-bg:#e8f1fe;
 --sans:"Geist",ui-sans-serif,system-ui,-apple-system,sans-serif;--mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;--shadow:0 8px 24px rgba(0,0,0,.07);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#000;--bg2:#0a0a0a;--bg3:#1a1a1a;--fg:#ededed;--fg2:#a1a1a1;--fg3:#707070;--line:#242424;--line2:#333;
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#000;--bg2:#0a0a0a;--bg3:#1a1a1a;--fg:#ededed;--fg2:#b0b0b0;--fg3:#8a8a8a;--line:#242424;--line2:#333;
 --green:#3ecf8e;--green-bg:#0d2a1c;--red:#ff6369;--red-bg:#3a1214;--amber:#f5b041;--amber-bg:#33240a;--blue:#3291ff;--blue-bg:#0b2340;--shadow:0 8px 24px rgba(0,0,0,.5);color-scheme:dark}}
-:root[data-theme=dark]{--bg:#000;--bg2:#0a0a0a;--bg3:#1a1a1a;--fg:#ededed;--fg2:#a1a1a1;--fg3:#707070;--line:#242424;--line2:#333;
+:root[data-theme=dark]{--bg:#000;--bg2:#0a0a0a;--bg3:#1a1a1a;--fg:#ededed;--fg2:#b0b0b0;--fg3:#8a8a8a;--line:#242424;--line2:#333;
 --green:#3ecf8e;--green-bg:#0d2a1c;--red:#ff6369;--red-bg:#3a1214;--amber:#f5b041;--amber-bg:#33240a;--blue:#3291ff;--blue-bg:#0b2340;--shadow:0 8px 24px rgba(0,0,0,.5);color-scheme:dark}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}.mono{font-family:var(--mono);font-size:13px}
 header{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:5}
 .bar{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:12px;height:56px}
@@ -26,8 +26,8 @@ header{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;
 .tabs .sep{width:1px;background:var(--line);margin:10px 8px}.tabs a.more{color:var(--fg3)}.tabs a.more.on,.tabs a.more:hover{color:var(--fg)}
 .tabs .n{font-size:11px;background:var(--bg3);border-radius:10px;padding:0 6px;margin-left:5px;color:var(--fg2)}
 main{max-width:1080px;margin:0 auto;padding:32px 24px 80px}
-h1{font-size:28px;font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.2}h2{font-size:13px;font-weight:500;margin:0 0 12px;color:var(--fg2)}h3{font-size:15px;font-weight:600;margin:0}
-.muted{color:var(--fg2)}.faint{color:var(--fg3)}.small{font-size:13px}.xs{font-size:12px}
+h1{font-size:28px;font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.2}h2{font-size:14px;font-weight:600;margin:0 0 12px;color:var(--fg)}h3{font-size:15px;font-weight:600;margin:0}
+.muted{color:var(--fg2)}.faint{color:var(--fg3)}.small{font-size:14px}.xs{font-size:12.5px}
 .card{border:1px solid var(--line);border-radius:12px;background:var(--bg)}.pad{padding:20px}.sec{margin-top:36px}
 .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.between{justify-content:space-between}.grow{flex:1;min-width:0}.nowrap{flex-wrap:nowrap}
 .btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--line2);background:var(--bg);color:var(--fg);font:500 13px var(--sans);cursor:pointer;white-space:nowrap}
@@ -121,6 +121,42 @@ details>summary{cursor:pointer;list-style:none}details>summary::-webkit-details-
 .btn{transition:background .15s,opacity .15s,transform .1s}.btn:active{transform:scale(.97)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+
+/* AI-first: needs you, sessions, features */
+:root{--accent:var(--blue);--accent-bg:var(--blue-bg)}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}.btn.accent:hover{opacity:.9;background:var(--accent)}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--accent);color:#fff;font-size:12.5px;font-weight:600}
+.tabs .n.acc{background:var(--accent);color:#fff}
+.asks{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.ask{border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));border-radius:12px;padding:18px;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 6%,var(--bg)),var(--bg) 70%);box-shadow:0 1px 0 color-mix(in srgb,var(--accent) 10%,transparent)}
+.enter .ask{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
+.kico{width:36px;height:36px;border-radius:9px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}.kico svg{width:19px;height:19px}
+.akind{color:var(--accent);font-weight:500;margin-bottom:2px}.akind a:hover{text-decoration:underline}
+.atitle{font-size:15.5px;font-weight:600;line-height:1.35;margin-bottom:4px}
+.cmd{display:flex;align-items:center;gap:8px;margin-top:10px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:6px 6px 6px 10px}.cmd .mono{overflow-wrap:anywhere}
+.calm{display:flex;gap:14px;align-items:center;padding:18px 20px}
+.sessions{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.scard{display:block;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.scard:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-2px)}
+.scard.s-blocked{border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}
+.enter .scard,.enter .fcard{animation:rise .4s cubic-bezier(.2,.7,.2,1) both}
+.sname{font-size:15px;font-weight:600;margin-top:10px}.sfeat{margin-top:2px}.sdoing{margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.scard,.fcard{transition:border-color .15s,transform .15s,box-shadow .15s}
+.nowsm{display:flex;align-items:center;gap:16px;padding:14px 16px}.nowsm .thumb{width:120px}
+.board{display:flex;gap:12px;overflow-x:auto;margin-top:22px;padding-bottom:8px}
+.col{flex:1 0 190px;min-width:190px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:10px}
+.col.empty-col{flex:0 0 104px;min-width:104px;opacity:.6}
+.chead{display:flex;justify-content:space-between;font-size:13px;font-weight:500;padding:2px 4px}
+.fcard{display:block;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.fcard:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-2px)}
+.ftitle{font-weight:500;line-height:1.35}
+.pipe{display:flex;gap:4px;margin-top:22px}.pipe>div{flex:1;min-width:0}.pipe i{display:block;height:5px;border-radius:3px;background:var(--line2)}.pipe .ok i{background:var(--green)}.pipe .cur i{background:var(--accent)}
+.pipe span{display:block;font-size:12px;color:var(--fg3);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pipe .cur span{color:var(--fg);font-weight:500}
+.trail{position:relative;padding-left:22px}.trail:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tstep{position:relative;padding-bottom:16px}.tdotl{position:absolute;left:-22px;top:5px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--line2)}
+.tstep.live .tdotl{border-color:var(--amber);background:var(--amber)}.tstep:first-child .tdotl{border-color:var(--fg2)}
+.fails{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.fails a{font-family:var(--mono);font-size:12.5px;padding:3px 10px;border-radius:999px;background:var(--red-bg);color:var(--red)}.fails a:hover{filter:brightness(.95)}
+.expand{padding:4px 16px 14px 54px;background:var(--bg2);border-top:1px solid var(--line)}
+@media (max-width:760px){.asks,.sessions{grid-template-columns:1fr}.board{flex-direction:column;overflow:visible}.col{min-width:0;flex:none}.col.empty-col{display:none}
+ .pipe span{display:none}.pipe .cur span{display:block;overflow:visible}.nowsm .thumb{display:block;width:72px}.expand{padding-left:16px}}
 @media (max-width:760px){
  main,.bar{padding-left:16px;padding-right:16px}main{padding-top:24px}h1{font-size:24px}
  .now{grid-template-columns:1fr}.now .pic{border-right:none;border-bottom:1px solid var(--line)}.now .info{padding:18px}
@@ -147,9 +183,9 @@ details>summary{cursor:pointer;list-style:none}details>summary::-webkit-details-
 <main id="main"><div class="empty">Loading…</div></main>
 <dialog id="zoom" onclick="this.close()"><img id="zoomimg" alt=""><div class="cap" id="zoomcap"></div></dialog>
 <script>
-const TABS=[["","Overview"],["builds","Builds"],["tests","Tests"],["machines","Machines"]];
+const TABS=[["","Overview"],["features","Features"],["builds","Builds"],["tests","Tests"],["machines","Machines"]];
 const MORE=[["shots","Screenshots"],["issues","Issues"],["checklist","Headset checklist"],["intake","Intake"],["workflow","Workflow"]];
-const ALIAS={build:"builds",test:"tests",machine:"machines"};
+const ALIAS={build:"builds",test:"tests",machine:"machines",feature:"features",session:""};
 let D=null,R={},err="",sub={},filt={type:"All",q:""},open={};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -170,6 +206,7 @@ const resCls=x=>x=="PASS"?"ok":x=="SKIP"?"skip":"bad";
 const shotURL=(run,f)=>`/shots/${enc(run)}/${enc(f)}`;
 const base=n=>n.replace(/#\d+$/,"");
 function zoom(src,cap){$("zoomimg").src=src;$("zoomcap").textContent=cap||"";$("zoom").showModal()}
+function failChips(r,max){const f=r.scenarios.filter(x=>x.result=="FAIL"||x.result=="CRASH");if(!f.length)return"";return `<div class="fails">${f.slice(0,max).map(x=>`<a href="#/test/${enc(base(x.name))}?run=${enc(r.id)}" onclick="event.stopPropagation()" title="open this test case">${esc(x.name)}</a>`).join("")}${f.length>max?`<a href="#/build/${enc(r.id)}" style="background:var(--bg3);color:var(--fg2)">+${f.length-max}</a>`:""}</div>`}
 const CHEV=`<svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function bar3(c,w){const t=(c.PASS||0)+failN(c)+(c.SKIP||0)||1;return `<div class="bar3" style="${w?`width:${w}px`:""}" title="${c.PASS} passed, ${failN(c)} failed, ${c.SKIP||0} skipped"><i style="width:${c.PASS/t*100}%;background:var(--green)"></i><i style="width:${failN(c)/t*100}%;background:var(--red)"></i><i style="width:${(c.SKIP||0)/t*100}%;background:var(--line2)"></i></div>`}
 const tcls=t=>"t-"+String(t||"Other").split(" ")[0];
@@ -210,11 +247,11 @@ function machineCard(n){const i=mInfo(n);
 function render(){
  const {parts,params}=route();const top=parts[0]||"";const tab=ALIAS[top]||top;
  const cnt=k=>!D?0:k=="issues"?D.issues.filter(i=>i.state!="closed").length:k=="shots"?D.shots.filter(s=>!s.review).length:0;
- $("tabs").innerHTML=TABS.map(([k,t])=>`<a href="#/${k}" class="${k==tab?"on":""}">${t}</a>`).join("")+`<span class="sep"></span>`+
+ const na=D&&!err?asksAll().length:0;$("tabs").innerHTML=TABS.map(([k,t])=>`<a href="#/${k}" class="${k==tab?"on":""}">${t}${k==""&&na?`<span class="n acc">${na}</span>`:""}</a>`).join("")+`<span class="sep"></span>`+
   MORE.map(([k,t])=>`<a href="#/${k}" class="more ${k==tab?"on":""}">${t}${cnt(k)?`<span class="n">${cnt(k)}</span>`:""}</a>`).join("");
  if(err){$("main").innerHTML=`<div class="card pad err">${esc(err)}</div>`;return}if(!D)return;
  $("crumb").textContent=D.project.game||"project";
- const f={"":pOverview,builds:pBuilds,build:pBuild,tests:pTests,test:pTest,machines:pMachines,machine:pMachine,shots:pShots,issues:pIssues,checklist:pChecklist,intake:pIntake,workflow:pWorkflow}[top]||pOverview;
+ const f={"":pOverview,features:pFeatures,feature:pFeature,session:pSession,builds:pBuilds,build:pBuild,tests:pTests,test:pTest,machines:pMachines,machine:pMachine,shots:pShots,issues:pIssues,checklist:pChecklist,intake:pIntake,workflow:pWorkflow}[top]||pOverview;
  const m=$("main");const keep=document.activeElement?.id;m.classList.toggle("enter",animate);m.innerHTML=f(parts,params);
  if(animate){m.querySelectorAll(".li,.shotcard,.mcard").forEach((el,i)=>el.style.animationDelay=(60+Math.min(i,20)*25)+"ms");animate=false}
  if(keep&&$(keep)&&keep=="q"){const i=$(keep);i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
@@ -224,29 +261,83 @@ function runningSuite(){const j=Object.entries(D.jobs||{}).find(([k,j])=>k.start
  const name=j[0].slice(6);const act=(D.activity||[]).filter(a=>a.what=="suite started"&&a.suite==name).pop()||{};
  const s=D.suites.find(x=>x.name==name)||{};const mins=act.minutes||s.minutes||10;const el=(Date.now()-Date.parse(j[1].at))/60000;
  return {name,machine:act.machine,count:s.count,mins,el,pct:Math.min(95,el/mins*100)}}
+/* asks: what the AI needs from the human; sign-offs show up here too */
+const KIND={do:["Do this",`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg>`],
+ decide:["Decide",`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a4 4 0 0 0 4 4h4a4 4 0 0 1 4 4v4M18 3v6a4 4 0 0 1-4 4"/><path d="M3 6l3-3 3 3M15 6l3-3 3 3"/></svg>`],
+ check:["Check in the headset",ICON.headset]};
+function asksAll(){const wf=D.workflow;const cur=wf.phases.find(p=>p.id==wf.current);const out=(D.asks||[]).filter(a=>a.state!="done"&&a.state!="dismissed");
+ const so=cur&&cur.id=="design"&&!D.signoffs.design?"design":cur&&cur.id=="slice"&&!D.signoffs.slice?"slice":null;
+ if(so)out.unshift({id:"signoff:"+so,signoff:so,kind:so=="slice"?"check":"decide",title:so=="design"?"Sign off the design decisions":"Do the feel check in the headset, then sign off the slice",why:cur.next||"",from:"workflow"});
+ return out}
+function askCard(a,i){const k=KIND[a.kind]||KIND.do;const o=open["ask"+a.id];
+ const acts=a.signoff?`<button class="btn sm accent" onclick="signoff('${a.signoff}')">Sign off</button>`
+  :a.kind=="check"?(o?`<input id="askin${i}" placeholder="What did you see?" class="grow"><button class="btn sm accent" onclick="askDone('${esc(a.id)}','done',$('askin${i}').value||'problem')">Send</button>`
+    :`<button class="btn sm accent" onclick="askDone('${esc(a.id)}','done','looks fine')">Looks fine</button><button class="btn sm" onclick="open['ask${esc(a.id)}']=1;render()">Found a problem</button>`)
+  :a.kind=="decide"?`<input id="askin${i}" placeholder="Your answer" class="grow"><button class="btn sm accent" onclick="askDone('${esc(a.id)}','done',$('askin${i}').value)">Answer</button>`
+  :`<button class="btn sm accent" onclick="askDone('${esc(a.id)}','done')">Done</button>`;
+ return `<div class="ask"><div class="row nowrap" style="align-items:flex-start;gap:14px"><span class="kico" title="${k[0]}">${k[1]}</span><div class="grow">
+  <div class="xs akind">${k[0]}${a.from?` · <span class="faint">${a.from.startsWith("vr-")||(D.agents||[]).some(g=>g.agent==a.from)?`<a href="#/session/${enc(a.from)}">${esc(a.from)}</a>`:esc(a.from)}</span>`:""}</div>
+  <div class="atitle">${esc(a.title)}</div>${a.why?`<div class="small muted">${esc(a.why)}</div>`:""}
+  ${a.command?`<div class="cmd"><span class="mono xs grow">${esc(a.command)}</span><button class="btn sm ghost" onclick="copy(this)" data-t="${esc(a.command)}">Copy</button></div>`:""}
+  <div class="row" style="margin-top:12px">${acts}${a.signoff?"":`<button class="btn sm ghost faint" onclick="askDone('${esc(a.id)}','dismissed')">Dismiss</button>`}</div></div></div></div>`}
+async function askDone(id,state,answer){try{await post("/api/ask",{id,state,answer:answer||null});load()}catch(e){alert(e.message)}}
+/* sessions */
+const AST={working:["run","Working"],blocked:["warn","Waiting on you"],idle:["off","Idle"]};
+const featTitle=id=>(D.features||{})[id]?.title||id;
+function sessionCard(g){const st=AST[g.state]||AST.idle;
+ return `<a class="scard s-${g.state}" href="#/session/${enc(g.agent)}"><div class="row between nowrap"><span class="status small"><span class="dot ${st[0]}"></span>${st[1]}</span><span class="xs faint">${esc(ago(g.at))}</span></div>
+  <div class="sname mono">${esc(g.agent)}</div>${g.feature?`<div class="small sfeat ell">${esc(featTitle(g.feature))}</div>`:""}
+  <div class="small muted sdoing">${esc(g.doing||"")}</div></a>`}
 function pOverview(){const wf=D.workflow;const ph=wf.phases;const ci=ph.findIndex(p=>p.id==wf.current);const cur=ph[ci];
- const done=ph.filter(p=>p.ok).length;const r=lastRun();const live=runningSuite();
+ const r=lastRun();const live=runningSuite();const asks=asksAll();const ag=(D.agents||[]).slice().sort((a,b)=>({blocked:0,working:1,idle:2}[a.state]??3)-({blocked:0,working:1,idle:2}[b.state]??3));
  const mini=`<a class="wf" href="#/workflow" title="Workflow"><span class="segs">${ph.map((p,i)=>`<i class="${p.ok?"ok":i==ci?"cur":""}"></i>`).join("")}</span><span>${cur?`Step ${ci+1} of ${ph.length} · <b style="color:var(--fg);font-weight:500">${esc(cur.title)}</b>`:"All steps done"}</span></a>`;
- const ms=Object.keys(D.machines);
- // right now
  let nowCard;
- if(live){nowCard=`<div class="card now s-run"><div class="pic">${r?.preview?`<img src="${shotURL(r.id,r.preview.file)}" alt="" style="opacity:.55" onclick="zoom(this.src,'last build')">`:`<div class="ph">Running…</div>`}</div><div class="info">
-  <span class="status"><span class="dot run"></span>Running <b>${esc(live.name)}</b>${live.machine?` <span class="muted" style="font-weight:400">on ${esc(live.machine)}</span>`:""}</span>
-  <div class="indet"><i style="width:${live.pct}%"></i></div>
-  <div class="muted small">${live.count?`${live.count} tests · `:""}${Math.round(live.el)} of ~${Math.round(live.mins)} min</div></div>${nextBar(cur)}</div>`}
- else if(r){const st=rstate(r);nowCard=`<div class="card now s-${st}"><div class="pic">${r.preview?`<img src="${shotURL(r.id,r.preview.file)}" alt="" onclick="zoom(this.src,'${esc(r.preview.moment)}')">`:`<div class="ph">No screenshot</div>`}</div>
-  <a class="info" href="#/build/${enc(r.id)}"><div class="row between nowrap"><span class="status" style="font-size:15px"><span class="dot ${st}"></span>${rlabel(r)}</span><span class="faint small">${esc(ago(r.imported))}</span></div>
-  <div><span class="big">${r.counts.PASS}</span><span class="muted" style="font-size:18px"> / ${total(r)} tests passed</span></div>
-  ${bar3(r.counts)}
-  <div class="row between nowrap small"><span class="muted ell">Build <span class="mono" style="color:var(--fg)">${esc(r.build.id)}</span> · ${esc(r.suite||"")} · ${esc(r.machine)}</span><span class="row nowrap" style="gap:4px">Open ${CHEV}</span></div></a>${nextBar(cur)}</div>`}
- else nowCard=`<div class="card pad empty">Nothing has run yet. Add a rig machine, then run the smoke suite.</div>`;
+ if(live)nowCard=`<div class="card nowsm s-run">${r?.preview?`<img class="thumb" src="${shotURL(r.id,r.preview.file)}" alt="" style="opacity:.55">`:`<div class="thumb"></div>`}<div class="grow"><span class="status small"><span class="dot run"></span>Running <b>${esc(live.name)}</b>${live.machine?` <span class="muted" style="font-weight:400">on ${esc(live.machine)}</span>`:""}</span>
+  <div class="indet" style="margin:10px 0 6px"><i style="width:${live.pct}%"></i></div><div class="xs muted">${live.count?`${live.count} tests · `:""}${Math.round(live.el)} of ~${Math.round(live.mins)} min</div></div></div>`;
+ else if(r){const st=rstate(r);nowCard=`<div class="card nowsm s-${st} click" onclick="location.hash='#/build/${enc(r.id)}'" style="cursor:pointer">${r.preview?`<img class="thumb" src="${shotURL(r.id,r.preview.file)}" alt="">`:`<div class="thumb"></div>`}
+  <div class="grow"><div class="row between nowrap"><span class="status small"><span class="dot ${st}"></span>${rlabel(r)} · ${r.counts.PASS}/${total(r)} passed</span><span class="xs faint">${esc(ago(r.imported))}</span></div>
+  <div style="margin:10px 0 6px">${bar3(r.counts)}</div><div class="xs muted ell">Build <span class="mono" style="color:var(--fg)">${esc(r.build.id)}</span> · ${esc(r.suite||"")} · ${esc(r.machine)}</div>${failChips(r,4)}</div>${CHEV}</div>`}
+ else nowCard=`<div class="card pad small muted">Nothing has run yet. Your agent runs the smoke suite once a rig machine is set up.</div>`;
  return `<div class="row between" style="margin-bottom:28px"><h1>${esc(D.project.game||"Project")}</h1>${mini}</div>
- <h2>Right now</h2>${nowCard}
- <div class="sec"><div class="row between"><h2>Your setup</h2><a class="xs muted" href="#/machines" style="margin-bottom:12px">Manage</a></div>
- <div class="machines">${ms.map(machineCard).join("")||`<div class="card pad empty">No machines yet</div>`}</div></div>`}
-function nextBar(cur){if(!cur)return"";const so=cur.id=="design"&&!D.signoffs.design?"design":cur.id=="slice"&&!D.signoffs.slice?"slice":null;
- return `<div class="next"><span class="pill warn">Next</span><span class="txt">${esc(cur.next||cur.title)}</span>${so?`<button class="btn sm primary" onclick="signoff('${so}')">Sign off</button>`:`<a class="btn sm" href="#/workflow">Details</a>`}</div>`}
+ <div class="row" style="margin-bottom:12px;gap:8px"><h2 style="margin:0;color:var(--fg)">Needs you</h2>${asks.length?`<span class="badge">${asks.length}</span>`:""}</div>
+ ${asks.length?`<div class="asks">${asks.map(askCard).join("")}</div>`:`<div class="card calm"><span class="dot ok"></span><div><b>Nothing needs you right now.</b><div class="small muted">Your agents will ask here when they need your hands, a decision or a look in the headset.</div></div></div>`}
+ <div class="sec"><div class="row between"><h2>Sessions</h2><span class="xs faint" style="margin-bottom:12px">${ag.filter(g=>g.state=="working").length} working</span></div>
+ ${ag.length?`<div class="sessions">${ag.map(sessionCard).join("")}</div>`:`<div class="card pad small muted">No agent sessions yet. Each agent reports here with <span class="mono">irisify agent</span>.</div>`}</div>
+ <div class="sec"><div class="row between"><h2>Your setup</h2><a class="xs muted" href="#/machines" style="margin-bottom:12px">Details</a></div>
+ <div class="machines">${Object.keys(D.machines).map(machineCard).join("")||`<div class="card pad small muted">No machines yet. Your agent adds them.</div>`}</div></div>
+ <div class="sec"><div class="row between"><h2>Latest build</h2><a class="xs muted" href="#/builds" style="margin-bottom:12px">All builds</a></div>${nowCard}</div>`}
 async function signoff(w){await post("/api/signoff",{what:w});load()}
+
+/* ---------- features ---------- */
+const FSTATES=[["idea","Idea"],["design","Design"],["building","Building"],["testing","Testing"],["merged","Merged"],["in-headset","In headset"],["done","Done"]];
+function scen(n){const c=D.catalog.find(x=>x.name==n);const l=c?.history?.[c.history.length-1];return {n,c,l,cls:l?resDot(l.result):"off"}}
+function featCard(id,f){const sc=(f.scenarios||[]).map(scen);const pass=sc.filter(s=>s.cls=="ok").length,ran=sc.filter(s=>s.l).length;const ag=(D.agents||[]).find(g=>g.agent==f.owner);
+ return `<a class="fcard" href="#/feature/${enc(id)}"><div class="ftitle">${esc(f.title||id)}</div>
+  ${f.owner?`<div class="xs muted row nowrap" style="gap:6px;margin-top:6px"><span class="dot ${ag?(AST[ag.state]||AST.idle)[0]:"off"}" style="width:7px;height:7px"></span><span class="mono ell">${esc(f.owner)}</span></div>`:`<div class="xs faint" style="margin-top:6px">no session</div>`}
+  ${sc.length?`<div class="row nowrap" style="gap:4px;margin-top:12px">${sc.map(s=>`<span class="dot ${s.cls}" style="width:7px;height:7px;box-shadow:none" title="${esc(s.n)}"></span>`).join("")}<span class="xs faint" style="margin-left:4px">${ran?`${pass}/${sc.length} passing`:"not run yet"}</span></div>`:""}</a>`}
+function pFeatures(){const F=Object.entries(D.features||{});const cols=FSTATES.concat(F.some(([i,f])=>f.state=="parked")?[["parked","Parked"]]:[]);
+ return `<div class="row between"><h1>Features</h1><span class="muted small">${F.length} features · ${F.filter(([i,f])=>f.state!="done"&&f.state!="parked").length} in flight</span></div>
+ <p class="muted small" style="margin:6px 0 0">Your agents move features along as they work.</p>
+ ${F.length?`<div class="board">${cols.map(([k,t])=>{const fs=F.filter(([i,f])=>(f.state||"idea")==k);
+  return `<div class="col ${fs.length?"":"empty-col"}"><div class="chead"><span>${t}</span><span class="faint">${fs.length}</span></div>${fs.map(([i,f])=>featCard(i,f)).join("")}</div>`}).join("")}</div>`:`<div class="card pad muted small sec">No features yet. Agents add them as they start work.</div>`}`}
+function trail(g){const t=(g?.trail||[]).slice().reverse();if(!t.length)return `<div class="small muted">No steps reported yet</div>`;
+ return `<div class="trail">${t.map((x,i)=>`<div class="tstep ${i==0&&g.state=="working"?"live":""}"><span class="tdotl"></span><div class="small">${esc(x.doing)}</div><div class="xs faint">${esc(ago(x.at))}</div></div>`).join("")}</div>`}
+function pFeature(parts){const id=parts[1];const f=(D.features||{})[id];if(!f)return `${crumbs([["Features","#/features"],[id]])}<div class="empty">No such feature</div>`;
+ const si=FSTATES.findIndex(s=>s[0]==f.state);const g=(D.agents||[]).find(x=>x.agent==f.owner);const sc=(f.scenarios||[]).map(scen);
+ return `${crumbs([["Features","#/features"],[f.title||id]])}<h1>${esc(f.title||id)}</h1>
+ <div class="row small muted" style="margin-top:8px"><span class="pill">${esc((FSTATES[si]||[0,f.state])[1])}</span>${f.branch?`<span class="mono xs">${esc(f.branch)}</span>`:""}<span>updated ${esc(ago(f.updated))}</span></div>
+ <div class="pipe">${FSTATES.map((s,i)=>`<div class="${i<si?"ok":i==si?"cur":""}"><i></i><span>${s[1]}</span></div>`).join("")}</div>
+ <div class="sec"><h2>Scenarios</h2>${sc.length?`<div class="list">${sc.map(s=>`<a class="li ${s.c?"typed "+tcls(s.c.type):""}" href="#/test/${enc(s.n)}"><span class="dot ${s.cls}"></span><span class="mono grow ell">${esc(s.n)}</span>${s.c?`<span class="hist hide-sm">${s.c.history.slice(-16).map(h=>`<span class="${resCls(h.result)}"></span>`).join("")}</span>`:`<span class="xs faint">not run yet</span>`}${CHEV}</a>`).join("")}</div>`:`<div class="small muted">No scenarios linked yet</div>`}</div>
+ <div class="sec"><h2>Session</h2>${g?`<div style="max-width:420px">${sessionCard(g)}</div><div style="margin-top:20px">${trail(g)}</div>`:`<div class="small muted">${f.owner?esc(f.owner)+" hasn't reported yet":"No session owns this yet"}</div>`}</div>`}
+function pSession(parts){const n=parts[1];const g=(D.agents||[]).find(x=>x.agent==n);if(!g)return `${crumbs([["Overview","#/"],[n]])}<div class="empty">No such session</div>`;
+ const st=AST[g.state]||AST.idle;const f=(D.features||{})[g.feature];const asks=asksAll().filter(a=>a.from==n);
+ return `${crumbs([["Overview","#/"],["Sessions"],[n]])}<div class="row between"><h1 class="mono" style="font-size:24px">${esc(n)}</h1><span class="status" style="font-size:15px"><span class="dot ${st[0]}"></span>${st[1]}</span></div>
+ <div class="row small muted" style="margin-top:8px">${g.branch?`<span class="mono xs">${esc(g.branch)}</span> ·`:""}<span>last update ${esc(ago(g.at))}</span></div>
+ <div class="card pad" style="margin-top:22px"><div class="xs muted">Doing now</div><div style="font-size:16px;margin-top:4px">${esc(g.doing||"—")}</div></div>
+ ${f?`<div class="sec"><h2>Working on</h2><div style="max-width:320px">${featCard(g.feature,f)}</div></div>`:""}
+ ${asks.length?`<div class="sec"><div class="row" style="gap:8px;margin-bottom:12px"><h2 style="margin:0">Asked you</h2><span class="badge">${asks.length}</span></div><div class="asks">${asks.map(askCard).join("")}</div></div>`:""}
+ <div class="sec"><h2>Trail</h2>${trail(g)}</div>`}
+
 
 /* ---------- workflow ---------- */
 function pWorkflow(){const wf=D.workflow;
@@ -258,18 +349,13 @@ function pWorkflow(){const wf=D.workflow;
 /* ---------- builds ---------- */
 function pBuilds(){const rigs=Object.entries(D.machines).filter(([n,m])=>(m.roles||[]).includes("rig")).map(([n])=>n);
  const live=runningSuite();const runs=D.runs.slice().reverse();const suites=D.suites.filter(s=>!s.error&&s.count!=null);
- return `<div class="row between"><h1>Builds</h1><button class="btn ${open.run?"":"primary"}" onclick="open.run=!open.run;render()">${open.run?"Close":"Run a suite"}</button></div>
- ${open.run?`<div class="card pad" style="margin-top:18px"><div class="row"><select id="suite" class="grow">${suites.map(s=>`<option value="${esc(s.name)}">${esc(s.name)} · ${s.count} tests · ~${Math.round(s.minutes)} min</option>`).join("")}</select>
-  <select id="rig">${rigs.map(r=>`<option>${esc(r)}</option>`).join("")||`<option value="">no rig machine</option>`}</select><button class="btn" onclick="planSuite()">Preview</button><button class="btn primary" onclick="runSuite()" ${rigs.length?"":"disabled"}>Run</button></div><div id="planout"></div></div>`:""}
+ return `<h1>Builds</h1><p class="muted small" style="margin:6px 0 0">Your agent runs suites on the rig (<span class="mono">irisify suite run smoke</span>).</p>
  ${live?`<div class="list" style="margin-top:18px"><div class="li"><span class="dot run"></span><b>${esc(live.name)}</b><span class="muted small grow">running · ${Math.round(live.el)} of ~${Math.round(live.mins)} min</span></div></div>`:""}
- <div class="list" style="margin-top:18px">${runs.map(r=>`<a class="li" href="#/build/${enc(r.id)}">${thumb(r)}
+ <div class="list" style="margin-top:18px">${runs.map(r=>`<div class="li click" onclick="location.hash='#/build/${enc(r.id)}'">${thumb(r)}
   <span class="dot ${rstate(r)}"></span>
-  <div class="grow"><div class="mono ell">${r.build.id=="unknown"?`<span class="faint">no build id</span>`:`<b>${esc(r.build.id)}</b>`}</div><div class="xs faint ell">${esc(r.suite||"")} · ${esc(r.machine)} · ${esc(ago(r.imported))}</div></div>
+  <div class="grow"><div class="mono ell">${r.build.id=="unknown"?`<span class="faint">no build id</span>`:`<b>${esc(r.build.id)}</b>`}</div><div class="xs faint ell">${esc(r.suite||"")} · ${esc(r.machine)} · ${esc(ago(r.imported))}</div>${failChips(r,3)}</div>
   <span class="small hide-sm" style="width:90px">${bar3(r.counts,80)}</span>
-  <span class="small" style="width:52px;text-align:right">${r.counts.PASS}/${total(r)}</span>${CHEV}</a>`).join("")||`<div class="empty">No builds yet</div>`}</div>`}
-async function planSuite(){const o=$("planout");try{const p=await post("/api/suite",{name:$("suite").value,machine:$("rig").value,dry:true});
- o.innerHTML=`<div class="small muted" style="margin:14px 0 8px">${p.scenarios.length} tests · ~${Math.round(p.minutes)} min${p.seed!=null?` · seed ${p.seed}`:""}</div><div class="chips">${p.scenarios.map(s=>`<span class="typepill ${tcls(typeOf(s))}"><span class="tdot"></span>${esc(s)}</span>`).join("")}</div>`}catch(e){o.innerHTML=`<div class="err" style="margin-top:12px">${esc(e.message)}</div>`}}
-async function runSuite(){try{await post("/api/suite",{name:$("suite").value,machine:$("rig").value});open.run=false;load();poll()}catch(e){$("planout").innerHTML=`<div class="err" style="margin-top:12px">${esc(e.message)}</div>`}}
+  <span class="small" style="width:52px;text-align:right">${r.counts.PASS}/${total(r)}</span>${CHEV}</div>`).join("")||`<div class="empty">No builds yet</div>`}</div>`}
 let pollT=null;function poll(){clearTimeout(pollT);pollT=setTimeout(async()=>{await load();if(Object.values(D.jobs||{}).some(j=>j.state=="running"))poll()},3000)}
 
 /* ---------- one build ---------- */
@@ -292,7 +378,7 @@ function pBuild(parts){const r=runById(parts[1]);if(!r)return `${crumbs([["Build
 
 /* ---------- tests catalog ---------- */
 function pTests(){const cat=D.catalog;const types=["All",...new Set(cat.map(c=>c.type))];const last=c=>c.history[c.history.length-1];
- const shown=cat.filter(c=>(filt.type=="All"||c.type==filt.type)&&(!filt.q||c.name.includes(filt.q)));
+ const shown=cat.filter(c=>(filt.type=="All"||c.type==filt.type)&&(!filt.q||c.name.includes(filt.q))).sort((a,b)=>(resCls(last(b)?.result||"SKIP")=="bad")-(resCls(last(a)?.result||"SKIP")=="bad"));
  const failing=cat.filter(c=>last(c)&&resCls(last(c).result)=="bad").length;
  return `<div class="row between"><h1>Tests</h1><span class="muted small">${cat.length} tests${failing?` · <span class="r">${failing} failing</span>`:""}</span></div>
  <div class="row filters" style="margin:20px 0"><div class="chips grow">${types.map(t=>`<span class="chip ${filt.type==t?"on":""} ${tcls(t)}" onclick="filt.type='${esc(t)}';render()">${t!="All"?`<span class="tdot"></span>`:""}${esc(t.split(" ")[0])}</span>`).join("")}</div>
@@ -326,14 +412,9 @@ function pTest(parts,params){const name=parts[1]||"";const key=name;
 
 /* ---------- machines ---------- */
 function pMachines(){const ms=Object.keys(D.machines);
- return `<div class="row between"><h1>Machines</h1><button class="btn ${open.add?"":"primary"}" onclick="open.add=!open.add;render()">${open.add?"Close":"Add a machine"}</button></div>
- ${open.add?addForm():""}
+ return `<h1>Machines</h1><p class="muted small" style="margin:6px 0 0">Your agent adds and checks machines (<span class="mono">irisify machine add</span>). Anything it needs from you shows up in Needs you.</p>
  <div class="machines" style="margin-top:20px">${ms.map(machineCard).join("")||`<div class="card pad empty">No machines yet. Add the one that runs the game first.</div>`}</div>
  <div class="sec"><h2>Headsets</h2><div class="list">${D.profiles.map(p=>`<div class="li"><span class="dot ${p.supported?"ok":"off"}"></span><span class="grow">${esc(p.name)}</span><span class="small faint hide-sm">${p.display?.px_per_degree?`~${p.display.px_per_degree} px/°`:""}</span><span class="pill ${p.supported?"ok":""}">${p.supported?"Supported":"Bindings only"}</span></div>`).join("")}</div></div>`}
-function addForm(){return `<div class="card pad" style="margin-top:18px"><div class="row"><input id="mName" placeholder="Name" size="12"><select id="mLink"><option value="ssh">SSH</option><option value="adb">adb</option><option value="local">This machine</option></select>
- <input id="mHost" placeholder="user@rig-laptop" class="grow"><select id="mHeadset"><option value="">Headset</option>${D.profiles.map(p=>`<option value="${esc(p.type)}">${esc(p.name)}</option>`).join("")}</select></div>
- <div class="row" style="margin-top:10px">${["dev","game-host","rig","headset"].map(r=>`<label class="chip"><input type="checkbox" class="mRole" value="${r}" ${r=="game-host"?"checked":""} style="height:auto">${r}</label>`).join("")}<input id="mGame" placeholder="Game folder (optional)" class="grow"></div>
- <div class="row" style="margin-top:14px"><button class="btn primary" onclick="addMachine()">Add and check</button><span id="mErr" class="err"></span></div></div>`}
 function pMachine(parts){const n=parts[1];if(!D.machines[n])return `${crumbs([["Machines","#/machines"],[n]])}<div class="empty">No such machine</div>`;
  const i=mInfo(n);const s=i.s;const tab=sub.machine||"overview";const pf=D.preflight[n]?.checks||[];
  const fixRow=(ok,what,fix,who)=>`<div class="li" style="display:block"><div class="row nowrap"><span class="dot ${ok?"ok":ok===false?"bad":"off"}"></span><span class="grow">${esc(what)}</span>${!ok&&who=="you"?`<span class="pill warn">you</span>`:""}</div>
@@ -349,13 +430,7 @@ function pMachine(parts){const n=parts[1];if(!D.machines[n])return `${crumbs([["
  return `${crumbs([["Machines","#/machines"],[n]])}
  <div class="row between"><div class="row nowrap"><div class="mcard" style="padding:0;border:none;background:none"><div class="ico">${ICON[i.kind]}</div></div><div><h1>${esc(n)}</h1><div class="muted small">${esc(i.roles.map(r=>ROLE[r]||r).join(" · "))}</div></div></div>
  <span class="status" style="font-size:15px"><span class="dot ${i.state}"></span>${i.stateText}</span></div>
- <div class="row" style="margin-top:18px"><button class="btn" onclick="check('${esc(n)}')">${i.state=="run"?"Checking…":"Check now"}</button>${i.roles.includes("rig")?`<button class="btn" onclick="sync('${esc(n)}')">Sync results</button>`:""}</div>
  <div class="subtabs">${[["overview","Overview"],["setup",`Setup${sd?` ${sdone}/${sd}`:""}`],["preflight",`Preflight${pf.length?` ${pd}/${pf.length}`:""}`]].map(([k,x])=>`<a class="${tab==k?"on":""}" onclick="sub.machine='${k}';render()">${x}</a>`).join("")}</div>${body}`}
-async function addMachine(){const roles=[...document.querySelectorAll(".mRole:checked")].map(x=>x.value);const e=$("mErr");const name=$("mName").value.trim(),link=$("mLink").value,host=$("mHost").value.trim();
- if(!name){e.textContent="Name the machine first";return}if(link!="local"&&!host){e.textContent="Enter its address";return}if(!roles.length){e.textContent="Pick at least one role";return}
- try{await post("/api/machine/add",{name,link,host:host||null,roles,headset:$("mHeadset").value||null,game_dir:$("mGame").value.trim()||null});open.add=false;setTimeout(load,300);poll()}catch(x){e.textContent=x.message}}
-async function check(n){await post("/api/machine/check",{name:n});load();poll()}
-async function sync(n){await post("/api/sync",{machine:n});poll()}
 
 /* ---------- screenshots ---------- */
 function pShots(){const sh=D.shots;const types=["All",...new Set(sh.map(s=>typeOf(s.scenario)))];const t=filt.stype||"All";
