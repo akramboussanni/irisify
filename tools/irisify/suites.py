@@ -91,7 +91,9 @@ def select(project, suite, scenario=None, seed=None, files=None):
         names += d.get("scenarios", [])
         names = [n for n in order(names, meta) if n not in always]
         add(always, "always")
-        add(names, f"suite {suite}")
+        for n in names:
+            hit = sorted(set(meta.get(n, {}).get("tags", [])) & inc)
+            add([n], f"tag {', '.join(hit)}" if hit else f"suite {suite}")
         sel = names * int(d.get("repeat", 1))
         if d.get("shuffle"):
             seed = seed if seed is not None else random.randrange(1 << 30)

@@ -37,8 +37,9 @@ def gate_setup(p):
     if not ms:
         return _g(False, [], "Add machines: irisify machine add <name> --roles ... --link ssh|adb|local")
     bad = [n for n in ms if not st.get(n, {}).get("reachable")]
-    return _g(not bad, [f"{n}: {'reachable' if n not in bad else 'not reachable'}" for n in ms],
-              f"Fix the link for {', '.join(bad)} (irisify machine setup {bad[0] if bad else ''})")
+    word = lambda n: "reachable" if n not in bad else ("not reachable" if n in st else "not checked")
+    return _g(not bad, [f"{n}: {word(n)}" for n in ms],
+              f"Fix the link for {', '.join(bad)} (irisify machine check {bad[0] if bad else ''})")
 
 
 def gate_intake(p):

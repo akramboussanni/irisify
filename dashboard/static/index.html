@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Irisify</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 16s5-9 14-9 14 9 14 9-5 9-14 9S2 16 2 16z' fill='none' stroke='%235b4fd6' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%235b4fd6'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--sunk:#efede7;--text:#1d1c1a;--muted:#6b6a64;--faint:#9a998f;--line:rgba(0,0,0,.09);--line2:rgba(0,0,0,.16);
+--acc:#5b4fd6;--acc-bg:#ecebfd;--ok:#2f7a1f;--ok-bg:#e8f3de;--bad:#b3261e;--bad-bg:#fbe9e7;--warn:#8a5a00;--warn-bg:#fbf0d9;--r:8px;
+font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#171716;--card:#21211f;--sunk:#2a2a27;--text:#ecebe6;--muted:#a8a79f;--faint:#77766f;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.18);
+--acc:#a59cf7;--acc-bg:#2d2a52;--ok:#9fd67f;--ok-bg:#22361a;--bad:#f2a49c;--bad-bg:#43201d;--warn:#f0c46b;--warn-bg:#3d2f12;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#171716;--card:#21211f;--sunk:#2a2a27;--text:#ecebe6;--muted:#a8a79f;--faint:#77766f;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.18);
+--acc:#a59cf7;--acc-bg:#2d2a52;--ok:#9fd67f;--ok-bg:#22361a;--bad:#f2a49c;--bad-bg:#43201d;--warn:#f0c46b;--warn-bg:#3d2f12;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+a{color:var(--acc)}.wrap{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+nav{border-right:1px solid var(--line);padding:16px 10px;position:sticky;top:0;height:100vh;overflow:auto}
+nav .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px;padding:4px 10px 14px}
+nav a{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:var(--r);color:var(--muted);text-decoration:none}
+nav a.on{background:var(--card);color:var(--text);font-weight:550;box-shadow:inset 0 0 0 1px var(--line)}
+nav .count{font-size:11px;padding:0 6px;border-radius:10px;background:var(--sunk)}
+main{padding:20px 24px 60px;max-width:1100px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+h1{font-size:20px;margin:0;font-weight:600}h2{font-size:15px;margin:0 0 10px;font-weight:600}
+.sub{color:var(--muted);font-size:13px}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.chip{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:6px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.ok{background:var(--ok-bg);color:var(--ok)}.bad{background:var(--bad-bg);color:var(--bad)}.warn{background:var(--warn-bg);color:var(--warn)}.acc{background:var(--acc-bg);color:var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top}th{color:var(--muted);font-weight:500;border-top:none}
+button,select,input,textarea{font:inherit;color:inherit}button{background:var(--card);border:1px solid var(--line2);border-radius:var(--r);padding:5px 11px;cursor:pointer}
+button:hover{background:var(--sunk)}button.primary{border-color:var(--acc);color:var(--acc)}
+input,select,textarea{background:var(--card);border:1px solid var(--line2);border-radius:var(--r);padding:5px 8px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}.step:first-child{border-top:none}
+.dot{width:18px;height:18px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}.fix{background:var(--sunk);padding:6px 8px;border-radius:6px;margin-top:4px;display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pair img,.ph{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;background:var(--sunk);display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:12px;cursor:zoom-in}
+.empty{color:var(--muted);padding:18px;text-align:center}.err{color:var(--bad);font-size:13px}
+dialog{border:1px solid var(--line2);border-radius:12px;background:var(--card);color:var(--text);max-width:92vw;padding:0}dialog img{max-width:90vw;max-height:85vh;display:block}
+.bars{display:flex;align-items:flex-end;gap:4px;height:90px}.bars div{flex:1;border-radius:4px 4px 0 0;min-height:3px}
+details summary{cursor:pointer;color:var(--muted)}pre{white-space:pre-wrap;font-size:12px;background:var(--sunk);padding:8px;border-radius:6px;max-height:260px;overflow:auto}
+@media (max-width:760px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px;border-right:none;border-bottom:1px solid var(--line)}nav .brand{width:100%}main{padding:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav id="nav"><div class="brand"><svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><path d="M2 16s5-9 14-9 14 9 14 9-5 9-14 9S2 16 2 16z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="16" cy="16" r="5" fill="var(--acc)"/></svg>Irisify</div></nav>
+<main id="main"><div class="empty">Loading…</div></main>
+</div>
+<dialog id="zoom" onclick="this.close()"><img id="zoomimg" alt=""></dialog>
+<script>
+const PAGES=[["workflow","Workflow"],["machines","Machines"],["suites","Suites and runs"],["shots","Screenshots"],["metrics","Metrics"],["issues","Issues"],["ready","Ready for headset"],["intake","Intake"]];
+let D=null,page=location.hash.slice(1)||"workflow",openRun=null,err="";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const chip=(t,c="")=>`<span class="chip ${c}">${esc(t)}</span>`;
+const res=r=>chip(r,r=="PASS"?"ok":r=="SKIP"?"":r=="FLAKY"?"warn":"bad");
+async function post(path,body){const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json","X-Irisify":"1"},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(j.error||r.status);return j}
+async function load(){try{const r=await fetch("/api/overview");D=await r.json();err=""}catch(e){err="Can't reach the Irisify server."}render()}
+function nav(){const n=document.getElementById("nav");const counts={issues:(D?.issues||[]).filter(i=>i.state!="closed").length,shots:(D?.shots||[]).filter(s=>!s.review).length,ready:(D?.checklist||[]).length};
+n.querySelectorAll("a").forEach(a=>a.remove());PAGES.forEach(([k,t])=>{const a=document.createElement("a");a.href="#"+k;a.className=k==page?"on":"";a.innerHTML=`<span>${t}</span>${counts[k]?`<span class="count">${counts[k]}</span>`:""}`;n.appendChild(a)})}
+window.onhashchange=()=>{page=location.hash.slice(1)||"workflow";openRun=null;render()};
+function header(){const p=D.project||{};const wf=D.workflow;const cur=wf.phases.find(x=>x.id==wf.current);
+return `<div class="head"><div><h1>${esc(p.game||"Irisify project")}</h1><div class="sub mono">${esc(p.root||"")} · integration branch ${esc(p.integration_branch||"main")}</div></div>
+<div class="row">${cur?chip("Phase: "+cur.title,"acc"):chip("All gates green","ok")}<button onclick="load()">Refresh</button></div></div>`}
+function render(){nav();const m=document.getElementById("main");if(err){m.innerHTML=`<div class="card err">${err}</div>`;return}if(!D)return;
+m.innerHTML=header()+(({workflow:pWorkflow,machines:pMachines,suites:pSuites,shots:pShots,metrics:pMetrics,issues:pIssues,ready:pReady,intake:pIntake})[page]||pWorkflow)()}
+
+function pWorkflow(){const wf=D.workflow;
+const steps=wf.phases.map(ph=>{const cur=ph.id==wf.current;const c=ph.ok?"ok":cur?"warn":"";
+return `<div class="step"><div class="dot ${c}">${ph.ok?"✓":cur?"→":""}</div><div style="flex:1"><div class="row between"><b>${esc(ph.title)}</b><span class="sub">${esc(ph.partial||ph.sub)}</span></div>
+<div class="sub">${ph.evidence.map(esc).join(" · ")}</div>${!ph.ok&&cur?`<div class="fix"><span>${esc(ph.next)}</span></div>`:""}
+${ph.id=="design"&&!D.signoffs.design&&(cur||ph.evidence.some(e=>e.startsWith("all artifacts")))?`<div class="row" style="margin-top:6px"><button onclick="signoff('design')">I've reviewed the design decisions: sign off</button></div>`:""}
+${ph.id=="slice"&&!D.signoffs.slice&&cur?`<div class="row" style="margin-top:6px"><button onclick="signoff('slice')">I did the feel check: sign off</button></div>`:""}</div></div>`}).join("");
+const acts=(D.activity||[]).slice().reverse().slice(0,8).map(a=>`<tr><td class="sub mono">${esc((a.at||"").replace("T"," ").slice(5,16))}</td><td>${esc(a.what)} ${esc(a.suite||"")} ${a.machine?"on "+esc(a.machine):""}</td></tr>`).join("");
+const ov=(wf.overrides||[]).map(o=>`<div class="sub">${chip("override","warn")} ${esc(o.action)} without ${esc(o.gates.join(", "))}: ${esc(o.why)}</div>`).join("");
+return `<div class="card"><h2>Gates</h2>${steps}</div>${ov?`<div class="card"><h2>Overrides</h2>${ov}</div>`:""}<div class="card"><h2>Recent activity</h2>${acts?`<table>${acts}</table>`:`<div class="sub">Nothing yet.</div>`}</div>`}
+async function signoff(w){await post("/api/signoff",{what:w});load()}
+
+function pMachines(){const ms=D.machines||{},st=D.machines_status||{},dep=D.deploys||{},pre=D.preflight||{};
+const latest=(D.runs||[]).slice(-1)[0]?.build?.id;
+const cards=Object.entries(ms).map(([n,m])=>{const s=st[n]||{};const d=dep[n];const ts=s.tailscale;const b=d?.build?.id||s.facts?.build?.id;
+const steps=(s.steps||[]).map(x=>`<div class="step"><div class="dot ${x.done?"ok":x.done===false?"bad":""}">${x.done?"✓":x.done===false?"✗":"?"}</div><div style="flex:1"><div class="row between"><span>${esc(x.what)}</span>${chip(x.who=="you"?"you":x.who=="agent"?"agent":"check",x.who=="you"?"warn":"")}</div>
+${!x.done&&x.fix?`<div class="fix"><span class="mono">${esc(x.fix)}</span><button onclick="copy(this)" data-t="${esc(x.fix)}">Copy</button></div>`:""}</div></div>`).join("");
+const pf=pre[n]?.checks?`<details style="margin-top:8px"><summary>Platform preflight · ${pre[n].checks.filter(c=>c.ok).length}/${pre[n].checks.length}</summary>${pre[n].checks.map(c=>`<div class="sub">${c.ok?"✓":c.ok===false?"✗":"?"} ${esc(c.what)}${c.fix?` — <span class="mono">${esc(c.fix)}</span>`:""}</div>`).join("")}</details>`:"";
+return `<div class="card"><div class="row between"><h2 style="margin:0">${esc(n)}</h2>${s.at?chip(s.reachable?"online":"unreachable",s.reachable?"ok":"bad"):chip("not checked")}</div>
+<div class="sub" style="margin:4px 0 8px">${(m.roles||[]).map(r=>chip(r,"acc")).join(" ")}</div>
+<table><tr><td class="sub">Link</td><td>${esc(m.link)} ${m.host?`<span class="mono">${esc(m.host)}</span>`:""}${ts?` · Tailscale ${ts.peer_online?"peer online":"peer offline"}`:""}</td></tr>
+${m.headset?`<tr><td class="sub">Headset</td><td>${esc((D.profiles.find(p=>p.type==m.headset)||{}).name||m.headset)}</td></tr>`:""}
+${s.facts?.kernel?`<tr><td class="sub">System</td><td>${esc(s.facts.os)} ${esc(s.facts.kernel)}${s.facts.gpu?" · "+esc(s.facts.gpu.trim()):""}</td></tr>`:""}
+${(m.roles||[]).some(r=>r!="dev")?`<tr><td class="sub">Build</td><td>${b?`<span class="mono">${esc(b)}</span> ${latest&&b!=latest?chip("not the latest run's build","warn"):b?chip("current","ok"):""}`:chip("unknown")}</td></tr>`:""}
+${s.facts?.lock?`<tr><td class="sub">Lock</td><td>${chip("locked: "+s.facts.lock,"warn")}</td></tr>`:""}
+${s.error?`<tr><td class="sub">Error</td><td class="err">${esc(s.error)}</td></tr>`:""}</table>
+${steps?`<div style="margin-top:8px">${steps}</div>`:""}${pf}
+<div class="row" style="margin-top:10px"><button onclick="check('${esc(n)}')">${D.jobs["check:"+n]?.state=="running"?"Checking…":"Check now"}</button>${(m.roles||[]).includes("rig")?`<button onclick="sync('${esc(n)}')">Sync results</button>`:""}</div></div>`}).join("");
+const profs=D.profiles.map(p=>`<option value="${esc(p.type)}">${esc(p.name)}${p.supported?"":" (bindings only)"}</option>`).join("");
+return `<div class="grid">${cards||`<div class="card empty">No machines yet. Add the one that runs the game first.</div>`}</div>
+<div class="card"><h2>Add a machine</h2><div class="sub" style="margin-bottom:10px">One machine can do everything, or split the roles: a dev machine that builds, a game host that streams to the headset, a rig that tests without one, the headset itself.</div>
+<div class="row"><input id="mName" placeholder="fedora" size="10"><select id="mLink"><option value="ssh">SSH</option><option value="adb">adb (Android headsets)</option><option value="local">This machine</option></select>
+<input id="mHost" placeholder="user@rig-laptop or 192.168.1.50:5555" size="26"><select id="mHeadset"><option value="">Headset…</option>${profs}</select></div>
+<div class="row" style="margin-top:8px">${["dev","game-host","rig","headset"].map(r=>`<label class="row" style="gap:4px"><input type="checkbox" class="mRole" value="${r}" ${r=="game-host"?"checked":""}>${r}</label>`).join("")}
+<input id="mGame" placeholder="game folder, e.g. ~/.local/share/Steam/steamapps/common/Game" size="44"></div>
+<div class="row" style="margin-top:10px"><button class="primary" onclick="addMachine()">Add and check</button><span id="mErr" class="err"></span></div></div>
+<div class="card"><h2>Headsets</h2>${D.profiles.map(p=>`<div class="step"><div class="dot ${p.supported?"ok":""}">${p.supported?"✓":"·"}</div><div><b>${esc(p.name)}</b> <span class="mono sub">${esc(p.type)}</span> ${p.supported?chip("supported","ok"):chip(p.type=="oculus_touch"?"Quest: coming":"bindings only")}
+${p.display?.px_per_degree?`<span class="sub"> · ~${p.display.px_per_degree} px/°</span>`:""}${(p.notes||[]).map(x=>`<div class="sub">${esc(x)}</div>`).join("")}</div></div>`).join("")}</div>`}
+async function addMachine(){const roles=[...document.querySelectorAll(".mRole:checked")].map(x=>x.value);const e=document.getElementById("mErr");
+const name=document.getElementById("mName").value.trim(),link=document.getElementById("mLink").value,host=document.getElementById("mHost").value.trim();
+if(!name){e.textContent="Name the machine first";return}if(link!="local"&&!host){e.textContent="Enter its address";return}if(!roles.length){e.textContent="Pick at least one role";return}
+try{await post("/api/machine/add",{name,link,host:host||null,roles,headset:document.getElementById("mHeadset").value||null,game_dir:document.getElementById("mGame").value.trim()||null});setTimeout(load,300)}catch(x){e.textContent=x.message}}
+async function check(n){await post("/api/machine/check",{name:n});load();poll()}
+async function sync(n){await post("/api/sync",{machine:n});poll()}
+function copy(b){navigator.clipboard?.writeText(b.dataset.t);b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1200)}
+let pollT=null;function poll(){clearTimeout(pollT);pollT=setTimeout(async()=>{await load();if(Object.values(D.jobs||{}).some(j=>j.state=="running"))poll()},2500)}
+
+function pSuites(){const rigs=Object.entries(D.machines||{}).filter(([n,m])=>(m.roles||[]).includes("rig")).map(([n])=>n);
+const jobs=Object.entries(D.jobs||{}).filter(([k])=>k.startsWith("suite:")).map(([k,j])=>`<div class="sub">${esc(k.slice(6))}: ${j.state=="running"?chip("running","warn"):j.state=="failed"?chip("failed","bad")+" "+esc(j.error):chip("done","ok")}</div>`).join("");
+const suites=(D.suites||[]).map(s=>s.error?`<div class="err">${esc(s.error)}</div>`:`<div class="step"><div style="flex:1"><div class="row between"><b>${esc(s.name)}</b><span class="sub">${s.count==null?"pick a scenario":s.count+" scenarios · ~"+s.minutes+" min"}</span></div>
+<div class="sub">${esc(s.description||({smoke:"Boot, input, one mechanic. After every deploy.",changed:"What the diff since the last green build touches, plus smoke.",regression:"Everything that failed or was flaky on recent builds.",auto:"changed + regression: what to run after a change.",full:"Everything, cheap first.","flaky-hunt":"One scenario between all the others, shuffled."})[s.name]||"")}</div></div>
+<div class="row"><button onclick="plan('${esc(s.name)}')">Plan</button>${rigs.length?`<button class="primary" onclick="runSuite('${esc(s.name)}')">Run</button>`:""}</div></div>`).join("");
+const runs=(D.runs||[]).slice().reverse();const groups={};runs.forEach(r=>{(groups[r.suite||"unlabelled"]=groups[r.suite||"unlabelled"]||[]).push(r)});
+const runTables=Object.entries(groups).map(([g,rs])=>`<div class="card"><h2>${esc(g)} <span class="sub">· ${rs.length} runs</span></h2><table><tr><th>Run</th><th>Build</th><th>Machine</th><th>Result</th><th>Comfort</th><th></th></tr>
+${rs.map(r=>`<tr><td class="mono">${esc(r.id)}</td><td class="mono">${esc(r.build.id)}${r.build_inferred?` <span class="sub" title="no build id in the results; taken from the deploy log or the import">(inferred)</span>`:""}</td><td>${esc(r.machine)}</td>
+<td>${chip(r.counts.PASS+" pass","ok")} ${r.counts.FAIL?chip(r.counts.FAIL+" fail","bad"):""} ${r.counts.CRASH?chip(r.counts.CRASH+" crash","bad"):""} ${r.counts.SKIP?chip(r.counts.SKIP+" skip"):""}</td><td>${r.comfort_events?chip(r.comfort_events+" events","warn"):chip("0","ok")}</td>
+<td><button onclick="showRun('${esc(r.id)}')">Open</button></td></tr>${openRun==r.id?`<tr><td colspan="6" id="rundetail"></td></tr>`:""}`).join("")}</table></div>`).join("");
+setTimeout(()=>{if(openRun)renderRun()},0);
+return `<div class="card"><div class="row between"><h2 style="margin:0">Suites</h2><div class="row"><span class="sub">Run on</span><select id="rig">${rigs.map(r=>`<option>${esc(r)}</option>`).join("")||"<option value=''>no rig machine</option>"}</select><input id="hunt" placeholder="scenario for flaky-hunt" size="20"></div></div>
+<div style="margin-top:6px">${suites}</div>${jobs?`<div style="margin-top:8px">${jobs}</div>`:""}<div id="planout"></div></div>${runTables||`<div class="card empty">No runs yet. Run smoke on a rig, or import an older results.jsonl with <span class="mono">irisify import</span>.</div>`}`}
+async function plan(n){const o=document.getElementById("planout");try{const p=await post("/api/suite",{name:n,machine:document.getElementById("rig").value,scenario:document.getElementById("hunt").value||null,dry:true});
+o.innerHTML=`<div class="card" style="margin-top:10px;background:var(--sunk)"><b>${esc(n)}</b>: ${p.scenarios.length} scenarios, ~${p.minutes} min${p.seed!=null?", seed "+p.seed:""}<table>${p.scenarios.map(s=>`<tr><td class="mono">${esc(s)}</td><td class="sub">${esc(p.why[s]||"")}</td></tr>`).join("")}</table></div>`}catch(e){o.innerHTML=`<div class="err">${esc(e.message)}</div>`}}
+async function runSuite(n){try{await post("/api/suite",{name:n,machine:document.getElementById("rig").value,scenario:document.getElementById("hunt").value||null});poll();load()}catch(e){document.getElementById("planout").innerHTML=`<div class="err">${esc(e.message)}</div>`}}
+async function showRun(id){openRun=openRun==id?null:id;render()}
+async function renderRun(){const el=document.getElementById("rundetail");if(!el)return;const r=await (await fetch("/api/run/"+encodeURIComponent(openRun))).json();
+const fl=(D.flaky||{})[r.build.id]||{};
+el.innerHTML=`<table>${r.scenarios.map((s,i)=>`<tr><td style="width:34%"><b>${esc(s.scenario)}</b><div class="sub">${esc(s.owner||"")}</div></td><td>${res(s.result)} ${fl[s.base]?chip("flaky: "+fl[s.base],"warn"):""}
+<div class="sub">${s.checks.filter(c=>!c.ok).slice(0,4).map(c=>"✗ "+esc(c.check)+(c.value!=null?": "+esc(JSON.stringify(c.value)).slice(0,160):"")).join("<br>")}</div>
+<details><summary>${s.checks.length} checks · ${s.shots.length} shots · log</summary><table>${s.checks.map(c=>`<tr><td>${c.ok?"✓":"✗"}</td><td>${esc(c.check)}</td><td class="mono sub">${esc(JSON.stringify(c.value)).slice(0,220)}</td></tr>`).join("")}</table>
+${s.shots.length?`<div class="shots" style="margin-top:6px">${s.shots.map(sh=>`<div>${sh.present?`<img loading="lazy" src="/shots/${encodeURIComponent(r.id)}/${encodeURIComponent(sh.file)}" alt="${esc(sh.moment)}" onclick="zoom(this.src)" style="width:100%;border-radius:6px">`:`<div class="ph">${esc(sh.file)}</div>`}<div class="sub">${esc(sh.moment)}</div></div>`).join("")}</div>`:""}
+${s.startState?`<div class="sub" style="margin-top:6px">Start state</div><pre>${esc(JSON.stringify(s.startState,null,1))}</pre>`:""}${s.log?.length?`<pre>${esc(s.log.join("\n"))}</pre>`:""}</details></td></tr>`).join("")}</table>`}
+function zoom(src){document.getElementById("zoomimg").src=src;document.getElementById("zoom").showModal()}
+
+function img(run,file,present,label){return present?`<img loading="lazy" src="/shots/${encodeURIComponent(run)}/${encodeURIComponent(file)}" alt="${esc(label)}" onclick="zoom(this.src)">`:`<div class="ph">${esc(label)}</div>`}
+function pShots(){const sh=D.shots||[];if(!sh.length)return `<div class="card empty">No screenshots yet. Scenarios name their moments; the rig saves one image per moment.</div>`;
+const todo=sh.filter(s=>!s.review).length;
+return `<div class="card"><div class="row between"><h2 style="margin:0">Screenshots</h2>${todo?chip(todo+" to review","warn"):chip("all reviewed","ok")}</div><div class="sub">The latest image of each moment, next to the same moment on the previous build. Answer the question from the image, not the code. Flagging opens an issue for the owner.</div></div>
+<div class="shots">${sh.map((s,i)=>`<div class="card" style="margin:0"><div class="pair">${s.before?img(s.before.run,s.before.file,s.before.present,"before · "+s.before.build):`<div class="ph">no earlier build</div>`}${img(s.run,s.file,s.present,s.build)}</div>
+<div class="row between" style="margin-top:6px"><span class="sub mono">${s.before?esc(s.before.build)+" → ":""}${esc(s.build)}</span>${s.review?chip(s.review.verdict,s.review.verdict=="ok"?"ok":s.review.verdict=="flag"?"bad":""):""}</div>
+<div style="margin-top:4px"><b>${esc(s.scenario)}</b> · ${esc(s.moment)}</div><div class="sub">${esc(s.question||"No question set for this moment: add one to the scenario.")}</div>
+${s.review?.answer?`<div class="sub">“${esc(s.review.answer)}” — ${esc(s.review.by||"")}</div>`:""}
+<div class="row" style="margin-top:8px"><input id="ans${i}" placeholder="Your answer" style="flex:1;min-width:120px"><button onclick="review(${i},'ok')">Looks right</button><button onclick="review(${i},'flag')">Flag</button></div></div>`).join("")}</div>`}
+async function review(i,v){const s=D.shots[i];await post("/api/review",{run:s.run,file:s.file,verdict:v,answer:document.getElementById("ans"+i).value,moment:s.moment,owner:s.owner});load()}
+
+function pMetrics(){const runs=(D.runs||[]).filter(r=>r.suite!="smoke");if(!runs.length)return `<div class="card empty">Metrics appear after a few runs.</div>`;
+const last=runs.slice(-20);const maxC=Math.max(1,...last.map(r=>r.comfort_events));
+const bars=(vals,cls,title)=>`<div class="bars">${vals.map(([v,t])=>`<div title="${esc(t)}" style="height:${Math.max(3,v*100)}%;background:var(--${cls})"></div>`).join("")}</div>`;
+const pass=last.map(r=>{const t=r.counts.PASS+r.counts.FAIL+r.counts.CRASH;return [t?r.counts.PASS/t:0,`${r.id}: ${r.counts.PASS}/${t}`]});
+const comf=last.map(r=>[r.comfort_events/maxC,`${r.id}: ${r.comfort_events} events`]);
+const fl=Object.entries(D.flaky||{}).flatMap(([b,f])=>Object.entries(f).map(([s,why])=>`<tr><td class="mono">${esc(b)}</td><td>${esc(s)}</td><td class="sub">${esc(why)}</td></tr>`)).join("");
+return `<div class="grid"><div class="card"><h2>Pass rate per run</h2>${bars(pass,"ok-bg")}<div class="sub">Last ${last.length} runs, oldest left</div></div>
+<div class="card"><h2>Comfort events per run</h2>${bars(comf,"warn-bg")}<div class="sub">Unexplained snaps, tilts, turns, drift and flashes</div></div></div>
+<div class="card"><h2>Flaky</h2>${fl?`<table><tr><th>Build</th><th>Scenario</th><th>Why</th></tr>${fl}</table>`:`<div class="sub">Nothing varies within a build.</div>`}</div>`}
+
+function pIssues(){const is=(D.issues||[]).slice().sort((a,b)=>(a.state=="closed")-(b.state=="closed"));
+const owners=[...new Set(is.map(i=>i.owner).filter(Boolean))];
+return `<div class="card"><h2>Issues</h2><table><tr><th>Issue</th><th>Owner</th><th>State</th><th>From</th></tr>${is.map(i=>`<tr><td>${esc(i.title)}</td><td>${i.owner?chip(i.owner,"acc"):chip("unrouted","warn")}</td><td>${chip(i.state,i.state=="closed"?"ok":"")}</td><td class="sub">${esc(i.source||"")}${i.run?" · "+esc(i.run):""}</td></tr>`).join("")||`<tr><td colspan="4" class="sub">No issues.</td></tr>`}</table></div>
+<div class="card"><h2>Tell the agent something</h2><div class="sub">Your own words go on the headset checklist as “re-check” until it's closed.</div><div class="row" style="margin-top:8px"><input id="iTitle" placeholder="swimming is still too slow" style="flex:1;min-width:200px"><input id="iOwner" placeholder="owner (optional)" list="owners" size="14"><datalist id="owners">${owners.map(o=>`<option>${esc(o)}</option>`).join("")}</datalist><button class="primary" onclick="addIssue()">Add</button><span id="iErr" class="err"></span></div></div>`}
+async function addIssue(){const t=document.getElementById("iTitle").value.trim();if(!t){document.getElementById("iErr").textContent="Write what you noticed first";return}await post("/api/issue",{title:t,owner:document.getElementById("iOwner").value.trim()||null,source:"user"});load()}
+
+function pReady(){const wf=D.workflow;const ready=wf.phases.find(p=>p.id=="ready");const br=wf.phases.find(p=>p.id=="breadth");
+return `<div class="card"><div class="row between"><h2 style="margin:0">Before you put the headset on</h2>${ready.ok?chip("ready","ok"):chip("not yet","warn")}</div>
+${ready.evidence.map(e=>`<div class="step"><div class="dot ${/green|: 0$|on [0-9a-f]+: \\w/.test(e)?"ok":""}">·</div><div>${esc(e)}</div></div>`).join("")}${ready.next?`<div class="fix"><span>${esc(ready.next)}</span></div>`:""}</div>
+<div class="card"><h2>Only you can check</h2><div class="sub">The rig can't judge these. Each comes from a scenario's “cannot cover”, or from something you told the agent.</div>
+${(D.checklist||[]).map(c=>`<div class="step"><div class="dot"><input type="checkbox" aria-label="done"></div><div><div>${esc(c.item)}</div><div class="sub">${esc(c.from.join(", "))}</div></div></div>`).join("")||`<div class="sub">Nothing yet.</div>`}</div>`}
+
+function pIntake(){const I=D.intake;const det=Object.entries(I.detected||{});
+const qs=I.questions.map(q=>{const a=I.answers[q.id];const nextRound=I.next_round.includes(q.id);
+return `<div class="card" ${nextRound?'style="border-color:var(--acc)"':""}><div class="row between"><b>${esc(q.q)}</b>${chip(q.rank,q.rank=="blocking"?"bad":q.rank=="shaping"?"":"")}</div><div class="sub" style="margin:4px 0 8px">${esc(q.why)}</div>
+${a?`<div class="row">${chip(a.value,"ok")}<span class="sub">${esc(a.source)}${a.why?" · "+esc(a.why):""}</span><button onclick="this.parentElement.nextElementSibling.style.display='flex';this.parentElement.style.display='none'">Change</button></div>`:""}
+<div class="row" style="${a?"display:none":""}">${q.free_text?`<input id="ft_${q.id}" placeholder="${esc(q.recommend)}" style="flex:1"><button onclick="ans('${q.id}',document.getElementById('ft_${q.id}').value||'${esc(q.recommend)}')">Save</button>`:
+(q.options||[]).map(o=>`<button ${o==q.recommend?'class="primary"':""} onclick="ans('${q.id}','${esc(o)}')">${esc(o)}${o==q.recommend?" (recommended)":""}</button>`).join("")}<button onclick="ans('${q.id}','${esc(q.recommend)}','agent')">You decide</button></div></div>`}).join("");
+return `<div class="card"><h2>Detected</h2>${det.length?det.map(([k,v])=>`<div class="sub">${esc(k)}: <b>${esc(v.value)}</b> — ${esc(v.evidence||"")}</div>`).join(""):`<div class="sub">Nothing detected yet: add and check machines, then run controller detection.</div>`}
+<div class="sub" style="margin-top:6px">Only questions a tool can't answer are here. Blocking ones first; the highlighted ones are the next round.</div></div>${qs}`}
+async function ans(id,v,src){await post("/api/intake",{id,value:v,source:src||"user",why:src=="agent"?"you decide: recommendation":null});load()}
+load();setInterval(()=>{if(!document.hidden&&page!="intake")load()},20000);
+</script>
+</body>
+</html>

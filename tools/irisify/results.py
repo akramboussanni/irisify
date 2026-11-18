@@ -53,6 +53,30 @@ def split_runs(lines):
     return runs
 
 
+def merge_legacy(runs, max_gap=1800):
+    """The older SubmersedVR rig wrote a summary after every single scenario. Runs without a header are merged
+    while the game session continues (game time keeps rising, gaps under max_gap)."""
+    out = []
+    for r in runs:
+        if r["header"]:
+            out.append(r)
+            continue
+        t0 = (r["scenarios"][0].get("t") if r["scenarios"] else None)
+        prev = out[-1] if out and not out[-1]["header"] else None
+        pt = prev and prev["scenarios"] and prev["scenarios"][-1].get("t")
+        if prev and t0 is not None and pt is not None and 0 <= t0 - pt < max_gap:
+            prev["scenarios"] += r["scenarios"]
+            prev["commands"] += r["commands"]
+        else:
+            out.append(r)
+    return out
+
+
+def from_summary_json(d):
+    """The older rig's summary.json: {"summary": {...}, "results": [scenario lines]} -> one run."""
+    return [{"header": {"suite": "full"}, "scenarios": d.get("results", []), "commands": 0}]
+
+
 def comfort_events(sc):
     n = 0
     for c in sc.get("checks", []):
@@ -129,14 +153,22 @@ def import_file(project, machine, results_path, shots_dir=None, build=None, suit
             pass
     meta = scenario_meta(project)
     made = []
-    for i, r in enumerate(split_runs(lines)):
+    if results_path.endswith("summary.json"):
+        groups = from_summary_json(json.loads(data or "{}")) if start == 0 else []
+    else:
+        groups = merge_legacy(split_runs(lines))
+    for i, r in enumerate(groups):
         hdr = r["header"]
         b = hdr.get("build") or build or current_build(project, machine)
-        run_id = hdr.get("id") or f"{now().replace(':', '').replace('-', '')}-{machine}-{len(made) + 1}"
+        seq = len(glob.glob(project.path("runs", "*", "run.json"))) + 1
+        run_id = hdr.get("id") or f"{now().replace(':', '').replace('-', '')}-{machine}-{seq}"
+        while os.path.exists(project.path("runs", run_id)):
+            seq += 1
+            run_id = f"{now().replace(':', '').replace('-', '')}-{machine}-{seq}"
         scen = [normalise_scenario(s, meta) for s in r["scenarios"]]
         run = {
-            "id": run_id, "machine": machine, "imported": now(), "build": b if isinstance(b, dict) else ({"id": b} if b else {"id": "unknown"}),
-            "build_inferred": not hdr.get("build"), "suite": hdr.get("suite") or suite,
+            "id": run_id, "seq": seq, "machine": machine, "imported": now(), "build": b if isinstance(b, dict) else ({"id": b} if b else {"id": "unknown"}),
+            "build_inferred": not hdr.get("build") and not build, "suite": suite or hdr.get("suite"),
             "counts": count(scen), "scenarios": scen,
         }
         d = project.path("runs", run_id)
@@ -167,7 +199,7 @@ def list_runs(project):
     for p in sorted(glob.glob(project.path("runs", "*", "run.json"))):
         with open(p) as f:
             runs.append(json.load(f))
-    runs.sort(key=lambda r: r.get("imported", ""))
+    runs.sort(key=lambda r: (r.get("imported", ""), r.get("seq", 0)))
     return runs
 
 

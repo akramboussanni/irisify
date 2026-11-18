@@ -208,10 +208,10 @@
    {
     "id": "hevc_encode",
     "what": "Hardware H.265 encode for streaming",
-    "check": "vainfo 2>/dev/null | grep -c 'VAProfileHEVCMain.*EncSlice' || echo 0",
-    "expect_nonzero": true,
+    "check": "if command -v vainfo >/dev/null; then vainfo 2>/dev/null | grep -q 'VAProfileHEVCMain.*EncSlice' && echo yes || echo no; elif command -v rpm >/dev/null; then rpm -q mesa-va-drivers-freeworld mesa-vulkan-drivers-freeworld >/dev/null 2>&1 && echo yes || echo no; else echo unknown; fi",
     "fix": "Fedora: sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld && sudo dnf swap mesa-vulkan-drivers mesa-vulkan-drivers-freeworld (RPM Fusion)",
-    "who": "you"
+    "who": "you",
+    "expect": "yes"
    },
    {
     "id": "compositor_cap",
@@ -224,7 +224,7 @@
    {
     "id": "adapter_managed",
     "what": "Frame wireless adapter managed by NetworkManager",
-    "check": "nmcli -t -f NAME connection show 2>/dev/null | grep -c 'Steam Frame' || echo 0",
+    "check": "nmcli -t -f NAME connection show 2>/dev/null | grep -c 'Steam Frame' || true",
     "expect_nonzero": true,
     "fix": "Plug in the adapter with Steam running; keep the device managed (don't mark it unmanaged)",
     "who": "you"

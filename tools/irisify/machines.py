@@ -151,7 +151,7 @@ def remote_path(p):
 
 PROBE = r"""
 echo "os=$(uname -s 2>/dev/null)"; echo "kernel=$(uname -r 2>/dev/null)"
-echo "gpu=$( (lspci 2>/dev/null | grep -iE 'vga|3d' | head -1 | cut -d: -f3) || true)"
+echo "gpu=$( (lspci 2>/dev/null | grep -iE 'vga|3d|display' | head -1 | cut -d: -f3) || true)"
 for d in "$HOME/.local/share/Steam" "$HOME/.steam/steam"; do [ -d "$d" ] && { echo "steam=$d"; break; }; done
 flatpak list 2>/dev/null | grep -q com.valvesoftware.Steam && echo "steam_flatpak=1"
 [ -d "$HOME/.local/share/Steam/steamapps/common/SteamVR" ] && echo "steamvr=1"
@@ -164,6 +164,7 @@ if [ -n "$GD" ] && [ -d "$GD" ]; then echo "game_dir=1"
   [ -f "$GD/.irisify-deploy.lock" ] && echo "lock=$(cat "$GD/.irisify-deploy.lock" | tr '\n' ' ')"
   B=$(find "$GD" -maxdepth 4 -name build.json -path '*irisify*' 2>/dev/null | head -1); [ -n "$B" ] && echo "build=$(tr -d '\n' < "$B")"
 fi
+true
 """
 
 
@@ -251,6 +252,7 @@ def setup_steps(m, st):
     if "rig" in roles and f.get("os") == "Linux":
         step("monado", "Monado + OpenComposite for the headset-free rig", "monado" in f and "opencomposite" in f, "you",
              "Fedora: sudo dnf install monado opencomposite", "SteamVR's null driver can't run its compositor on Linux")
-    steps.append({"id": "preflight", "what": "Platform preflight for the headset", "done": None, "who": "agent",
-                  "fix": f"irisify doctor platform --machine <name>"})
+    if "game-host" in roles:
+        steps.append({"id": "preflight", "what": "Platform preflight for the headset", "done": None, "who": "agent",
+                      "fix": f"irisify doctor platform --machine {(st or {}).get('name', '<name>')}"})
     return steps
