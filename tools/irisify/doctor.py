@@ -34,6 +34,9 @@ def evaluate(req, out):
 
 STEAM_INPUT_SCRIPT = r"""
 APP=__APPID__
+for f in "$HOME"/.local/share/Steam/userdata/*/config/cloudstorage/cloud-storage-namespace-*.json; do
+  [ -f "$f" ] && grep -o "\"$APP\",{[^]]*vrsi[^]]*" "$f" | head -1 | sed "s|^|SETTING $f: |"
+done
 for d in "$HOME/.local/share/Steam" "$HOME/.steam/steam"; do
   [ -d "$d/userdata" ] || continue
   for f in "$d"/userdata/*/config/localconfig.vdf; do
@@ -53,6 +56,11 @@ done
 def steam_input_findings(output):
     """Interpret the script's output. Returns (state, evidence lines)."""
     lines = [l for l in output.splitlines() if l.strip()]
+    # The saved per-game setting beats old log lines: Steam's cloud-storage namespace keeps {"vrsi": true|false}.
+    for l in lines:
+        if l.startswith("SETTING ") and "vrsi" in l:
+            on = re.search(r'vrsi\\?"?\s*:\s*true', l) is not None
+            return ("on" if on else "off"), [l[8:][:300]]
     forced = [l for l in lines if re.search(r"Opted-in Controller Mask|uses xinput|Queueing activation|desktopgame\.", l)]
     setting = [l for l in lines if "UseSteamControllerConfig" in l or "eEnableThirdPartyControllerConfiguration" in l]
     off = any(re.search(r'"(0|2)"', l) for l in setting) and not forced

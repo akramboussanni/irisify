@@ -91,6 +91,6 @@ def asks_from_machine_steps(project, status):
             if s.get("who") == "you" and s.get("done") is False:
                 made.append(ask(project, f"{name}: {s['what']}", why=s.get("why"), command=s.get("fix"), frm="machine check",
                                 ask_id=f"setup-{name}-{s['id']}"))
-            elif s.get("done") and any(a["id"] == f"setup-{name}-{s['id']}" and a["state"] == "open" for a in asks(project)):
+            elif s.get("done") is not False and any(a["id"] == f"setup-{name}-{s['id']}" and a["state"] == "open" for a in asks(project)):
                 resolve(project, f"setup-{name}-{s['id']}", by="machine check")
     return made

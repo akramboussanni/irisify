@@ -174,7 +174,7 @@ def check(project, name, m):
     ts = tailscale_peers()
     addr = host_address(m)
     if m.get("link") != "local" and ts:
-        st["tailscale"] = {"backend": ts["backend"], "peer_online": ts["peers"].get(addr)}
+        st["tailscale"] = {"backend": ts["backend"], "peer_online": ts["peers"].get(addr), "known": addr in ts["peers"]}
     try:
         if m.get("link") == "adb" and not shutil.which("adb"):
             raise FileNotFoundError("adb not installed on this machine")
@@ -229,11 +229,15 @@ def setup_steps(m, st):
 
     if link == "ssh":
         ts = (st or {}).get("tailscale")
-        if ts is not None:
+        asleep = bool(ts and ts.get("known") and not ts.get("peer_online"))
+        if ts is not None and asleep:
+            step("awake", f"Wake {('the headset' if 'headset' in roles else 'the machine')}: it's on your tailnet but offline", False, "you",
+                 "Turn it on or wake it, and make sure it's on Wi-Fi with Tailscale running", "the agent can't reach it while it sleeps")
+        elif ts is not None:
             step("tailscale", "Tailscale up on both ends, peer online", bool(ts.get("peer_online")), "you",
                  "Install Tailscale on the machine and sign in to the same tailnet (https://tailscale.com/download)",
                  "a stable address on any network")
-        step("ssh_key", "SSH key login works", bool(reach), "you",
+        step("ssh_key", "SSH key login works", None if asleep and not reach else bool(reach), "you",
              f"ssh-copy-id {m.get('host')}   (once; asks for the password)", "the agent deploys and reads logs over SSH")
     elif link == "adb":
         step("adb_installed", "adb on this machine", bool(shutil.which("adb")), "agent",
