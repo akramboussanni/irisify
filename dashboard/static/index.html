@@ -157,6 +157,36 @@ details>summary{cursor:pointer;list-style:none}details>summary::-webkit-details-
 .expand{padding:4px 16px 14px 54px;background:var(--bg2);border-top:1px solid var(--line)}
 @media (max-width:760px){.asks,.sessions{grid-template-columns:1fr}.board{flex-direction:column;overflow:visible}.col{min-width:0;flex:none}.col.empty-col{display:none}
  .pipe span{display:none}.pipe .cur span{display:block;overflow:visible}.nowsm .thumb{display:block;width:72px}.expand{padding-left:16px}}
+
+/* screenshots first */
+.film{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tile{position:relative;display:block;border-radius:12px;overflow:hidden;aspect-ratio:16/10;background:var(--bg3);border:1px solid var(--line);cursor:zoom-in;margin:0}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,.7,.2,1)}.tile:hover img{transform:scale(1.04)}
+.tile .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 9px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:#fff;font-size:12.5px;line-height:1.3;pointer-events:none}
+.tile .cap b{font-family:var(--mono);font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tile .cap span{opacity:.75}
+.tile.bad{box-shadow:inset 0 0 0 2px var(--red)}.tile.bad:after{content:"failed";position:absolute;top:8px;left:8px;font-size:11px;font-weight:600;color:#fff;background:var(--red);border-radius:5px;padding:1px 6px}
+.film .tile:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}.film .tile:first-child .cap{font-size:14px;padding:30px 16px 12px}
+.enter .tile{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+.strip{display:block;margin:-16px -18px 14px;aspect-ratio:16/7;background:var(--bg3);position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.strip img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}.scard:hover .strip img,.fcard:hover .strip img{transform:scale(1.04)}
+.strip .rel{position:absolute;left:8px;bottom:6px;font-size:11px;color:#fff;background:rgba(0,0,0,.55);border-radius:5px;padding:1px 6px;font-family:var(--mono)}
+.strip.none{aspect-ratio:16/3;background:radial-gradient(120% 120% at 20% 0%,color-mix(in srgb,var(--tc,var(--fg3)) 22%,transparent),transparent 70%),var(--bg3)}
+.fcard .strip{margin:-12px -14px 12px;aspect-ratio:16/8}
+.bigbuild{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);overflow:hidden;position:relative;cursor:pointer}
+.bigbuild:before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--sc,var(--line2));z-index:1}.bigbuild.s-ok{--sc:var(--green)}.bigbuild.s-bad{--sc:var(--red)}.bigbuild.s-run{--sc:var(--amber)}
+.bigbuild .pic{aspect-ratio:16/9;background:var(--bg3)}.bigbuild .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.bigbuild .info{padding:22px 24px;display:flex;flex-direction:column;gap:14px;justify-content:center;min-width:0}
+.rthumb{width:96px;aspect-ratio:16/10;border-radius:6px;object-fit:cover;background:var(--bg3);border:1px solid var(--line);flex:none;display:block}
+.testshots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.testshots .tile:first-child:nth-last-child(odd){grid-column:span 2}
+.gallery.big{grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:18px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);border-bottom:1px solid var(--line)}.pair .tile{border:none;border-radius:0}
+.tag{position:absolute;top:8px;left:8px;font-size:11px;font-weight:500;color:#fff;background:rgba(0,0,0,.55);border-radius:5px;padding:1px 7px;pointer-events:none}
+.shotcard>.tile{border:none;border-radius:0;border-bottom:1px solid var(--line)}
+dialog .nav{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.14);color:#fff;font-size:22px;cursor:pointer}dialog .nav:hover{background:rgba(255,255,255,.26)}
+dialog .prev{left:16px}dialog .next2{right:16px}
+@media (max-width:760px){.film{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.film .tile:first-child{grid-row:auto;aspect-ratio:16/10}
+ .bigbuild{grid-template-columns:1fr}.bigbuild .info{padding:16px 18px}.rthumb{width:64px}.gallery.big{grid-template-columns:1fr}.testshots{grid-template-columns:1fr}.testshots .tile:first-child{grid-column:auto}
+ .tile .cap{padding:18px 9px 7px;font-size:11.5px}dialog .nav{top:auto;bottom:16px;transform:none}}
 @media (max-width:760px){
  main,.bar{padding-left:16px;padding-right:16px}main{padding-top:24px}h1{font-size:24px}
  .now{grid-template-columns:1fr}.now .pic{border-right:none;border-bottom:1px solid var(--line)}.now .info{padding:18px}
@@ -181,7 +211,7 @@ details>summary{cursor:pointer;list-style:none}details>summary::-webkit-details-
  <nav class="tabs" id="tabs"></nav>
 </header>
 <main id="main"><div class="empty">Loading…</div></main>
-<dialog id="zoom" onclick="this.close()"><img id="zoomimg" alt=""><div class="cap" id="zoomcap"></div></dialog>
+<dialog id="zoom" onclick="if(event.target.tagName!='BUTTON')this.close()"><img id="zoomimg" alt=""><div class="cap" id="zoomcap"></div><button class="nav prev" onclick="zstep(-1)" aria-label="Previous">‹</button><button class="nav next2" onclick="zstep(1)" aria-label="Next">›</button></dialog>
 <script>
 const TABS=[["","Overview"],["features","Features"],["builds","Builds"],["tests","Tests"],["machines","Machines"]];
 const MORE=[["shots","Screenshots"],["issues","Issues"],["checklist","Headset checklist"],["intake","Intake"],["workflow","Workflow"]];
@@ -205,7 +235,20 @@ const resDot=x=>x=="PASS"?"ok":x=="SKIP"?"off":"bad";
 const resCls=x=>x=="PASS"?"ok":x=="SKIP"?"skip":"bad";
 const shotURL=(run,f)=>`/shots/${enc(run)}/${enc(f)}`;
 const base=n=>n.replace(/#\d+$/,"");
-function zoom(src,cap){$("zoomimg").src=src;$("zoomcap").textContent=cap||"";$("zoom").showModal()}
+let ZL=[],ZI=0;
+function zoom(src,cap){ZL=[];document.querySelectorAll("#zoom .nav").forEach(b=>b.style.display="none");$("zoomimg").src=src;$("zoomcap").textContent=cap||"";if(!$("zoom").open)$("zoom").showModal()}
+function zset(el){const g=el.closest("[data-zg]");const all=g?[...g.querySelectorAll("[data-z]")]:[el];ZL=all.map(x=>({src:x.dataset.z,cap:x.dataset.c}));ZI=Math.max(0,all.indexOf(el));zshow()}
+function zshow(){const z=ZL[ZI];$("zoomimg").src=z.src;$("zoomcap").textContent=(z.cap||"")+(ZL.length>1?`   ${ZI+1} / ${ZL.length}`:"");document.querySelectorAll("#zoom .nav").forEach(b=>b.style.display=ZL.length>1?"":"none");if(!$("zoom").open)$("zoom").showModal()}
+function zstep(d){if(!ZL.length)return;ZI=(ZI+d+ZL.length)%ZL.length;zshow()}
+document.addEventListener("keydown",e=>{if($("zoom").open&&ZL.length>1){if(e.key=="ArrowRight")zstep(1);if(e.key=="ArrowLeft")zstep(-1)}});
+/* screenshot helpers */
+function tile(run,file,cap,sub,bad,tag){const src=shotURL(run,file);const c=[cap,sub].filter(Boolean).join(" · ");
+ return `<figure class="tile ${bad?"bad":""}" data-z="${esc(src)}" data-c="${esc(c)}" onclick="zset(this)"><img loading="lazy" src="${esc(src)}" alt="">${tag?`<span class="tag">${esc(tag)}</span>`:""}${cap?`<figcaption class="cap"><b>${esc(cap)}</b>${sub?`<span>${esc(sub)}</span>`:""}</figcaption>`:""}</figure>`}
+function shotOf(scn,runId){const rs=runId?[runById(runId)].filter(Boolean):D.runs.slice().reverse();for(const r of rs){const s=r.scenarios.find(x=>base(x.name)==scn&&x.files.length);if(s)return {run:r.id,file:s.files[0]}}return null}
+function featShot(f){for(const n of f?.scenarios||[]){const h=shotOf(n);if(h)return h}
+ for(const n of f?.scenarios||[]){const pre=n.split("_")[0];const sh=D.shots.find(x=>x.present&&x.scenario.split("_")[0]==pre);if(sh)return {run:sh.run,file:sh.file,rel:sh.scenario}}return null}
+function strip(h,tc){return h?`<span class="strip"><img loading="lazy" src="${shotURL(h.run,h.file)}" alt="">${h.rel?`<span class="rel">${esc(h.rel)}</span>`:""}</span>`:`<span class="strip none ${tc||""}"></span>`}
+function rthumb(h){return h?`<img class="rthumb" loading="lazy" src="${shotURL(h.run,h.file)}" alt="">`:`<span class="rthumb" style="background:none;border-style:dashed"></span>`}
 function failChips(r,max){const f=r.scenarios.filter(x=>x.result=="FAIL"||x.result=="CRASH");if(!f.length)return"";return `<div class="fails">${f.slice(0,max).map(x=>`<a href="#/test/${enc(base(x.name))}?run=${enc(r.id)}" onclick="event.stopPropagation()" title="open this test case">${esc(x.name)}</a>`).join("")}${f.length>max?`<a href="#/build/${enc(r.id)}" style="background:var(--bg3);color:var(--fg2)">+${f.length-max}</a>`:""}</div>`}
 const CHEV=`<svg class="chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function bar3(c,w){const t=(c.PASS||0)+failN(c)+(c.SKIP||0)||1;return `<div class="bar3" style="${w?`width:${w}px`:""}" title="${c.PASS} passed, ${failN(c)} failed, ${c.SKIP||0} skipped"><i style="width:${c.PASS/t*100}%;background:var(--green)"></i><i style="width:${failN(c)/t*100}%;background:var(--red)"></i><i style="width:${(c.SKIP||0)/t*100}%;background:var(--line2)"></i></div>`}
@@ -285,34 +328,41 @@ async function askDone(id,state,answer){try{await post("/api/ask",{id,state,answ
 const AST={working:["run","Working"],blocked:["warn","Waiting on you"],idle:["off","Idle"]};
 const featTitle=id=>(D.features||{})[id]?.title||id;
 function sessionCard(g){const st=AST[g.state]||AST.idle;
- return `<a class="scard s-${g.state}" href="#/session/${enc(g.agent)}"><div class="row between nowrap"><span class="status small"><span class="dot ${st[0]}"></span>${st[1]}</span><span class="xs faint">${esc(ago(g.at))}</span></div>
+ const f=(D.features||{})[g.feature];return `<a class="scard s-${g.state}" href="#/session/${enc(g.agent)}">${strip(featShot(f),tcls(typeOf((f?.scenarios||[])[0]||"")))}<div class="row between nowrap"><span class="status small"><span class="dot ${st[0]}"></span>${st[1]}</span><span class="xs faint">${esc(ago(g.at))}</span></div>
   <div class="sname mono">${esc(g.agent)}</div>${g.feature?`<div class="small sfeat ell">${esc(featTitle(g.feature))}</div>`:""}
   <div class="small muted sdoing">${esc(g.doing||"")}</div></a>`}
 function pOverview(){const wf=D.workflow;const ph=wf.phases;const ci=ph.findIndex(p=>p.id==wf.current);const cur=ph[ci];
  const r=lastRun();const live=runningSuite();const asks=asksAll();const ag=(D.agents||[]).slice().sort((a,b)=>({blocked:0,working:1,idle:2}[a.state]??3)-({blocked:0,working:1,idle:2}[b.state]??3));
  const mini=`<a class="wf" href="#/workflow" title="Workflow"><span class="segs">${ph.map((p,i)=>`<i class="${p.ok?"ok":i==ci?"cur":""}"></i>`).join("")}</span><span>${cur?`Step ${ci+1} of ${ph.length} · <b style="color:var(--fg);font-weight:500">${esc(cur.title)}</b>`:"All steps done"}</span></a>`;
+ const big=(pic,body,cls,href)=>`<div class="card bigbuild ${cls}" ${href?`onclick="location.hash='${href}'"`:""}><div class="pic">${pic}</div><div class="info">${body}</div></div>`;
  let nowCard;
- if(live)nowCard=`<div class="card nowsm s-run">${r?.preview?`<img class="thumb" src="${shotURL(r.id,r.preview.file)}" alt="" style="opacity:.55">`:`<div class="thumb"></div>`}<div class="grow"><span class="status small"><span class="dot run"></span>Running <b>${esc(live.name)}</b>${live.machine?` <span class="muted" style="font-weight:400">on ${esc(live.machine)}</span>`:""}</span>
-  <div class="indet" style="margin:10px 0 6px"><i style="width:${live.pct}%"></i></div><div class="xs muted">${live.count?`${live.count} tests · `:""}${Math.round(live.el)} of ~${Math.round(live.mins)} min</div></div></div>`;
- else if(r){const st=rstate(r);nowCard=`<div class="card nowsm s-${st} click" onclick="location.hash='#/build/${enc(r.id)}'" style="cursor:pointer">${r.preview?`<img class="thumb" src="${shotURL(r.id,r.preview.file)}" alt="">`:`<div class="thumb"></div>`}
-  <div class="grow"><div class="row between nowrap"><span class="status small"><span class="dot ${st}"></span>${rlabel(r)} · ${r.counts.PASS}/${total(r)} passed</span><span class="xs faint">${esc(ago(r.imported))}</span></div>
-  <div style="margin:10px 0 6px">${bar3(r.counts)}</div><div class="xs muted ell">Build <span class="mono" style="color:var(--fg)">${esc(r.build.id)}</span> · ${esc(r.suite||"")} · ${esc(r.machine)}</div>${failChips(r,4)}</div>${CHEV}</div>`}
+ if(live)nowCard=big(r?.preview?`<img src="${shotURL(r.id,r.preview.file)}" alt="" style="opacity:.55">`:"",`<span class="status"><span class="dot run"></span>Running <b>${esc(live.name)}</b>${live.machine?` <span class="muted" style="font-weight:400">on ${esc(live.machine)}</span>`:""}</span>
+  <div class="indet"><i style="width:${live.pct}%"></i></div><div class="small muted">${live.count?`${live.count} tests · `:""}${Math.round(live.el)} of ~${Math.round(live.mins)} min</div>`,"s-run");
+ else if(r){const st=rstate(r);nowCard=big(r.preview?`<img src="${shotURL(r.id,r.preview.file)}" alt="">`:"",`<div class="row between nowrap"><span class="status"><span class="dot ${st}"></span>${rlabel(r)}</span><span class="small faint">${esc(ago(r.imported))}</span></div>
+  <div><span class="big">${r.counts.PASS}</span><span class="muted" style="font-size:18px"> / ${total(r)} passed</span></div>${bar3(r.counts)}
+  <div class="small muted ell">Build <span class="mono" style="color:var(--fg)">${esc(r.build.id)}</span> · ${esc(r.suite||"")} · ${esc(r.machine)}</div>${failChips(r,4)}`,"s-"+st,"#/build/"+enc(r.id))}
  else nowCard=`<div class="card pad small muted">Nothing has run yet. Your agent runs the smoke suite once a rig machine is set up.</div>`;
+ const lr=r?r.id:null;const res=n=>r?.scenarios.find(x=>base(x.name)==n)?.result;
+ let film=D.shots.filter(x=>x.present&&x.run==lr);if(film.length<4)film=D.shots.filter(x=>x.present);
+ film=film.slice().sort((a,b)=>(resCls(res(b.scenario)||"PASS")=="bad")-(resCls(res(a.scenario)||"PASS")=="bad")).slice(0,9);
+ const looks=film.length?`<div class="sec"><div class="row between"><h2>What it looks like now</h2><a class="small muted" href="#/shots" style="margin-bottom:12px">See all ${D.shots.filter(x=>x.present).length} →</a></div>
+  <div class="film" data-zg>${film.map(x=>tile(x.run,x.file,x.scenario,x.moment.replace(/-/g," "),resCls(res(x.scenario)||"PASS")=="bad")).join("")}</div></div>`:"";
  return `<div class="row between" style="margin-bottom:28px"><h1>${esc(D.project.game||"Project")}</h1>${mini}</div>
  <div class="row" style="margin-bottom:12px;gap:8px"><h2 style="margin:0;color:var(--fg)">Needs you</h2>${asks.length?`<span class="badge">${asks.length}</span>`:""}</div>
  ${asks.length?`<div class="asks">${asks.map(askCard).join("")}</div>`:`<div class="card calm"><span class="dot ok"></span><div><b>Nothing needs you right now.</b><div class="small muted">Your agents will ask here when they need your hands, a decision or a look in the headset.</div></div></div>`}
+ ${looks}
+ <div class="sec"><div class="row between"><h2>Latest build</h2><a class="xs muted" href="#/builds" style="margin-bottom:12px">All builds</a></div>${nowCard}</div>
  <div class="sec"><div class="row between"><h2>Sessions</h2><span class="xs faint" style="margin-bottom:12px">${ag.filter(g=>g.state=="working").length} working</span></div>
  ${ag.length?`<div class="sessions">${ag.map(sessionCard).join("")}</div>`:`<div class="card pad small muted">No agent sessions yet. Each agent reports here with <span class="mono">irisify agent</span>.</div>`}</div>
  <div class="sec"><div class="row between"><h2>Your setup</h2><a class="xs muted" href="#/machines" style="margin-bottom:12px">Details</a></div>
- <div class="machines">${Object.keys(D.machines).map(machineCard).join("")||`<div class="card pad small muted">No machines yet. Your agent adds them.</div>`}</div></div>
- <div class="sec"><div class="row between"><h2>Latest build</h2><a class="xs muted" href="#/builds" style="margin-bottom:12px">All builds</a></div>${nowCard}</div>`}
+ <div class="machines">${Object.keys(D.machines).map(machineCard).join("")||`<div class="card pad small muted">No machines yet. Your agent adds them.</div>`}</div></div>`}
 async function signoff(w){await post("/api/signoff",{what:w});load()}
 
 /* ---------- features ---------- */
 const FSTATES=[["idea","Idea"],["design","Design"],["building","Building"],["testing","Testing"],["merged","Merged"],["in-headset","In headset"],["done","Done"]];
 function scen(n){const c=D.catalog.find(x=>x.name==n);const l=c?.history?.[c.history.length-1];return {n,c,l,cls:l?resDot(l.result):"off"}}
 function featCard(id,f){const sc=(f.scenarios||[]).map(scen);const pass=sc.filter(s=>s.cls=="ok").length,ran=sc.filter(s=>s.l).length;const ag=(D.agents||[]).find(g=>g.agent==f.owner);
- return `<a class="fcard" href="#/feature/${enc(id)}"><div class="ftitle">${esc(f.title||id)}</div>
+ return `<a class="fcard" href="#/feature/${enc(id)}">${strip(featShot(f),tcls(typeOf((f.scenarios||[])[0]||"")))}<div class="ftitle">${esc(f.title||id)}</div>
   ${f.owner?`<div class="xs muted row nowrap" style="gap:6px;margin-top:6px"><span class="dot ${ag?(AST[ag.state]||AST.idle)[0]:"off"}" style="width:7px;height:7px"></span><span class="mono ell">${esc(f.owner)}</span></div>`:`<div class="xs faint" style="margin-top:6px">no session</div>`}
   ${sc.length?`<div class="row nowrap" style="gap:4px;margin-top:12px">${sc.map(s=>`<span class="dot ${s.cls}" style="width:7px;height:7px;box-shadow:none" title="${esc(s.n)}"></span>`).join("")}<span class="xs faint" style="margin-left:4px">${ran?`${pass}/${sc.length} passing`:"not run yet"}</span></div>`:""}</a>`}
 function pFeatures(){const F=Object.entries(D.features||{});const cols=FSTATES.concat(F.some(([i,f])=>f.state=="parked")?[["parked","Parked"]]:[]);
@@ -351,7 +401,7 @@ function pBuilds(){const rigs=Object.entries(D.machines).filter(([n,m])=>(m.role
  const live=runningSuite();const runs=D.runs.slice().reverse();const suites=D.suites.filter(s=>!s.error&&s.count!=null);
  return `<h1>Builds</h1><p class="muted small" style="margin:6px 0 0">Your agent runs suites on the rig (<span class="mono">irisify suite run smoke</span>).</p>
  ${live?`<div class="list" style="margin-top:18px"><div class="li"><span class="dot run"></span><b>${esc(live.name)}</b><span class="muted small grow">running · ${Math.round(live.el)} of ~${Math.round(live.mins)} min</span></div></div>`:""}
- <div class="list" style="margin-top:18px">${runs.map(r=>`<div class="li click" onclick="location.hash='#/build/${enc(r.id)}'">${thumb(r)}
+ <div class="list" style="margin-top:18px">${runs.map(r=>`<div class="li click" onclick="location.hash='#/build/${enc(r.id)}'">${rthumb(r.preview?{run:r.id,file:r.preview.file}:null)}
   <span class="dot ${rstate(r)}"></span>
   <div class="grow"><div class="mono ell">${r.build.id=="unknown"?`<span class="faint">no build id</span>`:`<b>${esc(r.build.id)}</b>`}</div><div class="xs faint ell">${esc(r.suite||"")} · ${esc(r.machine)} · ${esc(ago(r.imported))}</div>${failChips(r,3)}</div>
   <span class="small hide-sm" style="width:90px">${bar3(r.counts,80)}</span>
@@ -359,22 +409,22 @@ function pBuilds(){const rigs=Object.entries(D.machines).filter(([n,m])=>(m.role
 let pollT=null;function poll(){clearTimeout(pollT);pollT=setTimeout(async()=>{await load();if(Object.values(D.jobs||{}).some(j=>j.state=="running"))poll()},3000)}
 
 /* ---------- one build ---------- */
-function pBuild(parts){const r=runById(parts[1]);if(!r)return `${crumbs([["Builds","#/builds"],["?"]])}<div class="empty">No such build</div>`;const tab=sub.build||"tests";
+function pBuild(parts){const r=runById(parts[1]);if(!r)return `${crumbs([["Builds","#/builds"],["?"]])}<div class="empty">No such build</div>`;const tab=sub.build||"shots";
  const rank=s=>s.result=="PASS"?2:s.result=="SKIP"?3:0;
  const groups={};r.scenarios.forEach(s=>{(groups[typeOf(s.name)]=groups[typeOf(s.name)]||[]).push(s)});
  const gs=Object.entries(groups).map(([t,ss])=>({t,ss:ss.slice().sort((a,b)=>rank(a)-rank(b)),bad:ss.filter(s=>rank(s)==0).length})).sort((a,b)=>b.bad-a.bad);
  const fl=(D.flaky||{})[r.build.id]||{};const shots=r.scenarios.flatMap(s=>s.files.map(f=>({s,f})));const st=rstate(r);
  const body=tab=="tests"?gs.map(g=>`<div style="margin-top:22px"><div class="row" style="margin-bottom:10px">${typePill(g.t)}<span class="small ${g.bad?"r":"faint"}">${g.bad?`${g.bad} failed`:"all passed"}</span></div>
-  <div class="list">${g.ss.map(s=>`<a class="li typed ${tcls(g.t)}" href="#/test/${enc(base(s.name))}?run=${enc(r.id)}"><span class="dot ${resDot(s.result)}"></span><span class="mono grow ell">${esc(s.name)}</span>
+  <div class="list">${g.ss.map(s=>`<a class="li typed ${tcls(g.t)}" href="#/test/${enc(base(s.name))}?run=${enc(r.id)}">${rthumb(s.files.length?{run:r.id,file:s.files[0]}:null)}<span class="dot ${resDot(s.result)}"></span><span class="mono grow ell">${esc(s.name)}</span>
   ${fl[base(s.name)]?`<span class="pill warn hide-sm">flaky</span>`:""}<span class="small ${s.result=="PASS"?"faint":s.result=="SKIP"?"faint":"r"}">${s.result=="PASS"?"Passed":s.result=="SKIP"?"Skipped":s.result=="CRASH"?"Crashed":"Failed"}</span>${CHEV}</a>`).join("")}</div></div>`).join("")
- :tab=="shots"?(shots.length?`<div class="gallery">${shots.map(({s,f})=>`<div class="shotcard"><img loading="lazy" src="${shotURL(r.id,f)}" alt="" onclick="zoom(this.src,'${esc(s.name)} · ${esc(f)}')"><div class="body"><a class="mono small" href="#/test/${enc(base(s.name))}?run=${enc(r.id)}"><b>${esc(s.name)}</b></a></div></div>`).join("")}</div>`:`<div class="empty">No screenshots in this build</div>`)
+ :tab=="shots"?(shots.length?`<div class="film" data-zg>${shots.map(({s,f})=>tile(r.id,f,s.name,f.replace(/\.png$/,"").replace(base(s.name)+"-","").replace(/-/g," "),resCls(s.result)=="bad")).join("")}</div>`:`<div class="empty">No screenshots in this build</div>`)
  :`<div class="card pad"><div class="kv">${[["Build",r.build.id],["Commit",r.build.commit||"—"],["Branch",r.build.branch||"—"],["Merged",(r.build.merged||[]).join(", ")||"—"],["Suite",r.suite||"—"],["Machine",r.machine],["Ran",r.imported],["Comfort events",r.comfort_events],["Run id",r.id]].map(([k,v])=>`<div>${esc(k)}</div><div class="mono">${esc(v)}</div>`).join("")}</div>${r.build_inferred?`<div class="xs faint" style="margin-top:14px">Build id inferred: the results didn't carry one.</div>`:""}</div>`;
  return `${crumbs([["Builds","#/builds"],[r.build.id]])}
  <div class="row between"><h1 class="mono" style="font-size:26px">${esc(r.build.id)}</h1><span class="status" style="font-size:15px"><span class="dot ${st}"></span>${rlabel(r)}</span></div>
  <div class="muted small" style="margin-top:4px">${esc(r.suite||"")} on ${esc(r.machine)} · ${esc(ago(r.imported))}</div>
  <div class="stats" style="margin-top:22px"><div><div class="k">Passed</div><div class="big g">${r.counts.PASS}</div></div><div><div class="k">Failed</div><div class="big ${failN(r.counts)?"r":"faint"}">${failN(r.counts)}</div></div>
  <div><div class="k">Skipped</div><div class="big faint">${r.counts.SKIP||0}</div></div><div><div class="k">Comfort events</div><div class="big ${r.comfort_events?"a":"faint"}">${r.comfort_events}</div></div></div>
- <div class="subtabs">${[["tests",`Tests ${total(r)}`],["shots",`Screenshots ${shots.length}`],["info","Info"]].map(([k,t])=>`<a class="${tab==k?"on":""}" onclick="sub.build='${k}';render()">${t}</a>`).join("")}</div>${body}`}
+ <div class="subtabs">${[["shots",`Screenshots ${shots.length}`],["tests",`Tests ${total(r)}`],["info","Info"]].map(([k,t])=>`<a class="${tab==k?"on":""}" onclick="sub.build='${k}';render()">${t}</a>`).join("")}</div>${body}`}
 
 /* ---------- tests catalog ---------- */
 function pTests(){const cat=D.catalog;const types=["All",...new Set(cat.map(c=>c.type))];const last=c=>c.history[c.history.length-1];
@@ -383,7 +433,7 @@ function pTests(){const cat=D.catalog;const types=["All",...new Set(cat.map(c=>c
  return `<div class="row between"><h1>Tests</h1><span class="muted small">${cat.length} tests${failing?` · <span class="r">${failing} failing</span>`:""}</span></div>
  <div class="row filters" style="margin:20px 0"><div class="chips grow">${types.map(t=>`<span class="chip ${filt.type==t?"on":""} ${tcls(t)}" onclick="filt.type='${esc(t)}';render()">${t!="All"?`<span class="tdot"></span>`:""}${esc(t.split(" ")[0])}</span>`).join("")}</div>
  <input id="q" placeholder="Search" value="${esc(filt.q)}" oninput="filt.q=this.value;render()" style="width:180px"></div>
- <div class="list">${shown.map(c=>{const l=last(c);return `<a class="li typed ${tcls(c.type)}" href="#/test/${enc(c.name)}"><span class="dot ${l?resDot(l.result):"off"}"></span><span class="mono grow ell">${esc(c.name)}</span>
+ <div class="list">${shown.map(c=>{const l=last(c);return `<a class="li typed ${tcls(c.type)}" href="#/test/${enc(c.name)}">${rthumb(shotOf(c.name))}<span class="dot ${l?resDot(l.result):"off"}"></span><span class="mono grow ell">${esc(c.name)}</span>
   <span class="hist hide-sm">${c.history.slice(-16).map(h=>`<span class="${resCls(h.result)}"></span>`).join("")}</span>${CHEV}</a>`}).join("")||`<div class="empty">No tests match</div>`}</div>`}
 
 /* ---------- one test case ---------- */
@@ -393,7 +443,7 @@ function pTest(parts,params){const name=parts[1]||"";const key=name;
  const t=R.test||{name,history:[]};const es=R.entries||[];
  if(!es.length)return `${crumbs([["Tests","#/tests"],[name]])}<h1 class="mono">${esc(name)}</h1><div class="empty">This test hasn't run yet.</div>`;
  const e=es.find(x=>x.run==params.run)||es[es.length-1];const failing=e.checks.filter(c=>!c.ok);const shots=e.shots.filter(s=>s.present);
- const tab=sub.test||"checks";const fromBuild=params.run&&runById(params.run);
+ const tab=sub.test=="shots"?"checks":(sub.test||"checks");const fromBuild=params.run&&runById(params.run);
  const checks=e.checks.slice().sort((a,b)=>a.ok-b.ok);
  const body=tab=="checks"?`<div class="list">${checks.map((c,i)=>{const o=open["c"+i];const v=JSON.stringify(c.value);
    return `<div class="li click" style="display:block" onclick="open['c${i}']=!open['c${i}'];render()"><div class="row nowrap"><span class="dot ${c.ok?"ok":"bad"}"></span><span class="grow">${esc(c.check)}</span>${v!==undefined?CHEV.replace('class="chev"',`class="chev" style="transform:rotate(${o?90:0}deg)"`):""}</div>
@@ -407,8 +457,9 @@ function pTest(parts,params){const name=parts[1]||"";const key=name;
  <div class="row between"><h1 class="mono" style="font-size:24px;overflow-wrap:anywhere">${esc(name)}</h1><span class="status" style="font-size:15px"><span class="dot ${resDot(e.result)}"></span>${esc(e.result=="PASS"?"Passed":e.result=="SKIP"?"Skipped":e.result=="CRASH"?"Crashed":"Failed")}</span></div>
  <div class="row small muted" style="margin-top:8px">${typePill(t.type)}<span>build <a class="mono" href="#/build/${enc(e.run)}" style="color:var(--fg)">${esc(e.build)}</a> · ${esc(ago(e.at))}</span></div>
  <div class="card" style="margin-top:22px;padding:14px 16px"><div class="row between nowrap"><span class="hist" style="flex-wrap:wrap">${es.map(x=>`<a href="#/test/${enc(name)}?run=${enc(x.run)}" class="${resCls(x.result)} ${x===e?"sel":""}" title="${esc(x.build)} · ${esc(x.result)} · ${esc(ago(x.at))}"></a>`).join("")}</span><span class="xs faint hide-sm">last ${es.length} runs</span></div></div>
+ ${shots.length?`<div class="testshots" data-zg>${shots.map(x=>tile(e.run,x.file,x.moment.replace(/-/g," "),x.question||"",false)).join("")}</div>`:`<div class="card pad small muted" style="margin-top:22px">No screenshots in this run</div>`}
  ${failing.length?`<div class="small r" style="margin-top:14px">${failing.length} of ${e.checks.length} checks failed</div>`:""}
- <div class="subtabs">${[["checks",`Checks ${e.checks.length}`],["shots",`Screenshots ${shots.length}`],["log","Log"],["about","About"]].map(([k,x])=>`<a class="${tab==k?"on":""}" onclick="sub.test='${k}';render()">${x}</a>`).join("")}</div>${body}`}
+ <div class="subtabs">${[["checks",`Checks ${e.checks.length}`],["log","Log"],["about","About"]].map(([k,x])=>`<a class="${tab==k?"on":""}" onclick="sub.test='${k}';render()">${x}</a>`).join("")}</div>${body}`}
 
 /* ---------- machines ---------- */
 function pMachines(){const ms=Object.keys(D.machines);
@@ -437,11 +488,15 @@ function pShots(){const sh=D.shots;const types=["All",...new Set(sh.map(s=>typeO
  const shown=sh.filter(s=>t=="All"||typeOf(s.scenario)==t);const todo=sh.filter(s=>!s.review).length;
  return `<div class="row between"><h1>Screenshots</h1>${todo?`<span class="pill warn">${todo} to review</span>`:`<span class="pill ok">All reviewed</span>`}</div>
  <div class="chips" style="margin:20px 0">${types.map(x=>`<span class="chip ${t==x?"on":""} ${tcls(x)}" onclick="filt.stype='${esc(x)}';render()">${x!="All"?`<span class="tdot"></span>`:""}${esc(x.split(" ")[0])}</span>`).join("")}</div>
- <div class="gallery">${shown.map(s=>{const i=sh.indexOf(s);const fl=open["f"+i];return `<div class="shotcard ${tcls(typeOf(s.scenario))}">${s.present?`<img loading="lazy" src="${shotURL(s.run,s.file)}" alt="" onclick="zoom(this.src,'${esc(s.scenario)} · ${esc(s.moment)}')">`:`<div class="ph">not captured</div>`}
- <div class="body"><div class="row between nowrap"><a class="mono small ell" href="#/test/${enc(s.scenario)}?run=${enc(s.run)}"><span class="tdot" style="margin-right:6px"></span><b>${esc(s.scenario)}</b></a>${s.review?`<span class="pill ${s.review.verdict=="ok"?"ok":"bad"}">${s.review.verdict=="ok"?"ok":"flagged"}</span>`:""}</div>
+ <div class="gallery big" data-zg>${shown.map(s=>{const i=sh.indexOf(s);const fl=open["f"+i];const mo=s.moment.replace(/-/g," ");
+ const pic=!s.present?`<div class="ph" style="aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--fg3)">not captured</div>`
+  :s.before?.present?`<div class="pair">${tile(s.before.run,s.before.file,"",`${s.scenario} · ${mo} · before`,false,s.before.build&&s.before.build!="unknown"?"before "+s.before.build:"before")}${tile(s.run,s.file,"",`${s.scenario} · ${mo} · now`,false,"now "+s.build)}</div>`
+  :tile(s.run,s.file,"",`${s.scenario} · ${mo}`,false);
+ return `<div class="shotcard ${tcls(typeOf(s.scenario))}">${pic}
+ <div class="body"><div class="row between nowrap"><a class="mono small ell" href="#/test/${enc(s.scenario)}?run=${enc(s.run)}"><span class="tdot" style="margin-right:6px"></span><b>${esc(s.scenario)}</b> <span class="faint">${esc(mo)}</span></a>${s.review?`<span class="pill ${s.review.verdict=="ok"?"ok":"bad"}">${s.review.verdict=="ok"?"ok":"flagged"}</span>`:""}</div>
  ${s.question?`<div class="small muted" style="margin-top:6px">${esc(s.question)}</div>`:""}
  ${s.review?"":fl?`<div class="row nowrap" style="margin-top:10px"><input id="ans${i}" placeholder="What's wrong?" class="grow"><button class="btn sm primary" onclick="review(${i},'flag')">Flag</button></div>`
-  :`<div class="row" style="margin-top:10px"><button class="btn sm" onclick="review(${i},'ok')">Looks right</button><button class="btn sm ghost" onclick="open['f${i}']=1;render()">Flag…</button>${s.before?`<button class="btn sm ghost" onclick="zoom('${shotURL(s.before.run,s.before.file)}','before: ${esc(s.before.build)}')">Before</button>`:""}</div>`}</div></div>`}).join("")||`<div class="empty">No screenshots yet</div>`}</div>`}
+  :`<div class="row" style="margin-top:10px"><button class="btn sm" onclick="review(${i},'ok')">Looks right</button><button class="btn sm ghost" onclick="open['f${i}']=1;render()">Flag…</button></div>`}</div></div>`}).join("")||`<div class="empty">No screenshots yet</div>`}</div>`}
 async function review(i,v){const s=D.shots[i];await post("/api/review",{run:s.run,file:s.file,verdict:v,answer:$("ans"+i)?.value||"",moment:s.moment,owner:s.owner});load()}
 
 /* ---------- issues, checklist, intake ---------- */
