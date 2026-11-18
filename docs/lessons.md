@@ -182,6 +182,28 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   back to its owner with the evidence; a conflict drops only that branch from the batch. The headset is the human's
   turn only after everything testable passes.
 
+### A13. Fail-safes that persisted
+- **What happened:** about 40 features in SubmersedVR wrapped their work in `catch { Settings.X = false; }` to fail
+  safe. The settings file then saved that value, so one exception turned the feature off for good: in every later
+  game and every later rig run. Playtesters reported "this stopped working". On the rig, unrelated scenarios failed
+  in a cascade, because an earlier scenario's error had switched off something they relied on.
+- **Root cause:** the error path wrote the player's persisted settings. A session-scoped decision ("stop this for
+  now") was stored as a preference ("I don't want this"). Nothing reported that a feature had disabled itself, and
+  the rig's settings carried over from run to run.
+- **Why the agent missed it:** a defensive disable *feels* safe, so the agent added them without asking where the
+  state goes or who will ever turn it back on. Each one was locally reasonable. Together they were a hidden kill
+  switch, and they turned real bugs into silence.
+- **What catches it up front:**
+  1. An error stops a feature for the session only. All features go through one helper,
+     `FeatureSuspend.TurnOff(feature, why)` (`adapters/unity-bepinex/Core/FeatureSuspend.cs`). It logs
+     `[Irisify:suspend] <feature>: <why>` and the settings save path ignores it. Error paths never write settings.
+  2. Any self-disable is a test failure. The rig client reads each scenario's log, and a `[Irisify:suspend]` line
+     turns the scenario into a FAIL with that line as the evidence.
+  3. Test settings go back to defaults before every suite (`reset_settings` in the rig config), so state can't leak
+     between runs.
+  4. After fixing it, ship a settings migration that turns the affected features back on once (A5).
+  5. `irisify failsafe <mod source>` lists every `catch` that assigns a setting, so the agent can't add one quietly.
+
 ---
 
 ## B. Loading, patching and engine traps
@@ -631,5 +653,7 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 12. **Test what the player knows, not where the hand goes.** A geometric pass rate on an out-of-view mechanic says
     nothing about intuitiveness: judge intent, give feedback at the hand, and ask the human.
 13. **Never assume a skeleton.** Resolve bones by verified subtree, log what you resolved, and assert body proportions.
-14. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
+14. **A fail-safe never persists.** An error stops a feature for this session, says so in the log, and fails the
+    test. Before adding any defensive disable, ask where that state is stored and who turns it back on.
+15. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
     decide the rest yourself with a written reason.

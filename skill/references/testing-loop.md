@@ -154,4 +154,7 @@ Irisify generalizes the Subnautica rig (`tools/rig/`, `adapters/unity-bepinex/`)
 - **One proof shot in targeted runs.** `smoke`, `changed`, `auto`, `regression` and `flaky-hunt` ask the adapter for
   one proof screenshot per scenario (`shots: "proof"`); `full`, `nightly` and `pre-headset` keep every moment, so
   the human's review has them all.
+- **Fail-safes fail the test.** Reset test settings before every suite (`reset_settings` in the rig config). A
+  scenario whose log shows `[Irisify:suspend]` (a feature turned itself off through `FeatureSuspend`) is a FAIL with
+  that line as evidence, even if its own checks passed (lessons A13).
 - **What it costs.** A targeted batch of 6–9 scenarios ran in 7–10 minutes on the Subnautica rig.

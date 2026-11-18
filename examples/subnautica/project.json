@@ -30,6 +30,9 @@
     "cmd": "load",
     "slot": "slot9001"
    }
+  },
+  "reset_settings": {
+   "cmd": "reset_settings"
   }
  },
  "core": [

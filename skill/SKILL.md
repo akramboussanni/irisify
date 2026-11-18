@@ -58,6 +58,9 @@ run the game yourself, ask the user to launch it now, not after features exist.
    magazine. Information goes on the thing, then the body, then the world, and flat only when nothing else fits.
 9. **Ship it on.** One coherent preset on by default, discoverable in game (visible models, rings, one-time hints).
    Changing a default needs a settings migration. Runtime kill switches never persist.
+   **A fail-safe never writes settings:** an error stops the feature for the session through
+   `FeatureSuspend.TurnOff`, logs `[Irisify:suspend]`, and fails the scenario. Run `irisify failsafe <src>` before
+   merging. Ask yourself where any defensive disable's state goes (lessons A13).
 10. **The camera never moves without input.** Cuts the game needs are covered by a blink. Other cuts are removed.
     The head can't go through hulls.
 11. **Every let-go has a visible outcome.** Pick targets from the ray the player uses, never the game's hover.
@@ -89,7 +92,7 @@ them. Keep it true:
 
 `irisify` is the CLI (see the repo README). The ones you'll use most: `status`, `agent`, `feature`, `ask`,
 `machine add|check`, `doctor platform|input-focus`, `controllers detect|lint|bindings|prompts`,
-`suite plan|run <suite>` (default `auto`), `scenarios lint`, `shots review`, `gate first-boot`, `deploy`,
+`suite plan|run <suite>` (default `auto`), `scenarios lint`, `failsafe <src>`, `shots review`, `gate first-boot`, `deploy`,
 `integrate`, `verify-branch`, `fanout`. Start the dashboard for the human with `irisify dashboard` and show them
 screenshots there instead of describing them.
 

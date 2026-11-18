@@ -19,6 +19,10 @@ rig.json (written by `irisify suite run`, or by hand):
 --options options.json gives per-scenario {"save", "set": "quick|full", "shots": "proof|all", "cap": seconds}.
 The save, set and shots go to the adapter with the scenario command; the cap replaces scenario_timeout.
 A different save is loaded only when the scenario needs it, so a run stays in one game process.
+
+"reset_settings": an adapter command (e.g. {"cmd": "reset_settings"}) or a shell line ("sh: cp defaults.cfg ...")
+run once before the first scenario, so test settings can't leak between runs. A scenario whose log has an
+[Irisify:suspend] line (a feature turned itself off) is a FAIL: a silent fail-safe hides a real bug.
 """
 import argparse
 import json
@@ -185,6 +189,10 @@ def run_scenarios(rig, args):
     run = {"type": "run", "id": args.run_id, "build": build, "suite": args.suite, "machine": args.machine,
            "scenarios": names, "seed": args.seed, "started": time.time()}
     rig.append(run)
+    reset = rig.cfg.get("reset_settings")
+    if isinstance(reset, str) and reset.startswith("sh:"):
+        subprocess.run(["bash", "-lc", reset[3:]], timeout=60)  # before the game reads them
+        reset = None
     summary, seen, seconds = {}, {}, {}
     for name in names:
         seen[name] = seen.get(name, 0) + 1
@@ -200,6 +208,12 @@ def run_scenarios(rig, args):
             rig.append({"scenario": label, "result": "CRASH", "detail": "game did not come up", "run": args.run_id, "build": build})
             summary[label] = "CRASH"
             continue
+        if reset:
+            try:
+                rig.send(dict(reset) if isinstance(reset, dict) else {"cmd": reset}, timeout=30)
+            except TimeoutError:
+                pass
+            reset = None
         opt = options.get(name, {})
         load = save_cmd(rig, opt.get("save"))
         if load and not loaded(rig, load):
@@ -221,6 +235,11 @@ def run_scenarios(rig, args):
             res["scenario"] = label
             res.setdefault("run", args.run_id)
             res.setdefault("build", build)
+            suspended = [l.strip() for l in rig.log_since(off).splitlines() if "[Irisify:suspend]" in l]
+            if suspended:
+                res["checks"] = list(res.get("checks") or []) + [{"check": "no feature turned itself off", "ok": False, "value": suspended[:5]}]
+                if res.get("result") == "PASS":
+                    res["result"] = "FAIL"
             res["seconds"] = round(time.time() - t0, 1)
             if opt.get("set"):
                 res["set"] = opt["set"]

@@ -15,6 +15,8 @@ namespace Irisify
         {
             set => { set("ArmSwimming", true); set("HeadClipFade", true); },        // v1 example
             set => { set("PhysicalContainers", true); },                             // v2 example
+            // After removing persisted fail-safes (lessons A13), add one step that turns every feature an error path
+            // could have switched off back on, once: set => { foreach (var f in FeaturesThatSelfDisabled) set(f, true); }
         };
 
         // get/set: your settings store. Call after the game loads its settings, before your features read them.

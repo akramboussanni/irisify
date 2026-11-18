@@ -330,6 +330,15 @@ def cmd_patchcheck(a):
     sys.exit(1 if hits else 0)
 
 
+def cmd_failsafe(a):
+    from . import patchcheck
+    hits = patchcheck.failsafe_scan(a.src)
+    for h in hits:
+        print(f"{h['file']}:{h['line']}: {h['setting']} written from an error path; use FeatureSuspend.TurnOff (lessons A13)")
+    print(f"{len(hits)} persisted fail-safes")
+    sys.exit(1 if hits else 0)
+
+
 def cmd_dashboard(a):
     sys.path.insert(0, os.path.join(REPO, "dashboard"))
     import server  # noqa
@@ -443,6 +452,10 @@ def main(argv=None):
     s = sub.add_parser("patchcheck", help="find patch targets that are explicit interface methods")
     s.add_argument("decomp"); s.add_argument("src")
     s.set_defaults(f=cmd_patchcheck)
+
+    s = sub.add_parser("failsafe", help="find catch blocks that write settings (fail-safes that persist)")
+    s.add_argument("src")
+    s.set_defaults(f=cmd_failsafe)
 
     s = sub.add_parser("dashboard", help="serve the dashboard")
     s.add_argument("--host", default="127.0.0.1"); s.add_argument("--port", type=int, default=7420)

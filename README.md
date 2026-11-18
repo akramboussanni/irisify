@@ -163,7 +163,7 @@ through `rigclient.py` over SSH, then `irisify sync` pulls the results into `.ir
 - **Verified here:** the CLI, suites, importer, gates and dashboard against the real Subnautica rig results (imported
   read-only), the controller generator (it regenerates the shipped Frame binding except four touch-dpad move
   bindings that were dropped on purpose), `machine check` and `doctor platform` against the real laptop over
-  Tailscale, and 23 unit tests (`python3 -m unittest discover tests`), including the rig client against a fake game.
+  Tailscale, and 24 unit tests (`python3 -m unittest discover tests`), including the rig client against a fake game.
 - **Not verified:** `suite run`, `deploy`, `integrate` and `verify-branch` against a live rig, because the running
   Subnautica rig was left untouched. The C# adapter templates are generalised from code that ran in SubmersedVR, but
   these copies haven't been compiled. Quest support is profile and adb only, and its streaming checks are still TODO.

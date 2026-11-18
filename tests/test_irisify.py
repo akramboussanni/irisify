@@ -220,6 +220,8 @@ class RigClient(unittest.TestCase):
         res = os.path.join(d, "results.jsonl")
         stop = threading.Event()
         loads, seen_cmds = [], []
+        logf = os.path.join(d, "LogOutput.log")
+        open(logf, "w").close()
 
         def game():
             while not stop.is_set():
@@ -231,6 +233,8 @@ class RigClient(unittest.TestCase):
                             loads.append(c.get("slot"))
                         if c["cmd"] == "scenario":
                             seen_cmds.append(c)
+                            if c["name"] == "self_off":
+                                open(logf, "a").write("[Irisify:suspend] ArmSwimming: NullReferenceException\n")
                         if c["cmd"] == "scenario":
                             line = {"id": c["id"], "scenario": c["name"], "result": "FAIL" if c["name"] == "bad" else "PASS",
                                     "checks": [{"check": "x", "ok": c["name"] != "bad"}]}
@@ -243,24 +247,38 @@ class RigClient(unittest.TestCase):
         t = threading.Thread(target=game, daemon=True)
         t.start()
         cfg = os.path.join(d, "rig.json")
-        json.dump({"rig_dir": d, "scenario_timeout": 10, "saves": {"creative": {"cmd": "load", "slot": "slot9000"},
+        json.dump({"rig_dir": d, "log": logf, "scenario_timeout": 10, "reset_settings": {"cmd": "reset_settings"}, "saves": {"creative": {"cmd": "load", "slot": "slot9000"},
                                                                    "survival": {"cmd": "load", "slot": "slot9001"}}}, open(cfg, "w"))
         opts = os.path.join(d, "options.json")
         json.dump({"good": {"save": "creative", "set": "quick", "shots": "proof", "cap": 10}, "bad": {"save": "creative"},
-                   "eat": {"save": "survival"}}, open(opts, "w"))
+                   "eat": {"save": "survival"}, "self_off": {"save": "survival"}}, open(opts, "w"))
         p = subprocess.run([sys.executable, os.path.join(REPO, "tools", "rig", "rigclient.py"), "--config", cfg, "run",
-                            "--scenarios", "good,bad,good,eat", "--run-id", "r1", "--build", '{"id": "b1"}', "--options", opts],
+                            "--scenarios", "good,bad,good,eat,self_off", "--run-id", "r1", "--build", '{"id": "b1"}', "--options", opts],
                            capture_output=True, text=True, timeout=60)
         stop.set()
         self.assertEqual(p.returncode, 1, p.stderr)
         runs = results.split_runs([json.loads(l) for l in open(res)])
         self.assertEqual(len(runs), 1)
-        self.assertEqual([s["scenario"] for s in runs[0]["scenarios"]], ["good", "bad", "good#2", "eat"])
+        self.assertEqual([s["scenario"] for s in runs[0]["scenarios"]], ["good", "bad", "good#2", "eat", "self_off"])
+        self_off = runs[0]["scenarios"][-1]
+        self.assertEqual(self_off["result"], "FAIL", "a feature that turned itself off fails the scenario")
+        self.assertEqual(sum(1 for l in open(res) if '"reset_settings"' in l), 1, "test settings reset once per run")
         self.assertEqual(runs[0]["header"]["build"]["id"], "b1")
         self.assertEqual(loads, ["slot9000", "slot9001"], "each save loads once, only when a scenario needs it")
         self.assertEqual(seen_cmds[0].get("set"), "quick")
         self.assertEqual(seen_cmds[0].get("shots"), "proof")
         self.assertTrue(all("seconds" in s for s in runs[0]["scenarios"]))
+
+
+class FailSafe(unittest.TestCase):
+    def test_finds_catch_that_writes_a_setting(self):
+        d = tempfile.mkdtemp(prefix="irisify-src-")
+        with open(os.path.join(d, "Swim.cs"), "w") as f:
+            f.write("void A() {\n  try { Go(); }\n  catch (Exception e)\n  {\n    Log(e);\n    Settings.ArmSwimming = false;\n  }\n}\n"
+                    "void B() {\n  try { Go(); } catch { FeatureSuspend.TurnOff(\"X\", null); }\n  Settings.Other = false;\n}\n")
+        from irisify import patchcheck
+        hits = patchcheck.failsafe_scan(d)
+        self.assertEqual([h["setting"] for h in hits], ["Settings.ArmSwimming"])
 
 
 class SkillCopy(unittest.TestCase):

@@ -40,6 +40,7 @@ namespace Irisify.Rig
         public static Func<Dictionary<string, object>> Dump = () => new Dictionary<string, object>();          // fill from your game
         public static Func<Dictionary<string, object>> StartState = () => Dump();
         public static readonly Dictionary<string, Func<ScenarioContext, IEnumerator>> Scenarios = new Dictionary<string, Func<ScenarioContext, IEnumerator>>();
+        public static Action ResetSettings;
         public static readonly Dictionary<string, Func<Dictionary<string, object>, object>> Commands = new Dictionary<string, Func<Dictionary<string, object>, object>>();
         static readonly List<string> captured = new List<string>();
         bool busy;
@@ -55,6 +56,9 @@ namespace Irisify.Rig
             host.AddComponent<ComfortMonitor>();
             Commands["ping"] = a => "pong";
             Commands["dump"] = a => Dump();
+            // Test settings back to defaults and suspensions cleared before each suite (lessons A13).
+            // Set ResetSettings to your settings store's reset-and-save for the test profile.
+            Commands["reset_settings"] = a => { ResetSettings?.Invoke(); FeatureSuspend.Clear(); return "defaults"; };
             Commands["shot"] = a => null;   // handled as a coroutine below
         }
 
