@@ -52,7 +52,9 @@ def run_summaries(p):
                     "scenarios": [{"name": s["scenario"], "result": s["result"], "owner": s.get("owner"),
                                    "why": (plan.get("why") or {}).get(s["base"]),
                                    "fails": [c["check"] for c in s["checks"] if not c.get("ok")][:3],
-                                   "shots": len(s["shots"])} for s in r["scenarios"]]})
+                                   "shots": len(s["shots"]), "seconds": s.get("seconds"),
+                                   "files": [sh["file"] for sh in s["shots"] if sh.get("present")]} for s in r["scenarios"]],
+                    "preview": next(({"file": sh["file"], "moment": sh["moment"]} for s in r["scenarios"] for sh in s["shots"] if sh.get("present")), None)})
     return out, runs
 
 
@@ -74,6 +76,57 @@ def shots_index(runs, reviews):
                 seen[key] = entry
     vals = [e for e in seen.values() if e["present"] or (e.get("before") or {}).get("present")]
     return sorted(vals, key=lambda e: (e["review"] is not None, e["scenario"], e["moment"]))
+
+
+TYPES = [("Platform", {"boot", "settings", "input", "smoke"}), ("Comfort", {"comfort"}), ("Locomotion", {"locomotion", "swim", "climb"}),
+         ("Body and inventory", {"body", "holsters", "pda", "carry"}), ("Interaction", {"gathering", "containers", "machines", "grab", "interaction"}),
+         ("Building", {"building"}), ("Vehicles", {"vehicles"}), ("UI and readability", {"ui", "hints", "prompts"}), ("Diagnostics", {"diagnostic"})]
+
+
+def test_type(meta, name):
+    m = meta.get(name, {})
+    if m.get("type"):
+        return m["type"]
+    tags = set(m.get("tags", []))
+    for t, keys in TYPES:
+        if t != "Platform" and tags & keys and not (t == "Comfort" and tags & {"locomotion", "vehicles", "ui"}):
+            return t
+    for t, keys in TYPES:
+        if tags & keys:
+            return t
+    return "Other"
+
+
+def catalog(p, runs):
+    meta = results.scenario_meta(p)
+    names = list(meta)
+    for r in runs:
+        for s in r["scenarios"]:
+            if s["base"] not in names:
+                names.append(s["base"])
+    out = []
+    for n in names:
+        hist = []
+        for r in runs:
+            for s in r["scenarios"]:
+                if s["base"] == n:
+                    hist.append({"run": r["id"], "build": r["build"].get("id"), "result": s["result"], "at": r["imported"]})
+        m = meta.get(n, {})
+        out.append({"name": n, "type": test_type(meta, n), "owner": m.get("owner"), "tags": m.get("tags", []),
+                    "covers": m.get("covers", []), "cannot_cover": m.get("cannot_cover", []), "minutes": m.get("minutes"),
+                    "shots": list((m.get("shots") or {}).values()), "history": hist[-30:]})
+    return out
+
+
+def test_detail(p, name):
+    runs = results.list_runs(p)
+    entries = []
+    for r in runs:
+        for s in r["scenarios"]:
+            if s["base"] == name:
+                entries.append(dict(s, run=r["id"], build=r["build"].get("id"), machine=r["machine"], suite=r.get("suite"), at=r["imported"]))
+    cat = next((c for c in catalog(p, runs) if c["name"] == name), None)
+    return {"test": cat, "entries": entries[-30:]}
 
 
 def overview(p):
@@ -101,7 +154,7 @@ def overview(p):
         "flaky": results.flaky(runs), "issues": issues, "shots": shots_index(runs, reviews)[:120],
         "checklist": results.headset_checklist(runs, issues), "intake": intake.state(p),
         "suites": suite_list, "signoffs": p.read("signoffs.json", {}), "jobs": JOBS,
-        "activity": p.lines("activity.jsonl")[-20:], "profiles": profile_list(),
+        "activity": p.lines("activity.jsonl")[-20:], "profiles": profile_list(), "catalog": catalog(p, runs),
     }
 
 
@@ -146,6 +199,8 @@ class Handler(BaseHTTPRequestHandler):
             if parts[:2] == ["api", "run"] and len(parts) == 3:
                 r = p.read(os.path.join("runs", os.path.basename(parts[2]), "run.json"))
                 return self.send(200 if r else 404, r or {"error": "no such run"})
+            if parts[:2] == ["api", "test"] and len(parts) == 3:
+                return self.send(200, test_detail(p, parts[2]))
             if parts[0] == "shots" and len(parts) == 3:
                 return self.file(p.path("runs", os.path.basename(parts[1]), "shots", os.path.basename(parts[2])))
         except Exception as e:
