@@ -15,7 +15,7 @@ FEATURE_STATES = ["idea", "design", "building", "testing", "merged", "in-headset
 def report(project, agent, event="status", doing=None, feature=None, branch=None, session=None):
     rec = {"agent": agent, "event": event, "doing": doing, "feature": feature, "branch": branch, "session": session}
     rec = project.append("agents.jsonl", {k: v for k, v in rec.items() if v is not None})
-    if feature and event in ("start", "status"):
+    if feature and event in ("start", "status", "blocked"):
         f = project.read("features.json", {})
         if feature in f:
             f[feature]["owner"] = agent
