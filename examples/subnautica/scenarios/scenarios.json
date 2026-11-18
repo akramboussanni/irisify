@@ -741,12 +741,13 @@
   ],
   "minutes": 4,
   "covers": [
-   "shoulder slots: >= 95% success per context over many reach paths (heights, speeds, head turned, seated, swimming, body scale 0.85-1.15)",
-   "no draw when adjusting the headset strap, scratching hair or neck, or raising a hand near the head",
-   "A/B: old spheres vs regions on the same paths"
+   "every reach draws the slot the player meant: varied head yaw, high, low and cross-body reaches, seated and swimming, body scale 0.85-1.15",
+   "zero false draws: headset strap, scratching hair or neck, hand raised near the head",
+   "a ghost of the item appears at the hand on entering a zone, with a per-slot haptic",
+   "A/B: old vs new zones on the same paths"
   ],
   "cannot_cover": [
-   "whether reaching behind the shoulder feels natural"
+   "whether the player knows which slot they're in without looking (ask them)"
   ]
  },
  {

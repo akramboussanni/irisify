@@ -146,31 +146,12 @@ Read `vr-design.md` section 7. Decide and write down:
   (`lessons.md` E15).
 - **Seated in vehicles:** the seat pose rarely matches the player's eye height. Shift the seated body, bounded, so its
   eye point matches the headset through the neck pivot.
-- **Out-of-view slots** (shoulders, back): regions in the body frame with generous margins and distinct haptics, a
-  reach success-rate scenario with a target (≥ 95% per context), and false-trigger cases (hand raised near the head,
-  adjusting the headset strap, scratching hair or neck). Keep an A/B toggle for any slot change. Ask first whether the spot suits the platform
-  (`lessons.md` E14).
-
-## Step 6. Information placement
-
-List every piece of flat UI the game shows (HUD widgets, prompts, menus, notifications, subtitles, tooltips,
-reticle text). For each, choose a home in this order and write the reason:
-
-0. **The game's own surfaces first:** an existing cockpit screen, gauge or label from the asset inspection. If it is
-   painted into a texture, overlay it in the object's frame and check parallax with head-lean shots (`lessons.md` E11).
-1. **On the thing it describes:** charge on the tool, contents on the locker door, rounds in the magazine.
-2. **On the body or gear, where you'd glance anyway:** wrist dive computer, tank gauge, glove.
-3. **In the world, at the place of use:** crafting panel at the machine, vehicle stats on the dash.
-4. **Handheld:** a tablet or PDA you hold and can put away. Check it doesn't keep the game's modal locks (`lessons.md` B4).
-5. **Flat, lazy-follow HUD:** only for what has no physical home (subtitles, system messages). Bring it in from the
-   lens edges and size it in degrees.
-
-Size everything by its smallest meaningful element in visual angle, for the target headset's pixels per degree (the
-headset profile has it): text ≥ 2° font height, icons ≥ 4 cm at a 45 cm hold, panel text never below 0.8°.
-
-## Step 7. Comfort plan
-
-Read `comfort-and-overwhelm.md`. Produce:
+- **Out-of-view slots** (shoulders, back): feedback at the hand (a ghost of the item when the hand enters, a distinct
+  haptic per slot); zones split per hand and body side with a dead band at the spine; computed in a smoothed torso
+  frame that freezes during a reach (never the head's yaw); the same zone for draw and stow, with hysteresis only for
+  staying in. Reach tests judge intent (did the player get the slot they meant, zero false draws, including the
+  headset strap and scratching), not a hit rate. Keep an A/B toggle, and ask whether the spot suits the platform at
+  all (`lessons.md` E14).
 - **The teleport and cinematic audit:** grep every position set, cinematic, camera-driving and forced-look call in the
   game code. One row each: what the game does, and the VR treatment (physical route / glide / blink / keep with a
   reason). Subnautica's table (in `examples/subnautica/design/comfort.md`) has about 20 rows.

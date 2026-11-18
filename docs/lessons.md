@@ -534,19 +534,30 @@ The entries are grouped by the gap behind them, not by date. The last section tu
   is within ~20 cm, with hysteresis. `ViewChecks` reports any shown body model near a busy hand. Check proximity
   between held items and body attachments, not only how many things each hand holds.
 
-### E14. Out-of-view body slots tuned as points
-- **What happened:** shoulder holsters as small spheres behind the head felt "weird, inconsistent and not intuitive"
-  in the headset.
-- **What catches it up front:** design out-of-view slots as **regions** in the stable body frame (not the head), with
-  generous margins scaled to calibrated height and distinct haptics. Test them with a **reach success-rate**
-  scenario over many reach paths (heights, speeds, head turned, seated and swimming) plus false-trigger cases (hand
-  raised near the head), with a target rate. First ask whether the location suits the platform at all (back or
-  backpack zone, thighs, belt) before tuning it.
-- **Measured result:** as body-frame regions, shoulder holsters reached ≥ 95% success in every context on the rig
-  (body scale 1.15 included), against 5/8 and 3/8 for the old small spheres. The one false draw: gripping the
-  headset's back strap at eye height drew a tool. False-trigger cases must include adjusting the headset strap and
-  scratching the hair or neck. Any body-slot change keeps an A/B toggle (old vs new) and the reach-rate scenario, so
-  the comparison is a number, not a feeling.
+### E14. Out-of-view body slots: tested where the hand goes, not what the player knows
+- **What happened:** shoulder holsters as small spheres behind the head felt "weird, inconsistent and not
+  intuitive". They were redone as body-frame regions, and the rig then scored them at ≥ 95% in every context (body
+  scale 1.15 included), against 5/8 and 3/8 for the spheres. The user still said "shoulder holstering is really weird
+  to use and inconsistent and not intuitive".
+- **Root cause:** the metric was "did a scripted reach to a fixed point land in the zone". It never asked whether the
+  player got what they meant to grab, or whether they could have known which slot their hand was in. Behind the head
+  there is no sight line, so geometric hit rate says nothing about intuitiveness. Specific defects: zones computed in
+  the head's yaw frame (the head turns during a reach); a lopsided split line between left and right; draw and stow
+  using different zones; hysteresis that decided entry instead of only holding it. A false draw also came from
+  gripping the headset's back strap.
+- **Why the agent missed it:** **the agent tests where the hand goes, not what the player knows.** A number that
+  passes a threshold feels like proof, and the scripted hand always reaches exactly where the code expects.
+- **What catches it up front:**
+  1. Every slot outside the field of view gives feedback **at the hand**: a ghost of the item appears in the hand
+     when it enters the zone, plus a distinct haptic per slot.
+  2. Zones are split per hand and per body side, with a dead band at the spine. Never a lopsided split.
+  3. Zones live in a smoothed torso frame that **freezes while the hand is reaching**. Never the head's yaw frame.
+  4. Draw and stow use the same zone. Hysteresis only keeps you in a zone; it never decides entry.
+  5. Reach tests judge **intent**: varied head yaw, high, low and cross-body reaches, touching the headset strap,
+     scratching hair or neck. The pass rule is "the draw is the slot the player meant, and zero false draws",
+     not "hit rate ≥ 95%". Keep an A/B toggle for any slot change, and still ask the human, because no rig metric
+     settles intuitiveness for something they can't see.
+  6. First ask whether the location suits the platform at all (back or backpack zone, thighs, belt).
 
 ### E15. Grab where you see it
 - **What happened:** after the body moved, a holstered model hung at belly height while its grab zone stayed at the
@@ -610,6 +621,8 @@ The entries are grouped by the gap behind them, not by date. The last section tu
 10. **Test the worst case, run everything after every merge.** A fix checked only by its own scenario breaks
     something else. No headset deploy without a green full suite on that commit.
 11. **Diegetic means the game's own surfaces first.** Render onto existing screens before adding a panel.
-12. **Never assume a skeleton.** Resolve bones by verified subtree, log what you resolved, and assert body proportions.
-13. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
+12. **Test what the player knows, not where the hand goes.** A geometric pass rate on an out-of-view mechanic says
+    nothing about intuitiveness: judge intent, give feedback at the hand, and ask the human.
+13. **Never assume a skeleton.** Resolve bones by verified subtree, log what you resolved, and assert body proportions.
+14. **Ask the user early about the things only they know** (the hardware works, the platform is set up, feel), and
     decide the rest yourself with a written reason.
