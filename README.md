@@ -12,7 +12,9 @@ built a lot of good VR mechanics on a missing foundation:
    input-focus doctors, controller detection with binding and prompt generation, tag-based test suites on a
    headset-free rig, locked and stamped deploys, an integrator for parallel agents, and gates that refuse to move on
    without evidence.
-3. **A dashboard** (`dashboard/`): a self-hosted web app where the human sees builds, every test case, the
+3. **A dashboard** (`dashboard/`): AI-first, so it's a visualizer, not a control panel. The agent does the work and
+   reports through the CLI (`irisify agent`, `feature`, `ask`). The human sees what each session is working on, what
+   the agent needs from them, and builds, every test case, the
    screenshots, comfort over time, which build each device runs, open issues and who owns them, and what's left to
    check in the headset.
 

@@ -28,7 +28,9 @@ irisify machine check [name]      # reachability, OS, GPU, runtime, game install
 irisify machine setup <name>      # the guided steps; runs what the agent may, prints what needs the human
 ```
 
-`check` writes `.irisify/machines-status.json`, which the dashboard reads for its connection panel.
+`check` writes `.irisify/machines-status.json`, which the dashboard reads for its connection panel, and turns every
+failing "you" step into an ask on the human's dashboard (closed automatically when it passes). You add machines;
+the human never fills in a form.
 
 ## Setup steps (generated per machine from its roles, OS and headset profile)
 

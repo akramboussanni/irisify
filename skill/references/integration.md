@@ -9,6 +9,11 @@
   in their notes).
 - **Rig worker** (optional): owns the test rig code and scenarios, runs suites, routes failures with evidence.
 
+## Visibility
+Every worker reports with `irisify agent start|status|blocked|done <session-name> "..." --feature <id>` and keeps its
+feature's state current with `irisify feature set`. Human-only steps go through `irisify ask`, never as a paragraph
+buried in a worker's transcript. The integrator owns closing asks once their evidence passes.
+
 ## When to fan out
 Only after the `first-boot`, `design` and `slice` gates (`irisify fanout` checks). Split by **concern first**
 (input/controls, body, UI and readability, comfort, rig), then by game area. Cross-cutting concerns have exactly

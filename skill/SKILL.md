@@ -68,12 +68,30 @@ run the game yourself, ask the user to launch it now, not after features exist.
 14. **Ask what only the user knows, decide the rest.** Blocking questions first, at most four at a time, always with a
     recommendation. Feel questions after they've played. Always ask before anything outward-facing.
 
+## AI-first: the agent drives, the dashboard shows
+
+You run everything: setup, checks, suites, deploys. The human doesn't configure anything in the dashboard. It's a
+visualizer, there so they can see what's happening, which sessions work on which features, and what you need from
+them. Keep it true:
+
+- **Report as you work.** `irisify agent start <you> "<what you're doing>" --feature <id> --branch <b>` when you begin,
+  `irisify agent status <you> "<step>"` at each meaningful step, `irisify agent blocked|done <you> "..."` at the end.
+  Use your session name as `<you>` so the human can match it to the session in their app.
+- **Track features.** `irisify feature set <id> --title "..." --state idea|design|building|testing|merged|in-headset|done`
+  with the scenarios that prove it.
+- **Ask, don't instruct in prose.** Anything only the human can do (sudo, a password, a sign-in, a click on the
+  headset, a feel check, a decision) goes through `irisify ask new "<one clear instruction>" --why "..." --command "<exact
+  command>" --kind do|decide|check`. It appears at the top of their dashboard. `machine check` and `doctor` file their
+  own asks for steps marked "you", and close them once they pass. Mark an ask done yourself when you can verify it.
+- **Still tell them in chat** what you asked and why, briefly, and point them at the dashboard.
+
 ## Tools
 
-`irisify` is the CLI (see the repo README). The ones you'll use most: `status`, `machine add|check`,
-`doctor platform|input-focus`, `controllers detect|lint|bindings|prompts`, `suite plan|run <suite>` (default `auto`),
-`shots review`, `gate first-boot`, `deploy`, `integrate`, `verify-branch`, `fanout`. The human follows along in
-`irisify dashboard`. Point them at it, and show them screenshots there instead of describing them.
+`irisify` is the CLI (see the repo README). The ones you'll use most: `status`, `agent`, `feature`, `ask`,
+`machine add|check`, `doctor platform|input-focus`, `controllers detect|lint|bindings|prompts`,
+`suite plan|run <suite>` (default `auto`), `scenarios lint`, `shots review`, `gate first-boot`, `deploy`,
+`integrate`, `verify-branch`, `fanout`. Start the dashboard for the human with `irisify dashboard` and show them
+screenshots there instead of describing them.
 
 ## Reference files
 

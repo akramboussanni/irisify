@@ -5,7 +5,7 @@ import os
 import shutil
 import sys
 
-from . import controllers, deploy, doctor, intake, machines, results, runner, suites, workflow
+from . import controllers, deploy, doctor, intake, machines, results, runner, suites, team, workflow
 from .project import REPO, Project, load_structured, now
 
 
@@ -64,6 +64,7 @@ def cmd_machine(a):
         out(machines.load(p), True)
     elif a.op in ("check", "setup"):
         st = machines.check_all(p, a.name)
+        team.asks_from_machine_steps(p, st)
         for n, s in st.items():
             if a.name and n != a.name:
                 continue
@@ -77,6 +78,12 @@ def cmd_machine(a):
 def cmd_doctor(a):
     p = Project.open()
     rep = doctor.platform(p, a.machine, a.appid) if a.what == "platform" else doctor.input_focus(p, a.machine, a.appid, a.log)
+    for c in rep["checks"]:
+        aid = f"doctor-{a.machine}-{c['id']}"
+        if c["ok"] is False and c.get("who", "you") == "you":
+            team.ask(p, f"{a.machine}: {c['what']}", why=f"found: {c.get('found')}", command=c.get("fix"), frm="doctor", ask_id=aid)
+        elif c["ok"] and any(x["id"] == aid and x["state"] == "open" for x in team.asks(p)):
+            team.resolve(p, aid, by="doctor")
     if a.json:
         return out(rep, True)
     for c in rep["checks"]:
@@ -275,6 +282,37 @@ def cmd_scenarios(a):
     sys.exit(1 if errors else 0)
 
 
+def cmd_agent(a):
+    p = Project.open()
+    if a.op == "list":
+        for x in team.agents(p):
+            print(f"{x['state']:<8} {x['agent']:<20} {x.get('feature') or '-':<22} {x.get('doing') or ''}")
+        return
+    print(json.dumps(team.report(p, a.name, a.op, a.doing, a.feature, a.branch, a.session)))
+
+
+def cmd_feature(a):
+    p = Project.open()
+    if a.op == "list":
+        for fid, f in p.read("features.json", {}).items():
+            print(f"{f.get('state', ''):<11} {fid:<24} {f.get('owner') or '-':<18} {f.get('title', '')}")
+        return
+    print(json.dumps(team.set_feature(p, a.id, a.title, a.state, a.owner, a.scenarios.split(",") if a.scenarios else None, a.branch, a.note)))
+
+
+def cmd_ask(a):
+    p = Project.open()
+    if a.op == "list":
+        for x in team.asks(p):
+            if x["state"] == "open" or a.all:
+                print(f"{x['state']:<9} {x['id']:<26} {x['title']}" + (f"\n          $ {x['command']}" if x.get("command") else ""))
+        return
+    if a.op in ("done", "dismiss"):
+        print(json.dumps(team.resolve(p, a.text, "done" if a.op == "done" else "dismissed", a.answer, by=a.by)))
+        return
+    print(json.dumps(team.ask(p, a.text, a.why, a.command, a.frm, a.kind)))
+
+
 def cmd_patchcheck(a):
     from . import patchcheck
     hits = patchcheck.scan(a.decomp, a.src)
@@ -372,6 +410,23 @@ def main(argv=None):
     s = sub.add_parser("fanout", help="check the gates before starting parallel workers")
     s.add_argument("--force")
     s.set_defaults(f=cmd_fanout)
+
+    s = sub.add_parser("agent", help="agents report what they're doing (the dashboard shows it)")
+    s.add_argument("op", choices=["start", "status", "done", "blocked", "list"]); s.add_argument("name", nargs="?")
+    s.add_argument("doing", nargs="?"); s.add_argument("--feature"); s.add_argument("--branch"); s.add_argument("--session")
+    s.set_defaults(f=cmd_agent)
+
+    s = sub.add_parser("feature", help="features and their state")
+    s.add_argument("op", choices=["set", "list"]); s.add_argument("id", nargs="?")
+    s.add_argument("--title"); s.add_argument("--state", choices=team.FEATURE_STATES); s.add_argument("--owner")
+    s.add_argument("--scenarios"); s.add_argument("--branch"); s.add_argument("--note")
+    s.set_defaults(f=cmd_feature)
+
+    s = sub.add_parser("ask", help="ask the human to do or decide something (shows on the dashboard)")
+    s.add_argument("op", choices=["new", "list", "done", "dismiss"]); s.add_argument("text", nargs="?", help="the request, or the ask id for done/dismiss")
+    s.add_argument("--why"); s.add_argument("--command"); s.add_argument("--kind", default="do", choices=["do", "decide", "check"])
+    s.add_argument("--from", dest="frm"); s.add_argument("--answer"); s.add_argument("--by", default="agent"); s.add_argument("--all", action="store_true")
+    s.set_defaults(f=cmd_ask)
 
     s = sub.add_parser("scenarios", help="lint scenario metadata (owners, questions, worst-case coverage)")
     s.add_argument("op", choices=["lint"])

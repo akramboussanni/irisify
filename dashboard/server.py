@@ -17,7 +17,7 @@ from urllib.parse import unquote, urlparse
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), "tools"))
 
-from irisify import intake, machines, results, runner, suites, workflow  # noqa: E402
+from irisify import intake, machines, results, runner, suites, team, workflow  # noqa: E402
 from irisify.cli import issues_merged  # noqa: E402
 from irisify.project import now  # noqa: E402
 
@@ -155,6 +155,8 @@ def overview(p):
         "checklist": results.headset_checklist(runs, issues), "intake": intake.state(p),
         "suites": suite_list, "signoffs": p.read("signoffs.json", {}), "jobs": JOBS,
         "activity": p.lines("activity.jsonl")[-20:], "profiles": profile_list(), "catalog": catalog(p, runs),
+        "agents": team.agents(p), "features": p.read("features.json", {}),
+        "asks": [a for a in team.asks(p) if a["state"] == "open"],
     }
 
 
@@ -231,6 +233,8 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/sync":
                 started = job(f"sync:{body['machine']}", runner.sync, p, body["machine"])
                 return self.send(200, {"started": started})
+            if path == "/api/ask":
+                return self.send(200, team.resolve(p, body["id"], body.get("state", "done"), body.get("answer"), by="user"))
             if path == "/api/review":
                 r = p.read("shot-reviews.json", {})
                 r[f"{body['run']}/{body['file']}"] = {"verdict": body["verdict"], "answer": body.get("answer", ""), "by": "user", "at": now()}
