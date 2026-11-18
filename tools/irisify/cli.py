@@ -264,6 +264,15 @@ def cmd_fanout(a):
     print("gates passed: fan out. Give every worker skill/references/integration.md and notes/conventions.md.")
 
 
+def cmd_patchcheck(a):
+    from . import patchcheck
+    hits = patchcheck.scan(a.decomp, a.src)
+    for h in hits:
+        print(f"{h['file']}:{h['line']}: {h['class']}.{h['method']} is only implemented explicitly; target {' or '.join(h['use'])}")
+    print(f"{len(hits)} suspicious patch targets")
+    sys.exit(1 if hits else 0)
+
+
 def cmd_dashboard(a):
     sys.path.insert(0, os.path.join(REPO, "dashboard"))
     import server  # noqa
@@ -352,6 +361,10 @@ def main(argv=None):
     s = sub.add_parser("fanout", help="check the gates before starting parallel workers")
     s.add_argument("--force")
     s.set_defaults(f=cmd_fanout)
+
+    s = sub.add_parser("patchcheck", help="find patch targets that are explicit interface methods")
+    s.add_argument("decomp"); s.add_argument("src")
+    s.set_defaults(f=cmd_patchcheck)
 
     s = sub.add_parser("dashboard", help="serve the dashboard")
     s.add_argument("--host", default="127.0.0.1"); s.add_argument("--port", type=int, default=7420)

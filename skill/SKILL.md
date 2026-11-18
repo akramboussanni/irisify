@@ -68,6 +68,13 @@ run the game yourself, ask the user to launch it now, not after features exist.
 14. **Ask what only the user knows, decide the rest.** Blocking questions first, at most four at a time, always with a
     recommendation. Feel questions after they've played. Always ask before anything outward-facing.
 
+## Tools
+
+`irisify` is the CLI (see the repo README). The ones you'll use most: `status`, `machine add|check`,
+`doctor platform|input-focus`, `controllers detect|lint|bindings|prompts`, `suite plan|run <suite>` (default `auto`),
+`shots review`, `gate first-boot`, `deploy`, `integrate`, `verify-branch`, `fanout`. The human follows along in
+`irisify dashboard`. Point them at it, and show them screenshots there instead of describing them.
+
 ## Reference files
 
 | File | What |

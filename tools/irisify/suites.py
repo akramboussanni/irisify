@@ -114,7 +114,7 @@ def select(project, suite, scenario=None, seed=None, files=None):
             add(meta.keys(), "no green build to diff against: everything")
         else:
             for n, s in meta.items():
-                hits = [f for f in files for pat in s.get("touches", []) if fnmatch.fnmatch(f, pat) or fnmatch.fnmatch(os.path.basename(f), pat)]
+                hits = [f for f in files for pat in s.get("touches", []) if fnmatch.fnmatch(f, pat) or fnmatch.fnmatch(f, "*/" + pat) or fnmatch.fnmatch(os.path.basename(f), pat)]
                 if hits:
                     add([n], f"touches {hits[0]}")
                 elif any(t in s["tags"] for t in ("settings", "input")) and any(f.endswith(("Settings.cs", ".json")) for f in files):
