@@ -13,7 +13,12 @@ rig.json (written by `irisify suite run`, or by hand):
    "log": "~/.local/share/Steam/steamapps/common/Subnautica/BepInEx/LogOutput.log",
    "start": "~/irisify-rig/launch.sh", "stop": "~/irisify-rig/stop.sh",
    "patch_line": "patches: (\\d+) applied, (\\d+) failed", "menu_timeout": 240, "scenario_timeout": 600,
-   "load": {"cmd": "load", "slot": "slot9000"}}
+   "load": {"cmd": "load", "slot": "slot9000"},
+   "saves": {"creative": {"cmd": "load", "slot": "slot9000"}, "survival": {"cmd": "load", "slot": "slot9001"}}}
+
+--options options.json gives per-scenario {"save", "set": "quick|full", "shots": "proof|all", "cap": seconds}.
+The save, set and shots go to the adapter with the scenario command; the cap replaces scenario_timeout.
+A different save is loaded only when the scenario needs it, so a run stays in one game process.
 """
 import argparse
 import json
@@ -154,8 +159,15 @@ def boot(rig, run):
     return checks
 
 
-def loaded(rig):
-    want = rig.cfg["load"].get("slot")
+def save_cmd(rig, save):
+    saves = rig.cfg.get("saves") or {}
+    if save and save in saves:
+        return saves[save]
+    return rig.cfg.get("load") or (next(iter(saves.values())) if saves else None)
+
+
+def loaded(rig, load):
+    want = load.get("slot")
     try:
         d = rig.send({"cmd": "dump"}, timeout=15)[-1].get("data", {})
     except TimeoutError:
@@ -166,6 +178,10 @@ def loaded(rig):
 def run_scenarios(rig, args):
     build = json.loads(args.build) if args.build else {}
     names = [n for n in args.scenarios.split(",") if n]
+    options = {}
+    if getattr(args, "options", None):
+        with open(args.options) as f:
+            options = json.load(f)
     run = {"type": "run", "id": args.run_id, "build": build, "suite": args.suite, "machine": args.machine,
            "scenarios": names, "seed": args.seed, "started": time.time()}
     rig.append(run)
@@ -184,16 +200,20 @@ def run_scenarios(rig, args):
             rig.append({"scenario": label, "result": "CRASH", "detail": "game did not come up", "run": args.run_id, "build": build})
             summary[label] = "CRASH"
             continue
-        if rig.cfg.get("load") and not loaded(rig):
-            # One game process for the whole run: load the test save only when it isn't already loaded;
+        opt = options.get(name, {})
+        load = save_cmd(rig, opt.get("save"))
+        if load and not loaded(rig, load):
+            # One game process for the whole run: load a test save only when it isn't already loaded;
             # scenarios teleport within it instead of relaunching.
             try:
-                rig.send(dict(rig.cfg["load"]), timeout=700)
+                rig.send(dict(load), timeout=700)
             except TimeoutError:
                 pass
         off = rig.log_size()
+        cmd = {"cmd": "scenario", "name": name, "run": args.run_id}
+        cmd.update({k: opt[k] for k in ("set", "shots", "save") if k in opt})
         try:
-            got = rig.send({"cmd": "scenario", "name": name, "run": args.run_id}, timeout=rig.cfg.get("scenario_timeout", 600))
+            got = rig.send(cmd, timeout=opt.get("cap") or rig.cfg.get("scenario_timeout", 600))
             res = next((l for l in reversed(got) if l.get("scenario") == name or l.get("scenario") == label), None)
             if res is None:
                 res = {"scenario": name, "result": "FAIL", "detail": "no scenario line in the results"}
@@ -202,13 +222,15 @@ def run_scenarios(rig, args):
             res.setdefault("run", args.run_id)
             res.setdefault("build", build)
             res["seconds"] = round(time.time() - t0, 1)
+            if opt.get("set"):
+                res["set"] = opt["set"]
             res["via"] = "rigclient"  # the importer replaces the adapter's own line with this labelled copy
             rig.append(res)
             summary[label] = res.get("result")
             seconds[label] = res["seconds"]
         except TimeoutError:
             tail = rig.log_since(off).splitlines()[-30:]
-            rig.append({"scenario": label, "result": "CRASH", "detail": "no answer; game restarted", "log": tail,
+            rig.append({"scenario": label, "result": "CRASH", "detail": f"no answer in {opt.get('cap') or rig.cfg.get('scenario_timeout', 600)}s; game restarted", "log": tail,
                         "run": args.run_id, "build": build})
             summary[label] = "CRASH"
             rig.stop()
@@ -235,6 +257,7 @@ def main():
     r.add_argument("--suite", default=None)
     r.add_argument("--machine", default=None)
     r.add_argument("--seed", type=int, default=None)
+    r.add_argument("--options", default=None)
     for n in ("start", "stop", "alive"):
         sub.add_parser(n)
     a = ap.parse_args()

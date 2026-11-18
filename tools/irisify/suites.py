@@ -3,7 +3,13 @@
 Scenarios are described in `scenarios/*.json` (one object or a list):
   {"name": "swim_speed_curve", "owner": "swim-controls", "tags": ["swim", "locomotion", "comfort"],
    "touches": ["VR/Swim*.cs", "VR/ArmSwimming.cs"], "minutes": 3, "needs_restart": false,
-   "covers": [...], "cannot_cover": [...], "shots": [{"moment": "...", "question": "..."}]}
+   "covers": [...], "cannot_cover": [...], "shots": [{"moment": "...", "question": "..."}],
+   "save": "survival", "cap_seconds": 240, "sets": {"quick": "16 reaches", "full": "64 reaches"}}
+
+  save         which test save it needs (project.json rig.saves; the first one is the default). Never the player's.
+  cap_seconds  the scenario's time cap; over it counts as CRASH and the game restarts.
+  sets         the scenario has a quick and a full set of cases. Quick by default; full when a shared core rule with
+               "full_sets": true matched the change, and always in nightly.
 
 Suites are in `suites/*.json`:
   {"name": "swim", "description": "...", "include_tags": ["swim"], "exclude_tags": [], "scenarios": [],
@@ -71,8 +77,46 @@ def order(names, meta):
                                                        meta.get(n, {}).get("minutes", 2), n))
 
 
+TARGETED = ("smoke", "changed", "regression", "auto", "flaky-hunt")
+
+
 def select(project, suite, scenario=None, seed=None, files=None):
-    """Returns {"suite", "scenarios": [...ordered], "why": {name: reason}, "seed"}."""
+    """Returns {"suite", "scenarios": [...ordered], "why": {name: reason}, "seed", "options": {name: {...}}}."""
+    sel = _select(project, suite, scenario, seed, files)
+    sel["options"] = run_options(project, suite, sel["scenarios"], files)
+    return sel
+
+
+def run_options(project, suite, names, files=None):
+    """Per scenario: which save, which case set, how many shots, the time cap.
+    Targeted runs keep one proof shot per scenario; full, nightly and pre-headset keep every shot."""
+    meta = load_scenarios(project)
+    cfg = project.config()
+    saves = list((cfg.get("rig", {}).get("saves") or {}).keys())
+    full_tags = set()
+    if suite == "nightly":
+        full_tags = {"*"}
+    else:
+        if files is None:
+            files = changed_files(project, last_green_build(results.list_runs(project)))
+        for rule in cfg.get("core", []):
+            if rule.get("full_sets") and files and any(_match(f, pat) for f in files for pat in rule.get("files", [])):
+                full_tags |= set(rule.get("tags", []))
+    out = {}
+    for n in dict.fromkeys(names):
+        s = meta.get(n, {})
+        o = {"shots": "proof" if suite in TARGETED else "all"}
+        if s.get("save") or saves:
+            o["save"] = s.get("save") or saves[0]
+        if s.get("sets"):
+            o["set"] = "full" if ("*" in full_tags or set(s.get("tags", [])) & full_tags) else "quick"
+        if s.get("cap_seconds"):
+            o["cap"] = s["cap_seconds"]
+        out[n] = o
+    return out
+
+
+def _select(project, suite, scenario=None, seed=None, files=None):
     meta = load_scenarios(project)
     suites = load_suites(project)
     runs = results.list_runs(project)

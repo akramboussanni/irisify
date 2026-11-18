@@ -142,4 +142,16 @@ Irisify generalizes the Subnautica rig (`tools/rig/`, `adapters/unity-bepinex/`)
 - **One game process.** The rig client loads the test save only when it isn't loaded already, and scenarios teleport
   within it. Restarts are for `boot`, settings round-trips and crashes.
 - **Time per scenario.** The rig client records seconds per scenario and prints the slowest first. Suite estimates
-  use measured times, so a slow scenario shows up in the plan before you run it.
+  use measured times, so a slow scenario shows up in the plan before you run it. Give slow scenarios a
+  `cap_seconds`: past it the result is CRASH and the game restarts, instead of one hang eating the run.
+- **Quick and full sets.** A scenario that sweeps many cases (every shoulder reach, every build piece) declares
+  `sets` and runs its quick set by default. The full set runs when the change hit a `core` rule with
+  `"full_sets": true` (body and input files), and always in `nightly`. In Subnautica the shoulder sweep went from
+  ~7.5 min to ~2 min this way.
+- **Test saves, never the player's.** List them in `rig.saves` in `.irisify/project.json`; the first is the default
+  (a creative save). A scenario that needs ingredients, hunger or a real stall says `"save": "survival"`. The rig
+  client loads a different save only when the next scenario needs it.
+- **One proof shot in targeted runs.** `smoke`, `changed`, `auto`, `regression` and `flaky-hunt` ask the adapter for
+  one proof screenshot per scenario (`shots: "proof"`); `full`, `nightly` and `pre-headset` keep every moment, so
+  the human's review has them all.
+- **What it costs.** A targeted batch of 6–9 scenarios ran in 7–10 minutes on the Subnautica rig.

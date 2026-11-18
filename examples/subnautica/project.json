@@ -20,6 +20,16 @@
   "load": {
    "cmd": "load",
    "slot": "slot9000"
+  },
+  "saves": {
+   "creative": {
+    "cmd": "load",
+    "slot": "slot9000"
+   },
+   "survival": {
+    "cmd": "load",
+    "slot": "slot9001"
+   }
   }
  },
  "core": [
@@ -35,7 +45,8 @@
     "holsters",
     "pda",
     "carry"
-   ]
+   ],
+   "full_sets": true
   },
   {
    "files": [
@@ -49,7 +60,8 @@
     "locomotion",
     "holsters",
     "containers"
-   ]
+   ],
+   "full_sets": true
   },
   {
    "files": [

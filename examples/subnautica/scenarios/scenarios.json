@@ -125,7 +125,8 @@
   ],
   "shots": [],
   "minutes": 2,
-  "needs_restart": false
+  "needs_restart": false,
+  "cap_seconds": 240
  },
  {
   "name": "swim_water_hold",
@@ -726,7 +727,12 @@
     "moment": "all-tabs",
     "question": "Do all tabs fit, icons at least 4 cm?"
    }
-  ]
+  ],
+  "sets": {
+   "quick": "one room",
+   "full": "every piece (~3 min)"
+  },
+  "cap_seconds": 300
  },
  {
   "name": "shoulder_reach_rate",
@@ -739,7 +745,7 @@
    "VR/VRHolsters.cs",
    "VR/HolsterLayout.cs"
   ],
-  "minutes": 4,
+  "minutes": 2,
   "covers": [
    "every reach draws the slot the player meant: varied head yaw, high, low and cross-body reaches, seated and swimming, body scale 0.85-1.15",
    "zero false draws: headset strap, scratching hair or neck, hand raised near the head",
@@ -748,7 +754,12 @@
   ],
   "cannot_cover": [
    "whether the player knows which slot they're in without looking (ask them)"
-  ]
+  ],
+  "sets": {
+   "quick": "16 reaches and 12 must-never grips",
+   "full": "every reach from every pose (~7.5 min)"
+  },
+  "cap_seconds": 600
  },
  {
   "name": "seated_body_clearance",

@@ -21,8 +21,16 @@ namespace Irisify.Rig
         public readonly List<Dictionary<string, object>> Shots = new List<Dictionary<string, object>>();
         public readonly List<string> Log = new List<string>();
         public string Name;
+        public string Set = "quick";        // "quick" or "full": sweeping scenarios pick their case list from this
+        public bool ProofOnly;              // targeted runs: keep one proof shot (the last moment marked proof, else the first)
         public void Expect(string what, bool ok, object value = null) => Checks.Add(new Check { check = what, ok = ok, value = value });
-        public IEnumerator Shot(string moment, string question) { yield return Capture.Take(Name, moment, question, Shots); }
+        public bool Full => Set == "full";
+        public IEnumerator Shot(string moment, string question, bool proof = false)
+        {
+            if (ProofOnly && Shots.Count > 0 && !proof) yield break;
+            if (ProofOnly && proof) Shots.Clear();
+            yield return Capture.Take(Name, moment, question, Shots);
+        }
     }
 
     public class RigHost : MonoBehaviour
@@ -87,7 +95,8 @@ namespace Irisify.Rig
                 Write(new Dictionary<string, object> { ["id"] = c.GetValueOrDefault("id"), ["scenario"] = name, ["result"] = "SKIP", ["detail"] = "no such scenario" });
                 yield break;
             }
-            var ctx = new ScenarioContext { Name = name };
+            var ctx = new ScenarioContext { Name = name, Set = c.GetValueOrDefault("set") as string ?? "quick",
+                                            ProofOnly = (c.GetValueOrDefault("shots") as string) == "proof" };
             var start = StartState();
             int logFrom; lock (captured) logFrom = captured.Count;
             ComfortMonitor.Reset();

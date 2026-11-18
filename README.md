@@ -117,7 +117,10 @@ cover, screenshot moments with questions). Suites pick from them, so you don't r
 | `nightly` | everything shuffled with a logged seed, then again in order | catches state leaking between tests |
 | `flaky-hunt --scenario X` | X between every other test | an intermittent bug |
 
-Plan a suite with `irisify suite plan <name>`, which shows each test and why it's included. Run it with
+Sweeping scenarios run a quick set unless body or input code changed (or it's nightly), each scenario can name the
+test save it needs and a time cap, and targeted runs keep one proof screenshot per scenario.
+
+Plan a suite with `irisify suite plan <name>`, which shows each test, why it's included, its save, set and cap. Run it with
 `irisify suite run <name>`, or from the Builds page.
 
 ## Architecture
@@ -160,7 +163,7 @@ through `rigclient.py` over SSH, then `irisify sync` pulls the results into `.ir
 - **Verified here:** the CLI, suites, importer, gates and dashboard against the real Subnautica rig results (imported
   read-only), the controller generator (it regenerates the shipped Frame binding except four touch-dpad move
   bindings that were dropped on purpose), `machine check` and `doctor platform` against the real laptop over
-  Tailscale, and 19 unit tests (`python3 -m unittest discover tests`), including the rig client against a fake game.
+  Tailscale, and 23 unit tests (`python3 -m unittest discover tests`), including the rig client against a fake game.
 - **Not verified:** `suite run`, `deploy`, `integrate` and `verify-branch` against a live rig, because the running
   Subnautica rig was left untouched. The C# adapter templates are generalised from code that ran in SubmersedVR, but
   these copies haven't been compiled. Quest support is profile and adb only, and its streaming checks are still TODO.

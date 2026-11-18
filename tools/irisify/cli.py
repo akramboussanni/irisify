@@ -165,7 +165,9 @@ def cmd_suite(a):
             return out(sel, True)
         print(f"{a.name}: {len(sel['scenarios'])} scenarios, ~{sel['minutes']} min" + (f", seed {sel['seed']}" if sel["seed"] is not None else ""))
         for n in sel["scenarios"]:
-            print(f"  {n:<28} {sel['why'].get(n, '')}")
+            o = sel.get("options", {}).get(n, {})
+            extra = "  ".join(x for x in (o.get("save"), o.get("set") and o["set"] + " set", o.get("cap") and f"cap {o['cap']}s") if x)
+            print(f"  {n:<28} {sel['why'].get(n, ''):<34} {extra}")
         return
     res = runner.run_suite(p, a.name, a.machine, a.scenario, a.seed)
     if a.json:

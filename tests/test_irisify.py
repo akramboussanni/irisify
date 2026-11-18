@@ -140,6 +140,21 @@ class Suites(unittest.TestCase):
         self.assertTrue(sel["why"]["holster_carry_release"].startswith("shared"))
         self.assertNotIn("swim_water_hold", sel["scenarios"])
 
+    def test_run_options_sets_saves_and_shots(self):
+        p = project()
+        p.write("project.json", {"rig": {"saves": {"creative": {}, "survival": {}}},
+                                 "core": [{"files": ["VR/BodyFrame.cs"], "tags": ["holsters"], "full_sets": True}]})
+        o = suites.select(p, "changed", files=["SubmersedVR/VR/BodyFrame.cs"])["options"]
+        self.assertEqual(o["shoulder_reach_rate"]["set"], "full", "a body core change runs the full sets")
+        self.assertEqual(o["shoulder_reach_rate"]["shots"], "proof", "targeted runs keep one proof shot")
+        self.assertEqual(o["boot"]["save"], "creative")
+        o = suites.select(p, "changed", files=["SubmersedVR/VR/WaterGrab.cs"])["options"]
+        self.assertNotIn("shoulder_reach_rate", o)
+        o = suites.run_options(p, "full", ["shoulder_reach_rate", "build_menu_all_unlocked"], files=["x.cs"])
+        self.assertEqual(o["shoulder_reach_rate"]["set"], "quick")
+        self.assertEqual(o["shoulder_reach_rate"]["shots"], "all")
+        self.assertEqual(o["build_menu_all_unlocked"]["cap"], 300)
+
     def test_flaky_hunt_interleaves(self):
         p = project()
         sel = suites.select(p, "flaky-hunt", scenario="builder_move", seed=1)
@@ -204,7 +219,7 @@ class RigClient(unittest.TestCase):
         os.makedirs(cmd)
         res = os.path.join(d, "results.jsonl")
         stop = threading.Event()
-        loads = []
+        loads, seen_cmds = [], []
 
         def game():
             while not stop.is_set():
@@ -213,12 +228,14 @@ class RigClient(unittest.TestCase):
                         continue
                     for c in json.load(open(os.path.join(cmd, f))):
                         if c["cmd"] == "load":
-                            loads.append(1)
+                            loads.append(c.get("slot"))
+                        if c["cmd"] == "scenario":
+                            seen_cmds.append(c)
                         if c["cmd"] == "scenario":
                             line = {"id": c["id"], "scenario": c["name"], "result": "FAIL" if c["name"] == "bad" else "PASS",
                                     "checks": [{"check": "x", "ok": c["name"] != "bad"}]}
                         else:
-                            line = {"id": c["id"], "cmd": c["cmd"], "ok": True, "data": {"scene": "game" if loads else "menu", "slot": "slot9000" if loads else None}}
+                            line = {"id": c["id"], "cmd": c["cmd"], "ok": True, "data": {"scene": "game" if loads else "menu", "slot": loads[-1] if loads else None}}
                         open(res, "a").write(json.dumps(line) + "\n")
                     os.remove(os.path.join(cmd, f))
                 time.sleep(0.05)
@@ -226,16 +243,23 @@ class RigClient(unittest.TestCase):
         t = threading.Thread(target=game, daemon=True)
         t.start()
         cfg = os.path.join(d, "rig.json")
-        json.dump({"rig_dir": d, "scenario_timeout": 10, "load": {"cmd": "load", "slot": "slot9000"}}, open(cfg, "w"))
+        json.dump({"rig_dir": d, "scenario_timeout": 10, "saves": {"creative": {"cmd": "load", "slot": "slot9000"},
+                                                                   "survival": {"cmd": "load", "slot": "slot9001"}}}, open(cfg, "w"))
+        opts = os.path.join(d, "options.json")
+        json.dump({"good": {"save": "creative", "set": "quick", "shots": "proof", "cap": 10}, "bad": {"save": "creative"},
+                   "eat": {"save": "survival"}}, open(opts, "w"))
         p = subprocess.run([sys.executable, os.path.join(REPO, "tools", "rig", "rigclient.py"), "--config", cfg, "run",
-                            "--scenarios", "good,bad,good", "--run-id", "r1", "--build", '{"id": "b1"}'], capture_output=True, text=True, timeout=60)
+                            "--scenarios", "good,bad,good,eat", "--run-id", "r1", "--build", '{"id": "b1"}', "--options", opts],
+                           capture_output=True, text=True, timeout=60)
         stop.set()
         self.assertEqual(p.returncode, 1, p.stderr)
         runs = results.split_runs([json.loads(l) for l in open(res)])
         self.assertEqual(len(runs), 1)
-        self.assertEqual([s["scenario"] for s in runs[0]["scenarios"]], ["good", "bad", "good#2"])
+        self.assertEqual([s["scenario"] for s in runs[0]["scenarios"]], ["good", "bad", "good#2", "eat"])
         self.assertEqual(runs[0]["header"]["build"]["id"], "b1")
-        self.assertEqual(len(loads), 1, "the test save is loaded once, not per scenario")
+        self.assertEqual(loads, ["slot9000", "slot9001"], "each save loads once, only when a scenario needs it")
+        self.assertEqual(seen_cmds[0].get("set"), "quick")
+        self.assertEqual(seen_cmds[0].get("shots"), "proof")
         self.assertTrue(all("seconds" in s for s in runs[0]["scenarios"]))
 
 

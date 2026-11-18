@@ -41,7 +41,8 @@ def run_suite(project, suite, machine, scenario=None, seed=None, dry=False):
     sel = suites.select(project, suite, scenario=scenario, seed=seed)
     names = sel["scenarios"]
     est = suites.estimate_minutes(project, names)
-    plan = {"suite": suite, "machine": machine, "scenarios": names, "why": sel["why"], "seed": sel["seed"], "minutes": est}
+    plan = {"suite": suite, "machine": machine, "scenarios": names, "why": sel["why"], "seed": sel["seed"], "minutes": est,
+            "options": sel["options"]}
     if dry or not names:
         return plan
     m = machines.load(project)["machines"].get(machine)
@@ -50,7 +51,11 @@ def run_suite(project, suite, machine, scenario=None, seed=None, dry=False):
     build = current_build_record(project, machine)
     run_id = f"{time.strftime('%Y%m%d-%H%M%S')}-{machine}-{suite}"
     link = push_client(project, machine)
-    cmd = (f"cd {RIG_HOME} && python3 rigclient.py --config rig.json run --scenarios {','.join(names)} "
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        json.dump(sel["options"], f)
+    link.push(f.name, RIG_HOME + "/options.json")
+    os.unlink(f.name)
+    cmd = (f"cd {RIG_HOME} && python3 rigclient.py --config rig.json run --scenarios {','.join(names)} --options options.json "
            f"--run-id {run_id} --suite {suite} --machine {machine} --build '{json.dumps(build)}'"
            + (f" --seed {sel['seed']}" if sel["seed"] is not None else ""))
     project.write(os.path.join("plans", run_id + ".json"), dict(plan, run=run_id, build=build, at=now()))
